@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
+import { fetchEventsByCity } from '@/services/api';
 
 const LocationComponent = () => {
   const [location, setLocation] = useState(null); 

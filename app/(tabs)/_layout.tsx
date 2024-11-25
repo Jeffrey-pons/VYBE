@@ -11,7 +11,6 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
@@ -21,13 +20,13 @@ export default function TabLayout() {
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             background: 'transparent',
             position: 'absolute',
           },
           default: {},
         }),
       }}>
+
       <Tabs.Screen
         name="index"
         options={{
@@ -54,13 +53,6 @@ export default function TabLayout() {
         options={{
           title: '',
           tabBarIcon:({ color }) => <AntDesign name="user" size={24} color={color} />,
-        }}
-        />
-       <Tabs.Screen
-        name="settings"
-        options={{
-          title: '',
-          tabBarIcon:({ color }) => <Ionicons name="settings-outline" size={24} color={color}/>,
         }}
         />
     </Tabs>
