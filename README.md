@@ -1,4 +1,4 @@
-![VYBE](./assets/images/logos/VYBE_logo.webp)
+![VYBE](./assets/images/logos/VYBE_logo2.png)
 
 # L'Application qui répertorie ts les events à proximité (festivals, concerts, theatres, comedies, soirées...)
 
@@ -14,6 +14,3 @@
 
 # Démarrer le client
 - npm start
-
-# Démarrer le server
-- npm run dev
