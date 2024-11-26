@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextInput, View, Text, StyleSheet, Alert, Image } from "react-native";
+import { ScrollView, TextInput, View, Text, StyleSheet, Alert, Image } from "react-native";
 import { registerUser } from "@/services/backEnd.api";
 import { Button } from "react-native-elements";
 import { useNavigation } from "expo-router";
@@ -28,6 +28,7 @@ const RegisterScreen = () => {
   };
 
   return (
+    <ScrollView>
     <View style={styles.container}>
       <Image
         style={globalStyles.tinyLogoTwo}
@@ -85,6 +86,7 @@ const RegisterScreen = () => {
         Connectez-vous ici
       </Text>
     </View>
+    </ScrollView>
   );
 };
 

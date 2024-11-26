@@ -41,6 +41,11 @@ const globalStyles = StyleSheet.create({
     color: "#fff", 
     fontFamily: "FunnelSans-Regular",
   },
+  textClassic: {
+    fontSize: 24,
+    color: "#fff", 
+    fontFamily: "FunnelSans-Regular",
+  },
   input: {
     height: 50,
     width: width > 500 ? "50%" : "100%", 
@@ -53,14 +58,21 @@ const globalStyles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "FunnelSans-Regular",
   },
+  userText: {
+    fontSize: 16,
+    color: "#bbb", 
+    marginTop: 10,
+    fontFamily: "FunnelSans-Regular",
+    alignItems: "flex-start"
+  },
   footerText: {
-    fontSize: 15,
+    fontSize: 16,
     color: "#bbb", 
     marginTop: 10,
     fontFamily: "FunnelSans-Regular"
   },
   footerLink: {
-    fontSize: 15,
+    fontSize: 16,
     color: "#b36dff", 
     marginTop: 5,
     textDecorationLine: "underline",

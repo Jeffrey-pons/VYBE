@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TextInput, View, Text, StyleSheet, Alert, Image, ActivityIndicator } from "react-native";
+import { ScrollView, TextInput, View, Text, StyleSheet, Alert, Image, ActivityIndicator } from "react-native";
 import { Button } from "react-native-elements";
 import { useNavigation } from "expo-router";
 import globalStyles from "@/styles/globalStyles";
@@ -37,10 +37,10 @@ const LoginScreen = () => {
   const handleLogin = async () => {
     try {
       const response = await loginUser(email, password);
-      if (response.token) {
+      if (response.token && response.user) {
         await AsyncStorage.setItem('userToken', response.token); 
+        await AsyncStorage.setItem('userId', response.user.id); 
         Alert.alert("Succès", response.message);
-        console.log("Token reçu :", response.token);
         setIsLoggedIn(true); 
         navigation.navigate("(tabs)");
       }
@@ -54,6 +54,7 @@ const LoginScreen = () => {
 
   
   return (
+    <ScrollView>
     <View style={styles.container}>
       <Image
         style={globalStyles.tinyLogoTwo}
@@ -95,6 +96,7 @@ const LoginScreen = () => {
         Inscrivez-vous ici
       </Text>
     </View>
+    </ScrollView>
   );
 };
 
