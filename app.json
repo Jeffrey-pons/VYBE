@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/logos/VYBE_logo.png",
     "splash": {
-      "image": "./assets/images/logos/VYBE_logo.png",  
+      "image": "./assets/images/logos/VYBE_logo6.webp",  
       "resizeMode": "contain", 
       "backgroundColor": "#ffffff"
     },

@@ -1,39 +1,47 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View, Image, ActivityIndicator  } from "react-native";
+import { Button } from "react-native-elements"
+import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from "expo-router";
 import { Link } from "expo-router";
-import { AuthProvider } from '@/context/AuthContext'; 
+import globalStyles from "@/styles/globalStyles";
 
 type Props = {};
 
 const WelcomeScreen = (props: Props) => {
-  return (
-    <div style={{
-        backgroundColor: 'red'
-    }}>
+  const [loading, setLoading] = useState(true);
+  const navigation = useNavigation();
 
-        <View style={styles.container}>
-        <Text>Welcome Screen</Text>
+  useEffect(() => {
+    const checkUserToken = async () => {
+      const userToken = await AsyncStorage.getItem('userToken');
+      if (userToken) {
+        navigation.navigate("(tabs)");
+      }
+      setLoading(false);
+    };
+    checkUserToken();
+  }, []);
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+  return (
+        <View style={globalStyles.container}>
+         <Image
+        style={globalStyles.tinyLogo}
+        source={require('../assets/images/logos/VYBE_logoTwo.png')}
+      />
+      <Text style={globalStyles.textWhite}>TROUVE LES{'\n'}ÉVÈNEMENTS{'\n'}RIEN QUE POUR TOI</Text>
         <Link href={"/login"} asChild>
-            <TouchableOpacity>
-            <Text>Go to LOGIN Screen</Text>
-            </TouchableOpacity>
-        </Link>
-        <Link href={"/register"} asChild>
-            <TouchableOpacity>
-            <Text>Go to REGISTER Screen</Text>
-            </TouchableOpacity>
+            <Button 
+            buttonStyle={globalStyles.buttonStyle} 
+            title="CONNEXION / INSCRIPTION"
+            titleStyle={globalStyles.titleStyle} />
         </Link>
         </View>
-    </div>
   );
 };
 
 export default WelcomeScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

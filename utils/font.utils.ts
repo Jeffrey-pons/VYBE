@@ -1,19 +1,7 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-import globalStyles from "@/styles/globalStyles";
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { AuthProvider } from '@/context/AuthContext';
+import * as Font from "expo-font";
 
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [fontsLoaded] = useFonts({
+export const loadFonts = async () => {
+  await Font.loadAsync({
     "Fugaz-One": require("../assets/fonts/FugazOne-Regular.ttf"),
     "FunnelSans-Bold": require("../assets/fonts/FunnelSans-Bold.ttf"),
     "FunnelSans-BoldItalic": require("../assets/fonts/FunnelSans-BoldItalic.ttf"),
@@ -47,28 +35,4 @@ export default function RootLayout() {
     "Montserrat-ThinItalic": require("../assets/fonts/Montserrat-ThinItalic.ttf"),
     "SpaceMono-Regular": require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
-
-  useEffect(() => {
-    if (fontsLoaded) {
-      SplashScreen.hideAsync(); 
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null; 
-  }
-
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AuthProvider>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="login" options={{ presentation: 'modal' }} />
-          <Stack.Screen name="register" options={{ presentation: 'modal' }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      </AuthProvider>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
-}
+};

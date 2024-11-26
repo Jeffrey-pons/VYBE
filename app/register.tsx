@@ -1,54 +1,89 @@
 import React, { useState } from "react";
-import { TextInput, Button, View, Text, StyleSheet, Alert } from "react-native";
-import { registerUser } from "@/services/backEnd.api"; 
+import { TextInput, View, Text, StyleSheet, Alert, Image } from "react-native";
+import { registerUser } from "@/services/backEnd.api";
+import { Button } from "react-native-elements";
 import { useNavigation } from "expo-router";
+import globalStyles from "@/styles/globalStyles";
 
 const RegisterScreen = () => {
   const [name, setName] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const handleSignUp = async () => {
     try {
       const response = await registerUser(name, lastname, email, password);
       Alert.alert("Succès", response.message);
-      navigation.navigate('login'); 
+      navigation.navigate("login"); 
     } catch (error) {
       Alert.alert("Erreur", error.message);
+    } finally {
+      setName("");
+      setLastname("");
+      setEmail("");
+      setPassword("");
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text>Inscription</Text>
+      <Image
+        style={globalStyles.tinyLogoTwo}
+        source={require('../assets/images/logos/VYBE_logo5.png')}
+      />
+      <Text style={globalStyles.headerText}>Inscris-toi !</Text>
+
+      {/* First Name Input */}
       <TextInput
-        style={styles.input}
+        style={globalStyles.input}
         placeholder="Prénom"
+         placeholderTextColor="#bbb"
         value={name}
         onChangeText={setName}
       />
+
+      {/* Last Name Input */}
       <TextInput
-        style={styles.input}
+        style={globalStyles.input}
         placeholder="Nom"
+         placeholderTextColor="#bbb"
         value={lastname}
         onChangeText={setLastname}
       />
+
+      {/* Email Input */}
       <TextInput
-        style={styles.input}
+        style={globalStyles.input}
         placeholder="Email"
+        placeholderTextColor="#bbb"
         value={email}
         onChangeText={setEmail}
+        keyboardType="email-address"
       />
+
+      {/* Password Input */}
       <TextInput
-        style={styles.input}
+        style={globalStyles.input}
         placeholder="Mot de passe"
+        placeholderTextColor="#bbb"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
       />
-      <Button title="S'inscrire" onPress={handleSignUp} />
+
+      <Button 
+        buttonStyle={globalStyles.buttonStyle} 
+        title="S'inscrire"
+        titleStyle={globalStyles.titleStyle} 
+        onPress={handleSignUp} 
+      />
+
+      <Text style={globalStyles.footerText}>Vous avez déjà un compte ?</Text>
+      <Text style={globalStyles.footerLink} onPress={() => navigation.navigate("login")}>
+        Connectez-vous ici
+      </Text>
     </View>
   );
 };
@@ -59,15 +94,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    backgroundColor: "white"
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 10,
-    width: "80%",
-    paddingHorizontal: 10,
   },
 });
 
