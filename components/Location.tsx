@@ -3,7 +3,7 @@ import * as Location from 'expo-location';
 import { Text, View, StyleSheet } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
-import { fetchEventsByCity } from '@/services/api';
+import { fetchEventsByCity } from '@/services/openAgenda.api';
 
 const LocationComponent = () => {
   const [location, setLocation] = useState(null); 
