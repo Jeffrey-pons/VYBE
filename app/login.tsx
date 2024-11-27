@@ -54,7 +54,6 @@ const LoginScreen = () => {
 
   
   return (
-    <ScrollView>
     <View style={styles.container}>
       <Image
         style={globalStyles.tinyLogoTwo}
@@ -96,7 +95,7 @@ const LoginScreen = () => {
         Inscrivez-vous ici
       </Text>
     </View>
-    </ScrollView>
+
   );
 };
 

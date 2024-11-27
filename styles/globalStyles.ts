@@ -21,6 +21,7 @@ const globalStyles = StyleSheet.create({
     color: "white",
     borderRadius: 100,
     padding: 16,
+    marginBottom: 16,
   },
   titleStyle: {
     color: "black",
@@ -62,6 +63,7 @@ const globalStyles = StyleSheet.create({
     fontSize: 16,
     color: "#bbb", 
     marginTop: 10,
+    marginBottom: 10,
     fontFamily: "FunnelSans-Regular",
     alignItems: "flex-start"
   },
