@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, Button, TextInput } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
-import { fetchEventsByCity } from '@/services/openAgenda.api';
 
-const LocationComponent = () => {
+const LocationComponent = ({ onCityDetected }) => {
   const [location, setLocation] = useState(null); 
   const [errorMsg, setErrorMsg] = useState(null); 
   const [city, setCity] = useState(null); 
+  const [ manualCity, setManualCity ] = useState('');
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -33,6 +33,7 @@ const LocationComponent = () => {
         if (data && data.address) {
           const cityName = data.address.city || data.address.town || data.address.village || 'Ville non trouvée';
           setCity(cityName);
+          onCityDetected(cityName);
         } else {
           setCity('Ville non trouvée');
         }
@@ -44,16 +45,23 @@ const LocationComponent = () => {
     fetchLocation();
   }, []); 
 
-  const renderLocation = () => {
-    if (errorMsg) {
-      return <Text>{errorMsg}</Text>;
-    }
+  const handleCityInput = (text) => {
+    setManualCity(text);
+    setCity(text);  // Update both local city and manual city state
+    onCityDetected(text);  // Propagate the change to the parent
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.container}>Votre localisation actuelle : {city}</Text>
-      {renderLocation()}
+      {errorMsg && <Text style={styles.errorText}>{errorMsg}</Text>}
+      <Text style={styles.subtitle}>Ou entrez une ville :</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Saisir une ville"
+        value={city}
+        onChangeText={handleCityInput}
+      />
+      {/* <Button title="Utiliser ma position" onPress={fetchLocation} /> */}
     </View>
   );
 };

@@ -63,8 +63,11 @@ export default function RootLayout() {
       <AuthProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="login" options={{ presentation: 'modal' }} />
-          <Stack.Screen name="register" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="login"/>
+          <Stack.Screen name="register"/>
+          <Stack.Screen name="location"/>
+          <Stack.Screen name="connectmusic"/>
+          <Stack.Screen name="notification"/>
           <Stack.Screen name="+not-found" />
         </Stack>
       </AuthProvider>

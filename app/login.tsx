@@ -42,7 +42,7 @@ const LoginScreen = () => {
         await AsyncStorage.setItem('userId', response.user.id); 
         Alert.alert("Succès", response.message);
         setIsLoggedIn(true); 
-        navigation.navigate("(tabs)");
+        navigation.navigate("location");
       }
     } catch (error) {
       Alert.alert("Erreur", error.message);

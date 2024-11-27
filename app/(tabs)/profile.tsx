@@ -5,8 +5,10 @@ import { deleteUser, getUserInfos,  } from '@/services/backEnd.api';
 import { useNavigation } from 'expo-router';
 import globalStyles from '@/styles/globalStyles';
 import { Button } from 'react-native-elements';
+import LocationComponent from '@/components/Location';
 
 const ProfileScreen = () => {
+  const [city, setCity] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState(null);
   const [expandedSection, setExpandedSection] = useState(null); 
@@ -76,6 +78,10 @@ const ProfileScreen = () => {
     return initials.join('');
   };
 
+  const handleCityDetected = async (cityName) => {
+    setCity(cityName);
+  };
+
   const toggleSection = (section) => {
     if (expandedSection === section) {
       setExpandedSection(null); 
@@ -105,7 +111,7 @@ const ProfileScreen = () => {
   }
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={globalStyles.scrollViewContent}>
       <View style={styles.container}>
         {/* Conteneur centré pour l'avatar et le nom */}
         <View style={styles.centeredContainer}>
@@ -131,10 +137,11 @@ const ProfileScreen = () => {
         <TouchableOpacity style={styles.section} onPress={() => toggleSection('location')}>
           <Text style={globalStyles.textClassic}>{renderArrow('location')} Localisation</Text>
         </TouchableOpacity>
-        {/* <LocationComponent /> */}
+
         {expandedSection === 'location' && (
           <View>
-            <Text style={globalStyles.userText}>Ville Actuelle :    </Text>
+            <Text style={globalStyles.userText}>Ville Actuelle : {city || 'Détection en cours...'}</Text>
+            <LocationComponent onCityDetected={handleCityDetected} />
           </View>
         )}
 
@@ -174,7 +181,7 @@ const ProfileScreen = () => {
         </TouchableOpacity>
         {expandedSection === 'favorites' && (
           <View>
-            <Text style={globalStyles.userText}>{userData.favorites || "Aucun"}</Text>
+            <Text style={styles.favoris}>{userData.favorites || "Aucun"}</Text>
           </View>
         )}
 
@@ -193,6 +200,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',  
     padding: 20,
+
   },
   centeredContainer: {
     justifyContent: 'center',
@@ -250,5 +258,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  favoris: {
+    marginBottom: 30,
+    fontSize: 16,
+    color: "#bbb", 
+    marginTop: 10,
+    fontFamily: "FunnelSans-Regular",
+    alignItems: "flex-start"
+  }
 });
 export default ProfileScreen;

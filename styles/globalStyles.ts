@@ -20,7 +20,10 @@ const globalStyles = StyleSheet.create({
     backgroundColor: "white",
     color: "white",
     borderRadius: 100,
-    padding: 16,
+    paddingTop: 16,
+    paddingBottom: 16,
+    paddingRight: 20,
+    paddingLeft: 20,
     marginBottom: 16,
   },
   titleStyle: {
@@ -79,6 +82,11 @@ const globalStyles = StyleSheet.create({
     marginTop: 5,
     textDecorationLine: "underline",
     fontFamily: "FunnelSans-Regular"
+  },
+  scrollViewContent: {
+    flexGrow: 1, // Permet de remplir tout l'espace disponible
+    justifyContent: 'center', // Centre le contenu verticalement
+    padding: 20,
   },
 });
 
