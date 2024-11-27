@@ -38,10 +38,17 @@ export const apiRequest = async (endpoint, method = "GET", body = null, token = 
 
 export const registerUser = async (name, lastname, email, password) => {
     const res =  await apiRequest("register", "POST", { name, lastname, email, password });
-    console.log(res, 'res')
     return res
 };
   
-  export const loginUser = async (email, password) => {
+export const loginUser = async (email, password) => {
     return await apiRequest("login", "POST", { email, password });
-  };
+};
+
+export const getUserInfos = async (userId, token) => {
+  return await apiRequest(`infos/${userId}`, "GET", null, token);
+};
+
+export const deleteUser = async (userId, token) => {
+  return await apiRequest(`delete/${userId}`, "DELETE", null, token)
+}

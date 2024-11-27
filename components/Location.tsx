@@ -24,11 +24,8 @@ const LocationComponent = () => {
       setLocation(loc); 
 
       const { latitude, longitude } = loc.coords;
-      
-
       const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
 
-      
       try {
         const response = await fetch(url);
         const data = await response.json();
@@ -51,28 +48,11 @@ const LocationComponent = () => {
     if (errorMsg) {
       return <Text>{errorMsg}</Text>;
     }
-
-    if (location) {
-      const { latitude, longitude } = location.coords;
-      return (
-        <ThemedView >
-          <ThemedText style={styles.container}>Latitude: {latitude}</ThemedText>
-          <Text style={styles.container}>Longitude: {longitude}</Text>
-          {city ? (
-            <ThemedText style={styles.container}>Ville: {city}</ThemedText>
-          ) : (
-            <Text style={styles.container}>Ville non disponible</Text>
-          )}
-        </ThemedView>
-      );
-    } else {
-      return <Text style={{ color: 'white' }}>Chargement de la localisation...</Text>;
-    }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.container}>Votre localisation actuelle :</Text>
+      <Text style={styles.container}>Votre localisation actuelle : {city}</Text>
       {renderLocation()}
     </View>
   );

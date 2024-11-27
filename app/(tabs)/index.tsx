@@ -29,18 +29,7 @@ const App = () => {
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
-
-  // Fonction de déconnexion (en attendant davoir page profil)
-  const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem('userToken'); 
-      setIsLoggedIn(false); 
-      navigation.navigate("login"); 
-    } catch (error) {
-      console.error("Erreur lors de la déconnexion", error);
-    }
-  };
-
+ 
   return (
     <ThemedView>
       <Image 
@@ -50,10 +39,6 @@ const App = () => {
       <ThemedText style={styles.container}>Bienvenue sur l'application VYBE</ThemedText>
 
       <LocationComponent />
-
-      {isLoggedIn && (
-        <Button title="Se déconnecter" onPress={handleLogout} />
-      )}
     </ThemedView>
   );
 };
