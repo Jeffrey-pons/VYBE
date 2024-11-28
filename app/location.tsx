@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import { Button } from 'react-native-elements';
 import ProgressBar from '@/components/ProgressBar';
 import * as Location from 'expo-location';
-import { useNavigation } from "expo-router";
+import { useNavigation, router } from "expo-router";
 import globalStyles from '@/styles/globalStyles'; 
 
 const LocationScreen = () => {
@@ -61,7 +61,7 @@ const LocationScreen = () => {
         title="Suivant"
         buttonStyle={styles.buttonStyle}
         titleStyle={styles.titleStyle}
-        onPress={() => navigation.navigate('connectmusic')}
+        onPress={() => router.replace('/connectmusic')}
         disabled={!city}
       />
     </View>

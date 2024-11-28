@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ScrollView, TextInput, View, Text, StyleSheet, Alert, Image } from "react-native";
 import { registerUser } from "@/services/backEnd.api";
 import { Button } from "react-native-elements";
-import { useNavigation } from "expo-router";
+import { useNavigation, router } from "expo-router";
 import globalStyles from "@/styles/globalStyles";
 
 const RegisterScreen = () => {
@@ -16,9 +16,13 @@ const RegisterScreen = () => {
     try {
       const response = await registerUser(name, lastname, email, password);
       Alert.alert("Succès", response.message);
-      navigation.navigate("login"); 
-    } catch (error) {
-      Alert.alert("Erreur", error.message);
+      router.replace("/login"); 
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        Alert.alert("Erreur", error.message);
+      } else {
+        Alert.alert("Erreur", "Une erreur inconnue s'est produite.");
+      }
     } finally {
       setName("");
       setLastname("");
@@ -81,7 +85,7 @@ const RegisterScreen = () => {
       />
 
       <Text style={globalStyles.footerText}>Vous avez déjà un compte ?</Text>
-      <Text style={globalStyles.footerLink} onPress={() => navigation.navigate("login")}>
+      <Text style={globalStyles.footerLink} onPress={() => router.replace("/login")}>
         Connectez-vous ici
       </Text>
     </View>

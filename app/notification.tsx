@@ -1,16 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Switch, Image, TouchableOpacity } from 'react-native';
 import ProgressBar from '@/components/ProgressBar';
-import { useNavigation } from 'expo-router';
+import { useNavigation, router } from 'expo-router';
 import globalStyles from '@/styles/globalStyles';
 import { Button } from 'react-native-elements';
+import * as Notifications from "expo-notifications"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const NotificationScreen = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [notificationToken, setNotificationToken] = useState<string | null>(null);
   const navigation = useNavigation();
 
+  useEffect(() => {
+    const requestNotificationPermission = async () => {
+      // Demander la permission pour les notifications
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status !== 'granted') {
+        console.log('Permission de notification non accordée');
+        return;
+      }
+
+      // Récupérer le token de notification
+      const token = await Notifications.getExpoPushTokenAsync();
+      setNotificationToken(token.data);
+      console.log('Expo Push Token:', token.data); // Affiche le token dans la console
+      await AsyncStorage.setItem('notificationToken', token.data);
+    };
+
+    requestNotificationPermission();
+  }, []);
+
+  // Gérer l'activation/désactivation des notifications
+  const handleNotificationToggle = () => {
+    setNotificationsEnabled(prevState => !prevState);
+  };
   const handleSkip = () => {
-    navigation.navigate('(tabs)'); 
+    router.replace('/(tabs)'); 
+  };
+
+  const handleFinish = () => {
+    // Enregistrer l'état des notifications (à adapter si tu veux stocker dans AsyncStorage ou un autre endroit)
+    console.log('Notifications activées:', notificationsEnabled);
+
+    // Si les notifications sont activées, planifier une notification locale
+    if (notificationsEnabled) {
+      scheduleLocalNotification();
+    }
+
+    router.replace('/(tabs)');
+  };
+
+  const scheduleLocalNotification = async () => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Nouvelle notification",
+        body: "C'est le moment d'agir!",
+        data: { someData: 'Voici un exemple de notification' },
+      },
+      trigger: { seconds: 10 }, 
+    });
+
+    console.log("Notification planifiée !");
   };
 
 
@@ -31,14 +82,14 @@ const NotificationScreen = () => {
 
       <Switch
         value={notificationsEnabled}
-        onValueChange={setNotificationsEnabled}
+        onValueChange={handleNotificationToggle}
         trackColor={{ false: '#767577', true: '#b36dff' }} 
         thumbColor={notificationsEnabled ? 'white' : 'white'}
       />
 
       <Button
         title="Terminer"
-        onPress={() => navigation.navigate('(tabs)')} 
+        onPress={handleFinish}
         buttonStyle={styles.buttonStyle} 
         titleStyle={styles.titleStyle} 
       />

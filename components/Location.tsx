@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
-import { Text, View, StyleSheet, Button, TextInput } from 'react-native';
+import { Text, View } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-const LocationComponent = ({ onCityDetected }) => {
-  const [location, setLocation] = useState(null); 
-  const [errorMsg, setErrorMsg] = useState(null); 
-  const [city, setCity] = useState(null); 
-  const [ manualCity, setManualCity ] = useState('');
+interface LocationComponentProps {
+  onCityDetected: (city: string) => void;
+}
+
+const LocationComponent: React.FC<LocationComponentProps>  = ({ onCityDetected }) => {
+  const [location, setLocation] = useState<Location.LocationObject | null>(null); 
+  const [errorMsg, setErrorMsg] = useState<string | null>(null); 
+  const [city, setCity] = useState<string | null>(null); 
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -45,35 +48,12 @@ const LocationComponent = ({ onCityDetected }) => {
     fetchLocation();
   }, []); 
 
-  const handleCityInput = (text) => {
-    setManualCity(text);
-    setCity(text);  // Update both local city and manual city state
-    onCityDetected(text);  // Propagate the change to the parent
-  };
 
   return (
-    <View style={styles.container}>
-      {errorMsg && <Text style={styles.errorText}>{errorMsg}</Text>}
-      <Text style={styles.subtitle}>Ou entrez une ville :</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Saisir une ville"
-        value={city}
-        onChangeText={handleCityInput}
-      />
-      {/* <Button title="Utiliser ma position" onPress={fetchLocation} /> */}
+    <View >
+      {errorMsg && <Text>{errorMsg}</Text>}
     </View>
   );
 };
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 20,
-      color: 'white',
-    },
-
-  });
 
 export default LocationComponent;

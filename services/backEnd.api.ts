@@ -1,8 +1,16 @@
-const BASE_URL = "http://localhost:5000/api/auth"; 
+interface ApiRequestOptions {
+  method?: string;
+  body?: any;
+  token?: string | null;
+  headers?: Record<string, string>;
+}
 
-// Fonction générique pour envoyer des requêtes
-export const apiRequest = async (endpoint, method = "GET", body = null, token = null) => {
-  const headers = {
+const BASE_URL = "http://192.168.56.1:5000/api/auth";
+
+// const BASE_URL = "http://localhost:5000/api/auth"; 
+
+export const apiRequest = async (endpoint: string, method: string = "GET", body: any = null, token: string | null = null) => {
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
 
@@ -10,7 +18,7 @@ export const apiRequest = async (endpoint, method = "GET", body = null, token = 
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const options = {
+  const options: ApiRequestOptions = {
     method,
     headers,
   };
@@ -30,25 +38,27 @@ export const apiRequest = async (endpoint, method = "GET", body = null, token = 
     const JSONResponse = await response.json()
     console.log(JSONResponse,'JSON')
     return JSONResponse
-  } catch (error) {
-    console.error(`Erreur API : ${error.message}`);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Erreur API : ${error.message}`);
+    }
     throw error;
   }
 };
 
-export const registerUser = async (name, lastname, email, password) => {
-    const res =  await apiRequest("register", "POST", { name, lastname, email, password });
-    return res
-};
-  
-export const loginUser = async (email, password) => {
-    return await apiRequest("login", "POST", { email, password });
+export const registerUser = async (name: string, lastname: string, email: string, password: string) => {
+  const res = await apiRequest("register", "POST", { name, lastname, email, password });
+  return res;
 };
 
-export const getUserInfos = async (userId, token) => {
+export const loginUser = async (email: string, password: string) => {
+  return await apiRequest("login", "POST", { email, password });
+};
+
+export const getUserInfos = async (userId: string, token: string) => {
   return await apiRequest(`infos/${userId}`, "GET", null, token);
 };
 
-export const deleteUser = async (userId, token) => {
-  return await apiRequest(`delete/${userId}`, "DELETE", null, token)
-}
+export const deleteUser = async (userId: string, token: string) => {
+  return await apiRequest(`delete/${userId}`, "DELETE", null, token);
+};

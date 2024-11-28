@@ -4,14 +4,14 @@ import { Button } from 'react-native-elements';
 import ProgressBar from '@/components/ProgressBar';
 import Entypo from '@expo/vector-icons/Entypo';
 import Fontisto from '@expo/vector-icons/Fontisto';
-import { useNavigation } from 'expo-router';
+import { useNavigation, router } from 'expo-router';
 import globalStyles from '@/styles/globalStyles';
 
 const MusicScreen = () => {
   const navigation = useNavigation();
 
   const handleSkip = () => {
-    navigation.navigate('notification'); 
+    router.replace('/notification'); 
   };
 
   return (
@@ -49,7 +49,7 @@ const MusicScreen = () => {
 
       <Button 
         title="Suivant" 
-        onPress={() => navigation.navigate('notification')} 
+        onPress={() => router.replace('/notification')} 
         buttonStyle={styles.buttonStyle} 
         titleStyle={styles.titleStyle} 
       />

@@ -4,15 +4,24 @@ import LocationComponent from '@/components/Location';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from "expo-router";
-import { fetchEventsByCategory, fetchEventsTonight } from '@/services/openAgenda.api';
+import { router, useNavigation } from "expo-router";
+import { fetchEventsByCategory, fetchEventsTonight, fetchEventsThisWeek } from '@/services/openAgenda.api';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
+
+interface Event {
+  image?: { base?: string, filename?: string };
+  title?: { fr?: string };
+  dateRange?: { fr?: string };
+  firstTiming?: { begin?: string };
+  description?: { fr?: string };
+}
+
 const App = () => {
-  const [city, setCity] = useState(null);
-  const [events, setEvents] = useState([]);
+  const [city, setCity] = useState<string | null>(null);
+  const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
   const navigation = useNavigation();
@@ -24,7 +33,7 @@ const App = () => {
         setIsLoggedIn(true);
       } else {
         setIsLoggedIn(false); 
-        navigation.navigate("login")
+        router.replace('/login')
       }
       setLoading(false);
     };
@@ -37,12 +46,14 @@ const App = () => {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
-   const handleCityDetected = async (cityName) => {
+   const handleCityDetected = async (cityName: string) => {
     setCity(cityName);
     fetchEvents4Tonight(cityName);  
+    fetchEvents4Weeks(cityName);
+    
   };
 
-  const fetchEvents4Tonight = async (city) => {
+  const fetchEvents4Tonight = async (city: string) => {
     try {
       const eventsData = await fetchEventsTonight(city);  
       setEvents(eventsData);
@@ -52,59 +63,90 @@ const App = () => {
       setLoading(false);
     }
   };
+
+  const fetchEvents4Weeks = async (city: string) => {
+    try {
+      const eventsData = await fetchEventsThisWeek(city);  
+      setEvents(eventsData);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des événements:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCategoryClick = async (city: string, category: string) => {
+    if (!city || !category) {
+      console.error("Ville ou catégorie manquante");
+      return;
+    }
+    try {
+      const eventsDataCategory = await fetchEventsByCategory({
+        city,
+        category
+      });
+      setEvents(eventsDataCategory);
+    } catch (error){
+      console.error('Erreur lors de la récupération des événements:', error);
+
+    } finally {
+      setLoading(false);
+    }
+  };
  
   return (
-
     <ScrollView>
       <Image 
         source={require('../../assets/images/logos/VYBE_logo2.png')}  
         resizeMode="contain" 
         style={styles.logoIndex}
       />
-      <ThemedText style={styles.titleLocal}>Trouve ton prochain évènements à {city} 
+     <ThemedText style={styles.titleLocal}>
+      Trouve ton prochain évènements à{' '}
+      <Text style={styles.underlinedCity}>{city}</Text>
       <EvilIcons name="location" size={40} color="white" />
-      </ThemedText>
+    </ThemedText>
 
       <LocationComponent onCityDetected={handleCityDetected}/>
       <View style={styles.categoriesContainer}>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow}>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => fetchEvents4Tonight(city, '')}>
+      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow} contentOffset={{ x: 0, y: 0 }} >
+          <TouchableOpacity style={styles.categoryCard} onPress={() => city && fetchEvents4Tonight(city)}>
           <MaterialCommunityIcons name="weather-night" size={40} color="white" />
             <Text style={styles.categoryText}>Ce soir</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => fetchEventsByCategory(city, '')}>
+          <TouchableOpacity style={styles.categoryCard} onPress={() => city && fetchEvents4Weeks(city)}>
           <MaterialCommunityIcons name="calendar-weekend-outline" size={44} color="white" />
             <Text style={styles.categoryText}>Cette semaine</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => fetchEventsByCategory(city, 'concert')}>
+          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'concert')}>
             <Icon name="music" size={40} color="white" />
             <Text style={styles.categoryText}>Concerts</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => fetchEventsByCategory(city, 'festival')}>
+          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'festival')}>
             <Icon name="fire" size={40} color="white" />
             <Text style={styles.categoryText}>Festivals</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => fetchEventsByCategory(city, 'spectacle')}>
+          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'spectacle')}>
           <MaterialCommunityIcons name="theater" size={44} color="white" />
             <Text style={styles.categoryText}>Spectacles</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => fetchEventsByCategory(city, 'exposition')}>
+          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'exposition')}>
           <SimpleLineIcons name="picture" size={40} color="white" />
             <Text style={styles.categoryText}>Expositions</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => fetchEventsByCategory(city, 'humour')}>
+          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'humour')}>
             <Icon name="smile-o" size={40} color="white" />
             <Text style={styles.categoryText}>Humours</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => fetchEventsByCategory(city, 'soirée')}>
+          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'soirée')}>
             <Icon name="glass" size={40} color="white" />
             <Text style={styles.categoryText}>Soirées</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => fetchEventsByCategory(city, 'theatre')}>
-          <MaterialCommunityIcons name="drama-masks" size={40} color="white" />
-            <Text style={styles.categoryText}>Théâtres</Text>
+          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'techno')}>
+          <MaterialCommunityIcons name="music" size={40} color="white" />
+            <Text style={styles.categoryText}>DJ</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => fetchEventsByCategory(city, 'atelier')}>
+          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'atelier')}>
           <MaterialCommunityIcons name="brush" size={40} color="white" />
             <Text style={styles.categoryText}>Ateliers</Text>
           </TouchableOpacity>
@@ -166,9 +208,10 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   categoriesContainer: {
-    marginVertical: 20,
+    marginVertical: 30,
     width: '100%',
     alignItems: 'center',
+    flexDirection: "row",
   },
   categoriesTitle: {
     fontSize: 20,
@@ -179,20 +222,28 @@ const styles = StyleSheet.create({
   titleLocal: {
     color: "#fff",
     fontWeight: "bold",
-    fontFamily: "Fugaz-One",
+    fontFamily: 'FunnelSans-Regular',
     fontSize: 28,
     textAlign: "center",
+  },
+  underlinedCity: {
+    borderBottomWidth: 1, 
+    borderBottomColor: 'white', 
+    paddingBottom: 0.5, 
+    color: 'white', 
+    fontWeight: 'bold', 
   },
   categoryRow: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: 0,
   },
   categoryCard: {
     alignItems: 'center',
+    justifyContent: "center",
     width: '12%',
-    padding: 15,
+    padding: 10,
   },
   categoryText: {
     fontSize: 17,
@@ -238,14 +289,14 @@ const styles = StyleSheet.create({
     fontFamily: "FunnelSans-Regular",
   },
   detailsButton: {
-    backgroundColor: "#ff5a5f",
+    backgroundColor: "white",
     padding: 10,
     alignItems: "center",
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
   },
   detailsButtonText: {
-    color: "white",
+    color: "black",
     fontWeight: "bold",
     fontFamily: "FunnelSans-Regular",
   },
