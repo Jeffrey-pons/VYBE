@@ -1,30 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ActivityIndicator, Button, TouchableOpacity, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
 import LocationComponent from '@/components/Location'; 
-import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { router, useNavigation } from "expo-router";
+import { router } from "expo-router";
 import { fetchEventsByCategory, fetchEventsTonight, fetchEventsThisWeek } from '@/services/openAgenda.api';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
-
-interface Event {
-  image?: { base?: string, filename?: string };
-  title?: { fr?: string };
-  dateRange?: { fr?: string };
-  firstTiming?: { begin?: string };
-  description?: { fr?: string };
-}
+import { Event } from '@/interfaces/Event';
 
 const App = () => {
   const [city, setCity] = useState<string | null>(null);
+  const [manualCity, setManualCity] = useState<string>('');
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
-  const navigation = useNavigation();
 
   useEffect(() => {
     const checkUserToken = async () => {
@@ -41,19 +33,36 @@ const App = () => {
     checkUserToken();
   }, []);
 
+  useEffect(() => {
+    if (manualCity && !city) {
+      setCity(manualCity); // Met à jour 'city' avec la valeur de 'manualCity'
+      console.log('Manual city provided:', manualCity);
+      console.log('Current city:', city);
+      // console.log('isUsingLocation:', isUsingLocation);
+    }
+  }, [manualCity, city]);
 
-  if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
-  }
+  useEffect(() => {
+    console.log("City in useEffect2:", city);
+    if (city) {
+      // On déclenche la récupération des événements dès que la ville est définie
+      fetchEvents4Tonight(city);
+      fetchEvents4Weeks(city);
+    }
+  }, [city]);
 
-   const handleCityDetected = async (cityName: string) => {
-    setCity(cityName);
-    fetchEvents4Tonight(cityName);  
-    fetchEvents4Weeks(cityName);
+  
+
+  //  const handleCityDetected = async (cityName: string) => {
+  //   setCity(cityName);
+  //   fetchEvents4Tonight(cityName);  
+  //   fetchEvents4Weeks(cityName);
     
-  };
+  // };
 
   const fetchEvents4Tonight = async (city: string) => {
+    console.log("Fetching events for tonight in city:", city);
+    setLoading(true);
     try {
       const eventsData = await fetchEventsTonight(city);  
       setEvents(eventsData);
@@ -65,9 +74,10 @@ const App = () => {
   };
 
   const fetchEvents4Weeks = async (city: string) => {
+    setLoading(true);
     try {
       const eventsData = await fetchEventsThisWeek(city);  
-      setEvents(eventsData);
+      setEvents(prevEvents => [...prevEvents, ...eventsData]); 
     } catch (error) {
       console.error('Erreur lors de la récupération des événements:', error);
     } finally {
@@ -76,6 +86,7 @@ const App = () => {
   };
 
   const handleCategoryClick = async (city: string, category: string) => {
+
     if (!city || !category) {
       console.error("Ville ou catégorie manquante");
       return;
@@ -93,7 +104,15 @@ const App = () => {
       setLoading(false);
     }
   };
+
+  const handleCityDetected = (detectedCity: string) => {
+    setCity(detectedCity);
+  };
  
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
   return (
     <ScrollView>
       <Image 
@@ -107,7 +126,10 @@ const App = () => {
       <EvilIcons name="location" size={40} color="white" />
     </ThemedText>
 
-      <LocationComponent onCityDetected={handleCityDetected}/>
+    {!city && !manualCity && (
+        <LocationComponent onCityDetected={handleCityDetected} manualCity={manualCity} />
+      )}
+        
       <View style={styles.categoriesContainer}>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow} contentOffset={{ x: 0, y: 0 }} >
           <TouchableOpacity style={styles.categoryCard} onPress={() => city && fetchEvents4Tonight(city)}>

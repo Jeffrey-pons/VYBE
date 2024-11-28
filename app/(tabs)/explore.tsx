@@ -1,126 +1,137 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, FlatList, TouchableOpacity, Modal } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { fetchFiveUpcomingEvents } from '@/services/openAgenda.api';
+import EvilIcons from 'react-native-vector-icons/EvilIcons'; 
+import { Event } from '@/interfaces/Event';
+import { cities } from '@/utils/cities.utils';
 
 const FilterScreen = () => {
   const [search, setSearch] = useState('');
   const [date, setDate] = useState('');
-  const [price, setPrice] = useState('');
   const [city, setCity] = useState('');
-  const [events, setEvents] = useState([]);
+  const [keyword, setKeyword] = useState('');
+  const [events, setEvents] = useState<Event[]>([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showPricePicker, setShowPricePicker] = useState(false);
   const [showCityInput, setShowCityInput] = useState(false);
 
-  const sampleEvents = [
-    { id: '1', name: 'Concert de DJ à l\'IBoat', city: 'Bordeaux', date: '2024-12-10', price: 'payant' },
-    { id: '2', name: 'Soirée rock à la Rock School Barbey', city: 'Bordeaux', date: '2024-12-12', price: 'gratuit' },
-    { id: '3', name: 'Techno Night à l\'IBoat', city: 'Bordeaux', date: '2024-12-15', price: 'payant' },
-  ];
+  useEffect(() => {
+    const fetchFilteredEvents = async () => {
+      const filters = {
+        city,
+        timings: date ? { start: date, end: date } : undefined,
+        keyword: keyword,
+      };
+      try {
+        const upcomingEvents = await fetchFiveUpcomingEvents(filters);
+        setEvents(upcomingEvents);
+      } catch (error) {
+        console.error("Erreur lors du chargement des événements:", error);
+      }
+    };
 
-  const handleDateChange = (event, selectedDate) => {
-    setShowDatePicker(false);
-    if (selectedDate) {
-      const formattedDate = selectedDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
-      setDate(formattedDate);
-    }
-  };
+    fetchFilteredEvents();
+  }, [date, city, keyword]); 
 
-  const handlePriceSelect = (selectedPrice) => {
-    setPrice(selectedPrice);
-    setShowPricePicker(false);
-  };
 
-  const handleCitySelect = (enteredCity) => {
+  // const handleDateChange = (event, selectedDate) => {
+  //   setShowDatePicker(false);
+  //   if (selectedDate) {
+  //     const formattedDate = selectedDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
+  //     setDate(formattedDate);
+  //   }
+  // };
+
+  const handleCitySelect = (enteredCity: string) => {
     setCity(enteredCity);
     setShowCityInput(false);
   };
 
-  // Filtrage des événements
-  const filteredEvents = sampleEvents.filter((event) => {
-    return (
-      (!search || event.name.toLowerCase().includes(search.toLowerCase())) &&
-      (!date || event.date === date) &&
-      (!price || event.price === price) &&
-      (!city || event.city.toLowerCase() === city.toLowerCase())
+  const handleKeywordChange = (text: string) => {
+    setKeyword(text); 
+  };
+
+  const filteredEvents = events.filter((event) => {
+    const matchesSearch = !search || (event.title.fr && event.title.fr.toLowerCase().includes(search.toLowerCase()));
+    const matchesDate = !date || event.dateRange?.fr?.includes(date);
+    const matchesCity = !city || (event.location?.city && event.location.city.toLowerCase() === city.toLowerCase());
+    
+    // Vérification de keywords avec la nouvelle logique
+    const matchesKeyword = !keyword || (
+      event.keywords && Array.isArray(event.keywords.fr) && event.keywords.fr.some((k) => k.toLowerCase().includes(keyword.toLowerCase()))
     );
-  });
+    return matchesSearch && matchesDate && matchesCity && matchesKeyword;
+    
+  });  
 
   return (
     <View style={styles.container}>
-      {/* Recherche avec icône */}
+      {/* Recherche par mot clé */}
       <View style={styles.searchContainer}>
         <Icon name="search" size={20} color="#aaa" style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
           placeholder="Rechercher un événement ou un.e artiste"
           placeholderTextColor="#aaa"
-          value={search}
-          onChangeText={setSearch}
+          value={keyword}
+          onChangeText={handleKeywordChange}
         />
       </View>
 
       {/* Filtres sous forme de boutons */}
       <View style={styles.filterContainer}>
         <TouchableOpacity style={styles.filterButton} onPress={() => setShowDatePicker(true)}>
+        <EvilIcons name="calendar" size={20} color="white" style={styles.cityIcon} />
+
           <Text style={styles.filterButtonText}>{date || 'DATE'}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton} onPress={() => setShowPricePicker(true)}>
-          <Text style={styles.filterButtonText}>{price || 'PRIX'}</Text>
-        </TouchableOpacity>
         <TouchableOpacity style={styles.filterButton} onPress={() => setShowCityInput(true)}>
+        <EvilIcons name="location" size={20} color="white" style={styles.cityIcon} />
           <Text style={styles.filterButtonText}>{city || 'LIEU'}</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Modal Date Picker */}
+      {/* DATE */}
       {showDatePicker && (
         <DateTimePicker
           value={new Date()}
           mode="date"
           display="calendar"
-          onChange={handleDateChange}
+          // onChange={handleDateChange}
         />
       )}
 
-      {/* Modal Price Picker */}
-      <Modal visible={showPricePicker} transparent animationType="slide">
-        <View style={styles.modalContainer}>
-          <TouchableOpacity style={styles.modalOption} onPress={() => handlePriceSelect('gratuit')}>
-            <Text style={styles.modalOptionText}>Gratuit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.modalOption} onPress={() => handlePriceSelect('payant')}>
-            <Text style={styles.modalOptionText}>Payant</Text>
-          </TouchableOpacity>
-          <Button title="Annuler" onPress={() => setShowPricePicker(false)} color="#1e90ff" />
-        </View>
-      </Modal>
-
-      {/* Modal City Input */}
+      {/* LIEU */}
       <Modal visible={showCityInput} transparent animationType="slide">
         <View style={styles.modalContainer}>
-          <TextInput
-            style={styles.modalInput}
-            placeholder="Entrez une ville"
-            placeholderTextColor="#aaa"
-            value={city}
-            onChangeText={handleCitySelect}
+          <FlatList
+            data={cities}
+            keyExtractor={(item) => item.value}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => handleCitySelect(item.value)} // Sélectionner la ville
+              >
+                <Text >{item.label}</Text>
+              </TouchableOpacity>
+            )}
           />
-          <Button title="Annuler" onPress={() => setShowCityInput(false)} color="#1e90ff" />
+          <Button title="Fermer" onPress={() => setShowCityInput(false)} />
         </View>
       </Modal>
 
-      {/* Liste des événements */}
+      {/* EVENTS */}
       <FlatList
         data={filteredEvents}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => String(index)}
+        ListEmptyComponent={<Text>Aucun événement trouvé</Text>}  // Ajout d'un message pour les événements vides
         renderItem={({ item }) => (
           <View style={styles.eventCard}>
-            <Text style={styles.eventTitle}>{item.name}</Text>
-            <Text style={styles.eventText}>{item.city} - {item.date}</Text>
-            <Text style={styles.eventText}>Prix: {item.price}</Text>
+            <Text style={styles.eventTitle}>{item.title.fr || "Titre non disponible"}</Text>
+            <Text style={styles.eventText}>
+              {item.location?.city || "Ville inconnue"} - {item.dateRange?.fr || "Date non disponible"}
+            </Text>
+            <Text style={styles.eventText}>Prix: {item.price || "Non spécifié"}</Text>
           </View>
         )}
       />
@@ -159,10 +170,16 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     gap: 10,
   },
+  cityIcon: {
+    marginLeft: 2,
+    marginRight: 2,
+  },
   filterButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#535353',
     paddingVertical: 10,
-    paddingHorizontal: 15,
+    paddingHorizontal: 16,
     borderRadius: 100,
     borderColor: '#333',
     borderWidth: 1,
@@ -170,8 +187,10 @@ const styles = StyleSheet.create({
   filterButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight:"bold",
+    fontWeight: "bold",
     fontFamily: "FunnelSans-Regular",
+    marginLeft: 10,
+    marginBottom: 2,
   },
   modalContainer: {
     backgroundColor: '#121212',

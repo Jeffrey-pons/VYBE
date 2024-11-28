@@ -4,11 +4,10 @@ import { Button } from 'react-native-elements';
 import ProgressBar from '@/components/ProgressBar';
 import Entypo from '@expo/vector-icons/Entypo';
 import Fontisto from '@expo/vector-icons/Fontisto';
-import { useNavigation, router } from 'expo-router';
+import { router } from 'expo-router';
 import globalStyles from '@/styles/globalStyles';
 
 const MusicScreen = () => {
-  const navigation = useNavigation();
 
   const handleSkip = () => {
     router.replace('/notification'); 

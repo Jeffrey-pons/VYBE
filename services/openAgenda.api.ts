@@ -1,4 +1,4 @@
-const generateApiUrl = (params: { city?: string, category?: string, timings?: { start: string, end: string }}) => {
+const generateApiUrl = (params: { city?: string, category?: string, timings?: { start: string, end: string }, keyword?: string}) => {
   const baseUrl = 'https://api.openagenda.com/v2/events';
   const apiKey = '8fc8cd8bdee941d8826c8bfa9bd5c47d'; 
   const lang = 'fr'; 
@@ -9,6 +9,7 @@ const generateApiUrl = (params: { city?: string, category?: string, timings?: { 
   if (params.city) url += `&city=${params.city}`;
   if (params.category) url += `&search=${params.category}`;
   if (params.timings) url += `&timings[gte]=${params.timings.start}&timings[lte]=${params.timings.end}`;
+  if (params.keyword) url += `&keyword[]=${params.keyword}`;
 
   return url;
 };
@@ -58,24 +59,20 @@ export const fetchEventsThisWeek = async (city: string) => {
   return fetchEvents(apiUrl);
 };
 
-export const fetchFiveUpcomingEvents = async (city: string) => {
-  const baseUrl = 'https://api.openagenda.com/v2/events';
-  const apiKey = '8fc8cd8bdee941d8826c8bfa9bd5c47d';
-  const lang = 'fr';
-  const relative = 'upcoming';
-
-  const url = `${baseUrl}?city=${city}&key=${apiKey}&relative[]=${relative}&limit=5`;
+export const fetchFiveUpcomingEvents = async (filters = {}) => {
+  const apiUrl = generateApiUrl(filters);  
 
   try {
-    const response = await fetch(url);
-    const data = await response.json();
+    const response = await fetch(apiUrl);  
+    const data = await response.json();  
     if (data && data.events) {
-      return data.events.slice(0, 5); // S'assurer d'avoir au maximum 5 événements
+      return data.events.slice(0, 50);
     }
-    return [];
+    return [];  
+   
   } catch (error) {
-    console.error('Erreur lors de la récupération des événements :', error);
-    return [];
+    console.error('Erreur lors de la récupération des événements:', error);
+    throw new Error('Erreur lors de la récupération des événements');
   }
 };
 

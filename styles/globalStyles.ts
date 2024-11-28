@@ -1,6 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 const { width } = Dimensions.get('window');
 const globalStyles = StyleSheet.create({
+  
   container: {
     flex: 1,
     justifyContent: "center",
@@ -88,6 +89,7 @@ const globalStyles = StyleSheet.create({
     justifyContent: 'center', // Centre le contenu verticalement
     padding: 20,
   },
+  
 });
 
 export default globalStyles;

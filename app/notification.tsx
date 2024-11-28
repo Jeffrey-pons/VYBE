@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Switch, Image, TouchableOpacity } from 'react-native';
 import ProgressBar from '@/components/ProgressBar';
-import { useNavigation, router } from 'expo-router';
+import { router } from 'expo-router';
 import globalStyles from '@/styles/globalStyles';
 import { Button } from 'react-native-elements';
 import * as Notifications from "expo-notifications"
@@ -10,7 +10,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const NotificationScreen = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [notificationToken, setNotificationToken] = useState<string | null>(null);
-  const navigation = useNavigation();
 
   useEffect(() => {
     const requestNotificationPermission = async () => {
@@ -86,7 +85,6 @@ const NotificationScreen = () => {
         trackColor={{ false: '#767577', true: '#b36dff' }} 
         thumbColor={notificationsEnabled ? 'white' : 'white'}
       />
-
       <Button
         title="Terminer"
         onPress={handleFinish}

@@ -3,12 +3,11 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import { Button } from 'react-native-elements';
 import ProgressBar from '@/components/ProgressBar';
 import * as Location from 'expo-location';
-import { useNavigation, router } from "expo-router";
+import { router } from "expo-router";
 import globalStyles from '@/styles/globalStyles'; 
 
 const LocationScreen = () => {
   const [city, setCity] = useState('');
-  const navigation = useNavigation();
 
   const handleUseLocation = async () => {
     try {

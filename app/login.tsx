@@ -35,10 +35,8 @@ const LoginScreen = () => {
 
   // Fonction pour la connexion
   const handleLogin = async () => {
-    console.log('1')
     try {
       const response = await loginUser(email, password);
-      console.log('2', response)
       if (response.token && response.user) {
         await AsyncStorage.setItem('userToken', response.token); 
         await AsyncStorage.setItem('userId', response.user.id); 
@@ -47,7 +45,6 @@ const LoginScreen = () => {
         router.replace("/location");
       }
     } catch (error: unknown) {
-      console.log("3")
       if (error instanceof Error) {
         Alert.alert("Erreur", error.message);
       } else {

@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/logos/VYBE_logo.png",
     "splash": {
-      "image": "./assets/images/logos/VYBE_logo6.webp",  
+      "image": "./assets/images/logos/VYBE_logo6.png",  
       "resizeMode": "contain", 
       "backgroundColor": "#ffffff"
     },
@@ -28,7 +28,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/logos/VYBE_logo3.webp"
+      "favicon": "./assets/images/logos/VYBE_logo.png"
     },
     "plugins": [
       "expo-router",

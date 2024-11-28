@@ -2,28 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { deleteUser, getUserInfos,  } from '@/services/backEnd.api';
-import { useNavigation, router } from 'expo-router';
+import { router } from 'expo-router';
 import globalStyles from '@/styles/globalStyles';
 import { Button } from 'react-native-elements';
 import LocationComponent from '@/components/Location';
-
-interface UserData {
-  name: string;
-  lastname: string;
-  mail: string;
-  privacy: string;
-  credits: number;
-  notifications: string;
-  favorites: string[];
-}
+import { UserData } from '@/interfaces/User';
 
 const ProfileScreen = () => {
-
   const [city, setCity] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>(null); 
-  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -68,7 +57,6 @@ const ProfileScreen = () => {
         return;
       }
       await deleteUser(userId, token);
-
       await AsyncStorage.removeItem('userToken');
       await AsyncStorage.removeItem('userId');
       Alert.alert('Compte supprimé', 'Votre compte a été supprimé avec succès.');
@@ -120,7 +108,6 @@ const ProfileScreen = () => {
       </View>
     );
   }
-
   return (
     <ScrollView contentContainerStyle={globalStyles.scrollViewContent}>
       <View style={styles.container}>

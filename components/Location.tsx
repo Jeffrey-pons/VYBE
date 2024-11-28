@@ -1,30 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
-import { Text, View } from 'react-native';
-import { ThemedText } from './ThemedText';
-import { ThemedView } from './ThemedView';
+import { Text } from 'react-native';
 
 interface LocationComponentProps {
   onCityDetected: (city: string) => void;
+  manualCity?: string;
 }
 
-const LocationComponent: React.FC<LocationComponentProps>  = ({ onCityDetected }) => {
+const LocationComponent: React.FC<LocationComponentProps>  = ({ onCityDetected, manualCity }) => {
   const [location, setLocation] = useState<Location.LocationObject | null>(null); 
   const [errorMsg, setErrorMsg] = useState<string | null>(null); 
   const [city, setCity] = useState<string | null>(null); 
 
   useEffect(() => {
+
+    if (manualCity) {
+      console.log('Manual city provided:', manualCity);
+      // Priorisation de la ville saisie manuellement
+      onCityDetected(manualCity);
+      setCity(manualCity)
+      return;
+    }
+
     const fetchLocation = async () => {
       // Demander la permission d'accéder à la géolocalisation
+      console.log('Fetching location...');
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission refusée pour accéder à la géolocalisation.');
         return;
       }
-
       // Obtenir la localisation actuelle
       let loc = await Location.getCurrentPositionAsync({});
       setLocation(loc); 
+      console.log('Location fetched:', loc);
 
       const { latitude, longitude } = loc.coords;
       const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
@@ -37,8 +46,10 @@ const LocationComponent: React.FC<LocationComponentProps>  = ({ onCityDetected }
           const cityName = data.address.city || data.address.town || data.address.village || 'Ville non trouvée';
           setCity(cityName);
           onCityDetected(cityName);
+          console.log('City found via geocoding:', cityName);
         } else {
           setCity('Ville non trouvée');
+          setErrorMsg('Ville non trouvée.');
         }
       } catch (error) {
         setErrorMsg('Erreur lors de la récupération de la ville');
@@ -46,14 +57,9 @@ const LocationComponent: React.FC<LocationComponentProps>  = ({ onCityDetected }
 
     };
     fetchLocation();
-  }, []); 
+  }, [manualCity]); 
 
-
-  return (
-    <View >
-      {errorMsg && <Text>{errorMsg}</Text>}
-    </View>
-  );
+  return errorMsg ? <Text style={{ color: 'red', textAlign: 'center' }}>{errorMsg}</Text> : null;
 };
 
 export default LocationComponent;
