@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
-import { fetchEventsByCity } from '@/services/openAgenda.api';
 
-const LocationComponent = () => {
-  const [location, setLocation] = useState(null); 
-  const [errorMsg, setErrorMsg] = useState(null); 
-  const [city, setCity] = useState(null); 
+interface LocationComponentProps {
+  onCityDetected: (city: string) => void;
+}
+
+const LocationComponent: React.FC<LocationComponentProps>  = ({ onCityDetected }) => {
+  const [location, setLocation] = useState<Location.LocationObject | null>(null); 
+  const [errorMsg, setErrorMsg] = useState<string | null>(null); 
+  const [city, setCity] = useState<string | null>(null); 
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -33,6 +36,7 @@ const LocationComponent = () => {
         if (data && data.address) {
           const cityName = data.address.city || data.address.town || data.address.village || 'Ville non trouvée';
           setCity(cityName);
+          onCityDetected(cityName);
         } else {
           setCity('Ville non trouvée');
         }
@@ -44,28 +48,12 @@ const LocationComponent = () => {
     fetchLocation();
   }, []); 
 
-  const renderLocation = () => {
-    if (errorMsg) {
-      return <Text>{errorMsg}</Text>;
-    }
-  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.container}>Votre localisation actuelle : {city}</Text>
-      {renderLocation()}
+    <View >
+      {errorMsg && <Text>{errorMsg}</Text>}
     </View>
   );
 };
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 20,
-      color: 'white',
-    },
-
-  });
 
 export default LocationComponent;

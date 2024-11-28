@@ -2,14 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { deleteUser, getUserInfos,  } from '@/services/backEnd.api';
-import { useNavigation } from 'expo-router';
+import { useNavigation, router } from 'expo-router';
 import globalStyles from '@/styles/globalStyles';
 import { Button } from 'react-native-elements';
+import LocationComponent from '@/components/Location';
+
+interface UserData {
+  name: string;
+  lastname: string;
+  mail: string;
+  privacy: string;
+  credits: number;
+  notifications: string;
+  favorites: string[];
+}
 
 const ProfileScreen = () => {
+
+  const [city, setCity] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [userData, setUserData] = useState(null);
-  const [expandedSection, setExpandedSection] = useState(null); 
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [expandedSection, setExpandedSection] = useState<string | null>(null); 
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -39,7 +52,7 @@ const ProfileScreen = () => {
     try {
       await AsyncStorage.removeItem('userToken');
       await AsyncStorage.removeItem('userId');
-      navigation.navigate("login");
+      router.replace("/login");
     } catch (error) {
       console.error("Erreur lors de la déconnexion", error);
     }
@@ -59,13 +72,13 @@ const ProfileScreen = () => {
       await AsyncStorage.removeItem('userToken');
       await AsyncStorage.removeItem('userId');
       Alert.alert('Compte supprimé', 'Votre compte a été supprimé avec succès.');
-      navigation.navigate('login');
+      router.replace('/login');
     } catch (error) {
       Alert.alert('Erreur', 'Une erreur est survenue lors de la suppression du compte.');
     }
   };
 
-  const getInitials = (firstName, lastName) => {
+  const getInitials = (firstName: string, lastName: string) => {
     const initials = [];
     if (firstName) {
       initials.push(firstName.charAt(0).toUpperCase());
@@ -76,7 +89,11 @@ const ProfileScreen = () => {
     return initials.join('');
   };
 
-  const toggleSection = (section) => {
+  const handleCityDetected = async (cityName: string) => {
+    setCity(cityName);
+  };
+
+  const toggleSection = (section: string) => {
     if (expandedSection === section) {
       setExpandedSection(null); 
     } else {
@@ -84,7 +101,7 @@ const ProfileScreen = () => {
     }
   };
 
-  const renderArrow = (section) => {
+  const renderArrow = (section: string) => {
     return expandedSection === section ? '⏵' : '⏷'; 
   };
 
@@ -105,7 +122,7 @@ const ProfileScreen = () => {
   }
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={globalStyles.scrollViewContent}>
       <View style={styles.container}>
         {/* Conteneur centré pour l'avatar et le nom */}
         <View style={styles.centeredContainer}>
@@ -131,10 +148,11 @@ const ProfileScreen = () => {
         <TouchableOpacity style={styles.section} onPress={() => toggleSection('location')}>
           <Text style={globalStyles.textClassic}>{renderArrow('location')} Localisation</Text>
         </TouchableOpacity>
-        {/* <LocationComponent /> */}
+
         {expandedSection === 'location' && (
           <View>
-            <Text style={globalStyles.userText}>Ville Actuelle :    </Text>
+            <Text style={globalStyles.userText}>Ville Actuelle : {city || 'Détection en cours...'}</Text>
+            <LocationComponent onCityDetected={handleCityDetected} />
           </View>
         )}
 
@@ -174,7 +192,7 @@ const ProfileScreen = () => {
         </TouchableOpacity>
         {expandedSection === 'favorites' && (
           <View>
-            <Text style={globalStyles.userText}>{userData.favorites || "Aucun"}</Text>
+            <Text style={styles.favoris}>{userData.favorites || "Aucun"}</Text>
           </View>
         )}
 
@@ -193,6 +211,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',  
     padding: 20,
+
   },
   centeredContainer: {
     justifyContent: 'center',
@@ -250,5 +269,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  favoris: {
+    marginBottom: 30,
+    fontSize: 16,
+    color: "#bbb", 
+    marginTop: 10,
+    fontFamily: "FunnelSans-Regular",
+    alignItems: "flex-start"
+  }
 });
 export default ProfileScreen;

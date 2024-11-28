@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, TextInput, View, Text, StyleSheet, Alert, Image, ActivityIndicator } from "react-native";
 import { Button } from "react-native-elements";
-import { useNavigation } from "expo-router";
+import { useNavigation, router } from "expo-router";
 import globalStyles from "@/styles/globalStyles";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginUser } from "@/services/backEnd.api"; 
@@ -19,7 +19,7 @@ const LoginScreen = () => {
       const userToken = await AsyncStorage.getItem('userToken');
       if (userToken) {
         setIsLoggedIn(true); 
-        navigation.navigate("(tabs)");
+        router.replace("/(tabs)");
       } else {
         setIsLoggedIn(false); 
       }
@@ -35,17 +35,24 @@ const LoginScreen = () => {
 
   // Fonction pour la connexion
   const handleLogin = async () => {
+    console.log('1')
     try {
       const response = await loginUser(email, password);
+      console.log('2', response)
       if (response.token && response.user) {
         await AsyncStorage.setItem('userToken', response.token); 
         await AsyncStorage.setItem('userId', response.user.id); 
         Alert.alert("Succès", response.message);
         setIsLoggedIn(true); 
-        navigation.navigate("(tabs)");
+        router.replace("/location");
       }
-    } catch (error) {
-      Alert.alert("Erreur", error.message);
+    } catch (error: unknown) {
+      console.log("3")
+      if (error instanceof Error) {
+        Alert.alert("Erreur", error.message);
+      } else {
+        Alert.alert("Erreur", "Une erreur inconnue s'est produite.");
+      }
     } finally {
       setEmail("");
       setPassword("");
@@ -91,7 +98,7 @@ const LoginScreen = () => {
 
 
       <Text style={globalStyles.footerText}>Vous n'avez pas de compte ?</Text>
-      <Text style={globalStyles.footerLink} onPress={() => navigation.navigate("register")}>
+      <Text style={globalStyles.footerLink} onPress={() => router.replace("/register")}>
         Inscrivez-vous ici
       </Text>
     </View>

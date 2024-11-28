@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View, Image, ActivityIndicator  } f
 import { Button } from "react-native-elements"
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from "expo-router";
+import { useNavigation, router } from "expo-router";
 import { Link } from "expo-router";
 import globalStyles from "@/styles/globalStyles";
 
@@ -16,7 +16,7 @@ const WelcomeScreen = (props: Props) => {
     const checkUserToken = async () => {
       const userToken = await AsyncStorage.getItem('userToken');
       if (userToken) {
-        navigation.navigate("(tabs)");
+        router.replace("/(tabs)");
       }
       setLoading(false);
     };
