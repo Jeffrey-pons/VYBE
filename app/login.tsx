@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, TextInput, View, Text, StyleSheet, Alert, Image, ActivityIndicator } from "react-native";
 import { Button } from "react-native-elements";
-import { useNavigation, router } from "expo-router";
+import { router } from "expo-router";
 import globalStyles from "@/styles/globalStyles";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginUser } from "@/services/backEnd.api"; 
@@ -11,7 +11,6 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
-  const navigation = useNavigation();
 
   // Vérification si un utilisateur est déjà connecté en vérifiant le token
   useEffect(() => {

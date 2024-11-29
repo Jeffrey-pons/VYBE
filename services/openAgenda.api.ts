@@ -46,8 +46,11 @@ export const fetchEventsTonight = async (city: string) => {
 
 export const fetchEventsThisWeek = async (city: string) => {
   const today = new Date();
-  const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay())); // Dimanche passé
-  const endOfWeek = new Date(today.setDate(today.getDate() + (6 - today.getDay()))); // Samedi prochain
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - today.getDay());  
+  
+  const endOfWeek = new Date(today);
+  endOfWeek.setDate(today.getDate() + (6 - today.getDay())); 
   
   startOfWeek.setHours(0, 0, 0, 0);
   endOfWeek.setHours(23, 59, 59, 999);

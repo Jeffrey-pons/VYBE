@@ -1,4 +1,6 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -22,6 +24,21 @@ export const useAuthContext = () => {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkUserToken = async () => {
+      const userToken = await AsyncStorage.getItem('userToken');
+      if (userToken) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+        router.replace('/login');  
+      }
+    };
+
+    checkUserToken();
+  }, [router]);
 
   const login = () => {
     setIsAuthenticated(true);
@@ -29,6 +46,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const logout = () => {
     setIsAuthenticated(false);
+    AsyncStorage.removeItem('userToken');  // Supprimer le token lors du logout
+    router.replace('/login');
   };
 
   return (

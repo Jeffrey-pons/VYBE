@@ -84,12 +84,55 @@ const globalStyles = StyleSheet.create({
     textDecorationLine: "underline",
     fontFamily: "FunnelSans-Regular"
   },
-  scrollViewContent: {
-    flexGrow: 1, // Permet de remplir tout l'espace disponible
-    justifyContent: 'center', // Centre le contenu verticalement
-    padding: 20,
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
   },
-  
+  modalContainer: {
+    backgroundColor: 'black',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: 'white',
+    marginTop: 20,
+    fontFamily: "FunnelSans-Regular",
+  },
+  modalDate: {
+    fontSize: 16,
+    color: '#ffdd59',
+    marginVertical: 10,
+    fontFamily: "FunnelSans-Regular",
+  },
+  modalEventPrice: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: 20,
+    fontFamily: "FunnelSans-Regular",
+  },
+  modalDescription: {
+    fontSize: 16,
+    color: 'gray',
+    marginVertical: 10,
+    fontFamily: "FunnelSans-Regular",
+
+  },
+  closeModalButton: {
+    backgroundColor: '#ff4d4d',
+    padding: 10,
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  closeModalButtonText: {
+    color: 'white',
+    fontFamily: "FunnelSans-Regular",
+  },
 });
 
 export default globalStyles;

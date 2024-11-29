@@ -7,6 +7,7 @@ import globalStyles from '@/styles/globalStyles';
 import { Button } from 'react-native-elements';
 import LocationComponent from '@/components/Location';
 import { UserData } from '@/interfaces/User';
+import Logo from '@/components/LogoHeader';
 
 const ProfileScreen = () => {
   const [city, setCity] = useState<string | null>(null);
@@ -109,7 +110,8 @@ const ProfileScreen = () => {
     );
   }
   return (
-    <ScrollView contentContainerStyle={globalStyles.scrollViewContent}>
+    <ScrollView>
+      <Logo></Logo>
       <View style={styles.container}>
         {/* Conteneur centré pour l'avatar et le nom */}
         <View style={styles.centeredContainer}>

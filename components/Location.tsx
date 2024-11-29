@@ -14,17 +14,8 @@ const LocationComponent: React.FC<LocationComponentProps>  = ({ onCityDetected, 
 
   useEffect(() => {
 
-    if (manualCity) {
-      console.log('Manual city provided:', manualCity);
-      // Priorisation de la ville saisie manuellement
-      onCityDetected(manualCity);
-      setCity(manualCity)
-      return;
-    }
-
     const fetchLocation = async () => {
       // Demander la permission d'accéder à la géolocalisation
-      console.log('Fetching location...');
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission refusée pour accéder à la géolocalisation.');
@@ -33,7 +24,6 @@ const LocationComponent: React.FC<LocationComponentProps>  = ({ onCityDetected, 
       // Obtenir la localisation actuelle
       let loc = await Location.getCurrentPositionAsync({});
       setLocation(loc); 
-      console.log('Location fetched:', loc);
 
       const { latitude, longitude } = loc.coords;
       const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
@@ -46,7 +36,6 @@ const LocationComponent: React.FC<LocationComponentProps>  = ({ onCityDetected, 
           const cityName = data.address.city || data.address.town || data.address.village || 'Ville non trouvée';
           setCity(cityName);
           onCityDetected(cityName);
-          console.log('City found via geocoding:', cityName);
         } else {
           setCity('Ville non trouvée');
           setErrorMsg('Ville non trouvée.');

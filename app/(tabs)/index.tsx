@@ -1,92 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import LocationComponent from '@/components/Location'; 
 import { ThemedText } from '@/components/ThemedText';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { router } from "expo-router";
 import { fetchEventsByCategory, fetchEventsTonight, fetchEventsThisWeek } from '@/services/openAgenda.api';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import { Event } from '@/interfaces/Event';
+import Logo from '@/components/LogoHeader';
+import globalStyles from '@/styles/globalStyles';
 
 const App = () => {
   const [city, setCity] = useState<string | null>(null);
-  const [manualCity, setManualCity] = useState<string>('');
   const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   useEffect(() => {
-    const checkUserToken = async () => {
-      const userToken = await AsyncStorage.getItem('userToken');
-      if (userToken) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false); 
-        router.replace('/login')
-      }
-      setLoading(false);
-    };
-
-    checkUserToken();
-  }, []);
-
-  useEffect(() => {
-    if (manualCity && !city) {
-      setCity(manualCity); // Met à jour 'city' avec la valeur de 'manualCity'
-      console.log('Manual city provided:', manualCity);
-      console.log('Current city:', city);
-      // console.log('isUsingLocation:', isUsingLocation);
-    }
-  }, [manualCity, city]);
-
-  useEffect(() => {
-    console.log("City in useEffect2:", city);
-    if (city) {
-      // On déclenche la récupération des événements dès que la ville est définie
+    if (city && events.length === 0) {
       fetchEvents4Tonight(city);
       fetchEvents4Weeks(city);
     }
-  }, [city]);
-
-  
-
-  //  const handleCityDetected = async (cityName: string) => {
-  //   setCity(cityName);
-  //   fetchEvents4Tonight(cityName);  
-  //   fetchEvents4Weeks(cityName);
-    
-  // };
+  }, [city, events.length]);
 
   const fetchEvents4Tonight = async (city: string) => {
-    console.log("Fetching events for tonight in city:", city);
-    setLoading(true);
     try {
       const eventsData = await fetchEventsTonight(city);  
       setEvents(eventsData);
     } catch (error) {
       console.error('Erreur lors de la récupération des événements:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const fetchEvents4Weeks = async (city: string) => {
-    setLoading(true);
     try {
       const eventsData = await fetchEventsThisWeek(city);  
-      setEvents(prevEvents => [...prevEvents, ...eventsData]); 
+      setEvents(eventsData); 
     } catch (error) {
       console.error('Erreur lors de la récupération des événements:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleCategoryClick = async (city: string, category: string) => {
-
     if (!city || !category) {
       console.error("Ville ou catégorie manquante");
       return;
@@ -99,35 +55,35 @@ const App = () => {
       setEvents(eventsDataCategory);
     } catch (error){
       console.error('Erreur lors de la récupération des événements:', error);
+    } 
+  };
 
-    } finally {
-      setLoading(false);
-    }
+  const handleEventClick = (event: Event) => {
+    setSelectedEvent(event);  
+    setModalVisible(true);     
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);   
+    setSelectedEvent(null);  
   };
 
   const handleCityDetected = (detectedCity: string) => {
     setCity(detectedCity);
   };
  
-  if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
-  }
-
+  
   return (
     <ScrollView>
-      <Image 
-        source={require('../../assets/images/logos/VYBE_logo2.png')}  
-        resizeMode="contain" 
-        style={styles.logoIndex}
-      />
+    <Logo></Logo>
      <ThemedText style={styles.titleLocal}>
       Trouve ton prochain évènements à{' '}
       <Text style={styles.underlinedCity}>{city}</Text>
       <EvilIcons name="location" size={40} color="white" />
     </ThemedText>
 
-    {!city && !manualCity && (
-        <LocationComponent onCityDetected={handleCityDetected} manualCity={manualCity} />
+    {!city &&  (
+        <LocationComponent onCityDetected={handleCityDetected} />
       )}
         
       <View style={styles.categoriesContainer}>
@@ -182,23 +138,21 @@ const App = () => {
                 source={{ uri: `${event.image?.base || ''}${event.image?.filename}` }}
                 style={styles.eventImage}
               />
+              
               <Text style={styles.eventTitle}>{event.title?.fr || 'Titre indisponible'}</Text>
-               <Text style={styles.eventDate}>
-                {event.dateRange?.fr || 
-                  new Date(event.firstTiming?.begin).toLocaleString('fr-FR', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  }) || 
-                  'Date non disponible'}
-              </Text>
-              <Text style={styles.eventDescription}>
-                {event.description?.fr ? `${event.description.fr.slice(0, 80)}...` : 'Description non disponible'}
-              </Text>
-              <TouchableOpacity style={styles.detailsButton} onPress={() => alert(`Détails pour: ${event.title?.fr}`)}>
+              <Text style={styles.eventDate}>
+              {event.dateRange?.fr || 
+                (event.firstTiming?.begin ? new Date(event.firstTiming.begin).toLocaleString('fr-FR', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                }) : 'Date non disponible')
+              }
+            </Text>
+              <TouchableOpacity style={styles.detailsButton} onPress={() => handleEventClick(event)}>
                 <Text style={styles.detailsButtonText}>Voir plus</Text>
               </TouchableOpacity>
             </View>
@@ -207,6 +161,42 @@ const App = () => {
           <Text style={styles.noEventsText}>Aucun événement trouvé</Text>
         )}
       </View>
+
+      {selectedEvent && (
+        <Modal visible={modalVisible} transparent animationType="none">
+          <View style={globalStyles.modalOverlay}>
+            <View style={globalStyles.modalContainer}>
+              {selectedEvent.image && (
+                 <Image 
+                 source={{ uri: `${selectedEvent.image?.base || ''}${selectedEvent.image?.filename}` }}
+                 style={styles.eventImage}
+               />
+              )}
+                <Text style={globalStyles.modalTitle}>{selectedEvent.title?.fr}</Text>
+              <Text style={globalStyles.modalDate}>
+                {selectedEvent.dateRange?.fr ||
+                  (selectedEvent.firstTiming?.begin ? new Date(selectedEvent.firstTiming.begin).toLocaleString('fr-FR', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  }) : 'Date non disponible')}
+              </Text>
+              <Text style={globalStyles.modalDescription}>
+                {selectedEvent.description?.fr || 'Aucune description disponible'}
+              </Text>
+              <Text style={globalStyles.modalEventPrice}>
+                  {selectedEvent.price ? `${selectedEvent.price} €` : 'Prix non disponible'}
+                </Text>
+              <TouchableOpacity style={globalStyles.closeModalButton} onPress={closeModal}>
+                <Text style={globalStyles.closeModalButtonText}>Fermer</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      )}
       
     </ScrollView>
     
@@ -221,11 +211,7 @@ const styles = StyleSheet.create({
     padding: 20,
     fontFamily: "Fugaz-One",
   },
-  logoIndex: {
-    width: 100,  
-    height: 100,  
-    resizeMode: "contain", 
-  },
+
   whiteText: {
     color: 'white',
   },
@@ -287,7 +273,7 @@ const styles = StyleSheet.create({
   },
   eventImage: {
     width: "100%",
-    height: 200,
+    height: 300,
     resizeMode: "cover",
   },
   eventTitle: {
@@ -301,6 +287,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#ffdd59",
     marginHorizontal: 10,
+    marginBottom:20,
     fontFamily: "FunnelSans-Regular",
   },
   eventDescription: {

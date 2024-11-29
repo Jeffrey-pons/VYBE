@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ScrollView, TextInput, View, Text, StyleSheet, Alert, Image } from "react-native";
 import { registerUser } from "@/services/backEnd.api";
 import { Button } from "react-native-elements";
-import { useNavigation, router } from "expo-router";
+import { router } from "expo-router";
 import globalStyles from "@/styles/globalStyles";
 
 const RegisterScreen = () => {
@@ -10,7 +10,6 @@ const RegisterScreen = () => {
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigation = useNavigation();
 
   const handleSignUp = async () => {
     try {

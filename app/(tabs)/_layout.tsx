@@ -7,6 +7,14 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { LogBox } from 'react-native';
+
+// Désactiver les avertissements spécifiques
+LogBox.ignoreLogs([
+  'shadow* style props are deprecated',
+  'props.pointerEvents is deprecated',
+  'Image: style.resizeMode is deprecated',
+]);
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();

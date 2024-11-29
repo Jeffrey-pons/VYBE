@@ -2,7 +2,7 @@ import { Text, View, Image, ActivityIndicator  } from "react-native";
 import { Button } from "react-native-elements"
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation, router } from "expo-router";
+import { router } from "expo-router";
 import { Link } from "expo-router";
 import globalStyles from "@/styles/globalStyles";
 
@@ -10,7 +10,6 @@ type Props = {};
 
 const WelcomeScreen = (props: Props) => {
   const [loading, setLoading] = useState(true);
-  const navigation = useNavigation();
 
   useEffect(() => {
     const checkUserToken = async () => {
