@@ -42,7 +42,7 @@ const ProfileScreen = () => {
     try {
       await AsyncStorage.removeItem('userToken');
       await AsyncStorage.removeItem('userId');
-      router.replace("/login");
+      router.replace("/home");
     } catch (error) {
       console.error("Erreur lors de la déconnexion", error);
     }
@@ -61,7 +61,7 @@ const ProfileScreen = () => {
       await AsyncStorage.removeItem('userToken');
       await AsyncStorage.removeItem('userId');
       Alert.alert('Compte supprimé', 'Votre compte a été supprimé avec succès.');
-      router.replace('/login');
+      router.replace('/home');
     } catch (error) {
       Alert.alert('Erreur', 'Une erreur est survenue lors de la suppression du compte.');
     }

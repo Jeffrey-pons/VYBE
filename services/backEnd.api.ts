@@ -6,9 +6,9 @@ interface ApiRequestOptions {
   credentials?: 'same-origin' | 'include' | 'omit';
 }
 
-// const BASE_URL = "https://5bce-195-7-117-146.ngrok-free.app/api/auth";
+const BASE_URL = "https://e60e-195-7-117-146.ngrok-free.app/api/auth";
 
-const BASE_URL = "http://localhost:5000/api/auth"; 
+// const BASE_URL = "http://localhost:5000/api/auth"; 
 
 export const apiRequest = async (endpoint: string, method: string = "GET", body: any = null, token: string | null = null) => {
   const headers: Record<string, string> = {
@@ -31,6 +31,8 @@ export const apiRequest = async (endpoint: string, method: string = "GET", body:
 
   try {
     const response = await fetch(`${BASE_URL}/${endpoint}`, options);
+    // const textResponse = await response.text();
+    // console.log(textResponse);
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || "Une erreur est survenue");

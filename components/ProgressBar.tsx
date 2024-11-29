@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     left: '30%',        
     right: '30%',  
     height: 10,
-    width: '40%',
+    width: '50%',
     backgroundColor: 'grey',
     borderRadius: 5,
     overflow: 'hidden',

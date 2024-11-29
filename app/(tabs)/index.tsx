@@ -10,7 +10,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Event } from '@/interfaces/Event';
 import Logo from '@/components/LogoHeader';
 import globalStyles from '@/styles/globalStyles';
-
 const App = () => {
   const [city, setCity] = useState<string | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
@@ -116,6 +115,10 @@ const App = () => {
             <Icon name="smile-o" size={40} color="white" />
             <Text style={styles.categoryText}>Humours</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'atelier')}>
+          <MaterialCommunityIcons name="brush" size={40} color="white" />
+            <Text style={styles.categoryText}>Ateliers</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'soirée')}>
             <Icon name="glass" size={40} color="white" />
             <Text style={styles.categoryText}>Soirées</Text>
@@ -123,10 +126,6 @@ const App = () => {
           <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'techno')}>
           <MaterialCommunityIcons name="music" size={40} color="white" />
             <Text style={styles.categoryText}>DJ</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'atelier')}>
-          <MaterialCommunityIcons name="brush" size={40} color="white" />
-            <Text style={styles.categoryText}>Ateliers</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>

@@ -77,7 +77,6 @@ const FilterScreen = () => {
   };
 
   return (
-   <ScrollView>
     <View style={styles.container}>
       {/* Recherche par mot clé */}
       <View style={styles.searchContainer}>
@@ -208,7 +207,6 @@ const FilterScreen = () => {
         </Modal>
       )}
     </View>
-    </ScrollView>
   );
 };
 
@@ -273,10 +271,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   gridContainer: {
-    justifyContent: 'space-between', 
+    justifyContent: 'center', 
     flexDirection: 'column',
-    flexWrap: 'wrap-reverse',
-    paddingVertical: 10,
+    // flexWrap: 'wrap-reverse',
+    // paddingVertical: 10,
   },
   cityButtonText: {
     color: 'black',
@@ -284,7 +282,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     width: '100%',
-    aspectRatio: 1,
     fontFamily: "FunnelSans-Regular"
   },
   modalOption: {
