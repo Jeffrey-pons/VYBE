@@ -53,9 +53,9 @@ const LocationScreen = () => {
         titleStyle={globalStyles.titleStyle}
         onPress={handleUseLocation}
       />
-
+  <View>
       {city && <Text style={styles.cityText}>Ville sélectionnée : {city}</Text>}
-
+      </View>
       <Button
         title="Suivant"
         buttonStyle={styles.buttonStyle}
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 36,
     color: 'white',
     textAlign: 'center',
      fontFamily: "FunnelSans-Regular"

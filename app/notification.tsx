@@ -16,14 +16,12 @@ const NotificationScreen = () => {
       // Demander la permission pour les notifications
       const { status } = await Notifications.requestPermissionsAsync();
       if (status !== 'granted') {
-        console.log('Permission de notification non accordée');
         return;
       }
 
       // Récupérer le token de notification
       const token = await Notifications.getExpoPushTokenAsync();
       setNotificationToken(token.data);
-      console.log('Expo Push Token:', token.data); // Affiche le token dans la console
       await AsyncStorage.setItem('notificationToken', token.data);
     };
 
@@ -40,8 +38,6 @@ const NotificationScreen = () => {
 
   const handleFinish = () => {
     // Enregistrer l'état des notifications (à adapter si tu veux stocker dans AsyncStorage ou un autre endroit)
-    console.log('Notifications activées:', notificationsEnabled);
-
     // Si les notifications sont activées, planifier une notification locale
     if (notificationsEnabled) {
       scheduleLocalNotification();
@@ -59,8 +55,6 @@ const NotificationScreen = () => {
       },
       trigger: { seconds: 10 }, 
     });
-
-    console.log("Notification planifiée !");
   };
 
 

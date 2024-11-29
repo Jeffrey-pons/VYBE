@@ -36,7 +36,6 @@ export const apiRequest = async (endpoint: string, method: string = "GET", body:
       throw new Error(errorData.message || "Une erreur est survenue");
     }
     const JSONResponse = await response.json()
-    console.log(JSONResponse,'JSON')
     return JSONResponse
   } catch (error: unknown) {
     if (error instanceof Error) {
