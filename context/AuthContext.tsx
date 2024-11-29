@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
-        router.replace('/login');  
+        router.replace('home');  
       }
     };
 
