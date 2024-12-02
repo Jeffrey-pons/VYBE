@@ -15,6 +15,7 @@ const App = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   useEffect(() => {
     if (city && events.length === 0) {
@@ -46,6 +47,7 @@ const App = () => {
       console.error("Ville ou catégorie manquante");
       return;
     }
+    setActiveCategory(category);
     try {
       const eventsDataCategory = await fetchEventsByCategory({
         city,
@@ -85,45 +87,138 @@ const App = () => {
         <LocationComponent onCityDetected={handleCityDetected} />
       )}
         
-      <View style={styles.categoriesContainer}>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow} contentOffset={{ x: 0, y: 0 }} >
-          <TouchableOpacity style={styles.categoryCard} onPress={() => city && fetchEvents4Tonight(city)}>
+          <View style={styles.categoriesContainer}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow} contentOffset={{ x: 0, y: 0 }} >
+          <TouchableOpacity
+          style={[
+            styles.categoryCard,
+            activeCategory === 'tonight' && styles.activeCategory,
+          ]}
+          onPress={() => {
+            city && fetchEvents4Tonight(city);
+            setActiveCategory('tonight');
+          }}
+        >
           <MaterialCommunityIcons name="weather-night" size={40} color="white" />
             <Text style={styles.categoryText}>Ce soir</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => city && fetchEvents4Weeks(city)}>
+
+             <TouchableOpacity
+              style={[
+                styles.categoryCard,
+                activeCategory === 'week' && styles.activeCategory,
+              ]}
+              onPress={() => {
+                city && fetchEvents4Weeks(city);
+                setActiveCategory('week');
+              }}
+            >
           <MaterialCommunityIcons name="calendar-weekend-outline" size={44} color="white" />
             <Text style={styles.categoryText}>Cette semaine</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'concert')}>
+          
+            <TouchableOpacity
+              style={[
+                styles.categoryCard,
+                activeCategory === 'concert' && styles.activeCategory,
+              ]}
+              onPress={() => {
+                city && handleCategoryClick(city, 'concert');
+                setActiveCategory('concert');
+              }}
+            >
             <Icon name="music" size={40} color="white" />
             <Text style={styles.categoryText}>Concerts</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'festival')}>
+          
+            <TouchableOpacity
+              style={[
+                styles.categoryCard,
+                activeCategory === 'festival' && styles.activeCategory,
+              ]}
+              onPress={() => {
+                city && handleCategoryClick(city, 'festival');
+                setActiveCategory('festival');
+              }}
+            >
             <Icon name="fire" size={40} color="white" />
             <Text style={styles.categoryText}>Festivals</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'spectacle')}>
+          <TouchableOpacity
+              style={[
+                styles.categoryCard,
+                activeCategory === 'spectacle' && styles.activeCategory,
+              ]}
+              onPress={() => {
+                city && handleCategoryClick(city, 'spectacle');
+                setActiveCategory('spectacle');
+              }}
+            >
           <MaterialCommunityIcons name="theater" size={44} color="white" />
             <Text style={styles.categoryText}>Spectacles</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'exposition')}>
+          <TouchableOpacity
+              style={[
+                styles.categoryCard,
+                activeCategory === 'exposition' && styles.activeCategory,
+              ]}
+              onPress={() => {
+                city && handleCategoryClick(city, 'exposition');
+                setActiveCategory('exposition');
+              }}
+            >
           <SimpleLineIcons name="picture" size={40} color="white" />
             <Text style={styles.categoryText}>Expositions</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'humour')}>
+          <TouchableOpacity
+              style={[
+                styles.categoryCard,
+                activeCategory === 'humour' && styles.activeCategory,
+              ]}
+              onPress={() => {
+                city && handleCategoryClick(city, 'humour');
+                setActiveCategory('humour');
+              }}
+            >
             <Icon name="smile-o" size={40} color="white" />
             <Text style={styles.categoryText}>Humours</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'atelier')}>
+          <TouchableOpacity
+              style={[
+                styles.categoryCard,
+                activeCategory === 'atelier' && styles.activeCategory,
+              ]}
+              onPress={() => {
+                city && handleCategoryClick(city, 'atelier');
+                setActiveCategory('atelier');
+              }}
+            >
           <MaterialCommunityIcons name="brush" size={40} color="white" />
             <Text style={styles.categoryText}>Ateliers</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'soirée')}>
+          <TouchableOpacity
+              style={[
+                styles.categoryCard,
+                activeCategory === 'soiree' && styles.activeCategory,
+              ]}
+              onPress={() => {
+                city && handleCategoryClick(city, 'soiree');
+                setActiveCategory('soiree');
+              }}
+            >
             <Icon name="glass" size={40} color="white" />
             <Text style={styles.categoryText}>Soirées</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoryCard} onPress={() => city && handleCategoryClick(city, 'techno')}>
+          <TouchableOpacity
+              style={[
+                styles.categoryCard,
+                activeCategory === 'techno' && styles.activeCategory,
+              ]}
+              onPress={() => {
+                city && handleCategoryClick(city, 'techno');
+                setActiveCategory('techno');
+              }}
+            >
           <MaterialCommunityIcons name="music" size={40} color="white" />
             <Text style={styles.categoryText}>DJ</Text>
           </TouchableOpacity>
@@ -249,8 +344,14 @@ const styles = StyleSheet.create({
   categoryCard: {
     alignItems: 'center',
     justifyContent: "center",
+    borderColor: 'transparent',
+    borderRadius: 8,
+    borderWidth: 2,
     width: '12%',
     padding: 10,
+  },
+  activeCategory: {
+    borderColor: 'yellow', 
   },
   categoryText: {
     fontSize: 17,
