@@ -1,50 +1,98 @@
-# Welcome to your Expo app 👋
+# ![VYBE](./assets/images/logos/VYBE_logo_white_transparent (2).png)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# VYBE - L'Application qui répertorie tous les évènements à proximité de toi
 
-## Get started
+## 🪧 À propos
+**VYBE** est une application qui te permet de découvrir facilement tous les évènements culturels et festifs autour de toi : festivals, concerts, théâtres, cinémas, comédies, soirées... Ne rate plus aucun évènement près de chez toi !
 
-1. Install dependencies
+# FEATURES : 
+- Géolocalisation : Localiser des évènements à proximité
+- Recherche avancée (filtre)
+- Notifications : évènements à venir / changement de programme
+- QR CODES : Afficher son billet à l'entrée de l'event
+- Espace utilisateur
+- Redirection vers le site d'achat de billet
+- Suggestion basées sur les données utilisateurs
+- Favoris
 
-   ```bash
-   npm install
-   ```
+## 📦 Prérequis
+Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur votre machine :
 
-2. Start the app
+- **Node.js** (v18+) - [Télécharger ici](https://nodejs.org/)
+- **Expo CLI** - [Documentation](https://docs.expo.dev/)
+  ```bash
+  npm install -g expo-cli
+  ```
+- **Git** - [Télécharger ici](https://git-scm.com/downloads)
 
-   ```bash
-    npx expo start
-   ```
+## 🚀 Installation
+Clonez le projet et installez les dépendances :
 
-In the output, you'll find options to open the app in a
+```bash
+git clone https://github.com/VYBE-Project/VYBE.git
+cd VYBE
+npm install
+```
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Démarrez l'application :
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+```bash
+npx expo start
+```
 
-## Get a fresh project
+Ou avec npm :
 
-When you're ready, run:
+```bash
+npm start
+```
+
+## 🛠️ Utilisation
+### Obtenir un nouveau projet
+Lorsque vous êtes prêt, lancez :
 
 ```bash
 npm run reset-project
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Cette commande déplacera le code de démarrage dans le répertoire **app-example** et créera un répertoire **app** vierge dans lequel vous pourrez commencer à développer.
 
-## Learn more
+### Proposer une amélioration ou une correction
+1. Forker le projet
+2. Créez une branche pour votre modification :
+   ```bash
+   git checkout -b feature/amélioration
+   ```
+3. Faites vos modifications et committez-les :
+   ```bash
+   git commit -m "Ajout d'une nouvelle fonctionnalité"
+   ```
+4. Poussez votre branche :
+   ```bash
+   git push origin feature/amélioration
+   ```
+5. Ouvrez une **Pull Request** depuis GitHub
 
-To learn more about developing your project with Expo, look at the following resources:
+## 🏗️ Construit avec
+### Langages & Frameworks
+- **React Native** - [Documentation](https://reactnative.dev/)
+- **Expo** - [Documentation](https://docs.expo.dev/)
+- **Firebase** - Authentification, Firestore, Storage - [Documentation](https://firebase.google.com/docs)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Outils
+#### CI/CD
+- **GitHub Actions** - Automatisation des tests et des déploiements - [Documentation](https://github.com/features/actions)
 
-## Join the community
+#### Déploiement
+- **EAS (Expo Application Services)** - Build et déploiement simplifiés - [Documentation](https://expo.dev/eas)
 
-Join our community of developers creating universal apps.
+## 📚 Documentation
+Consultez la documentation officielle pour en savoir plus :
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- [Expo documentation](https://docs.expo.dev/)
+- [React Native documentation](https://reactnative.dev/docs/getting-started)
+- [Firebase documentation](https://firebase.google.com/docs)
+
+## 🏷️ Gestion des versions
+Nous utilisons la **gestion sémantique des versions** (SemVer) pour la numérotation des versions. Consultez [la page des Releases](https://github.com/VYBE-Project/vybe-app/releases) pour voir les dernières versions.
+
+
