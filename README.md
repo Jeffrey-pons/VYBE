@@ -1,4 +1,4 @@
-# ![VYBE](./assets/images/logos/VYBE_logo_white_transparent (2).png)
+# ![VYBE](./assets/images/logos/VYBE_logo_white_transparent%20(2).png)
 
 # VYBE - L'Application qui répertorie tous les évènements à proximité de toi
 
