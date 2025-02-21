@@ -1,33 +1,37 @@
-import React from "react";
-import { Dimensions, TextInput, View, Text, StyleSheet, Image } from "react-native";
+import React , { useState, useEffect } from "react";
+import { Dimensions, TextInput, View, Text, StyleSheet, Image, Alert } from "react-native";
 import { Button } from "react-native-elements";
 import { router } from "expo-router";
 import globalStyles from "@/styles/global.style";
+import { registerUser } from "@/services/auth.service";
 
-const RegisterScreen = () => {
-  // const [name, setName] = useState("");
-  // const [lastname, setLastname] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+const RegisterScreen: React.FC = () => {
+  const [name, setName] = useState<string>("");
+  const [lastname, setLastname] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [isMounted, setIsMounted] = useState<boolean>(true);
 
-  // const handleSignUp = async () => {
-  //   try {
-  //     const response = await registerUser(name, lastname, email, password);
-  //     Alert.alert("Succès", response.message);
-  //     router.replace("/login"); 
-  //   } catch (error: unknown) {
-  //     if (error instanceof Error) {
-  //       Alert.alert("Erreur", error.message);
-  //     } else {
-  //       Alert.alert("Erreur", "Une erreur inconnue s'est produite.");
-  //     }
-  //   } finally {
-  //     setName("");
-  //     setLastname("");
-  //     setEmail("");
-  //     setPassword("");
-  //   }
-  // };
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
+
+  const handleSignUp = async () => {
+    try {
+      await registerUser(email, password);
+      if (isMounted) {
+        Alert.alert("Succès", "Compte créé avec succès !");
+        router.replace("/login");
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        Alert.alert("Erreur", error.message);
+      } else {
+        Alert.alert("Erreur", "Une erreur inconnue s'est produite.");
+      }
+    } 
+  };
 
   return (
     <View style={styles.container}>
@@ -58,8 +62,8 @@ const RegisterScreen = () => {
         style={globalStyles.input}
         placeholder="Email"
         placeholderTextColor="#bbb"
-        // value={email}
-        // onChangeText={setEmail}
+        value={email}
+        onChangeText={setEmail}
         keyboardType="email-address"
       />
 
@@ -76,15 +80,15 @@ const RegisterScreen = () => {
         placeholder="Mot de passe"
         placeholderTextColor="#bbb"
         secureTextEntry
-        // value={password}
-        // onChangeText={setPassword}
+        value={password}
+        onChangeText={setPassword}
       />
 
       <Button 
         buttonStyle={globalStyles.buttonStyle} 
         title="S'inscrire"
         titleStyle={globalStyles.titleStyle} 
-        // onPress={handleSignUp} 
+        onPress={handleSignUp} 
       />
 
       <Text style={globalStyles.footerAuthTextStyle}>Vous avez déjà un compte ?</Text>

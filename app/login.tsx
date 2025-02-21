@@ -1,59 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { TextInput, View, Text, StyleSheet, Image} from "react-native";
+import { TextInput, View, Text, StyleSheet, Image, Alert} from "react-native";
 import { Button } from "react-native-elements";
 import { router } from "expo-router";
 import globalStyles from "@/styles/global.style"; 
+import { loginUser } from "@/services/auth.service";
 
-const LoginScreen = () => {
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [loading, setLoading] = useState(true);
-//   const [isLoggedIn, setIsLoggedIn] = useState(false); 
+const LoginScreen: React.FC = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
-  // Vérification si un utilisateur est déjà connecté en vérifiant le token
-//   useEffect(() => {
-//     const checkUserToken = async () => {
-//       const userToken = await AsyncStorage.getItem('userToken');
-//       if (userToken) {
-//         setIsLoggedIn(true); 
-//         router.replace("/(tabs)");
-//       } else {
-//         setIsLoggedIn(false); 
-//       }
-//       setLoading(false);
-//     };
+  const handleLogin = async () => {
+    try {
+      const response = await loginUser(email, password);
+        Alert.alert("Succès", "connexion réussie");
+        router.replace("/findlocation");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        Alert.alert("Erreur", error.message);
+      } else {
+        Alert.alert("Erreur", "Une erreur inconnue s'est produite.");
+      }
+    }
+  };
 
-//     checkUserToken();
-//   }, []);
-
-//   if (loading) {
-//     return <ActivityIndicator size="large" color="#0000ff" />;
-//   }
-
-//   // Fonction pour la connexion
-//   const handleLogin = async () => {
-//     try {
-//       const response = await loginUser(email, password);
-//       if (response.token && response.user) {
-//         // await AsyncStorage.setItem('userToken', response.token); 
-//         // await AsyncStorage.setItem('userId', response.user.id); 
-//         Alert.alert("Succès", response.message);
-//         setIsLoggedIn(true); 
-//         router.replace("/findlocation");
-//       }
-//     } catch (error: unknown) {
-//       if (error instanceof Error) {
-//         Alert.alert("Erreur", error.message);
-//       } else {
-//         Alert.alert("Erreur", "Une erreur inconnue s'est produite.");
-//       }
-//     } finally {
-//       setEmail("");
-//       setPassword("");
-//     }
-//   };
-
-  
   return (
     <View style={styles.container}>
       <Image
@@ -67,8 +36,8 @@ const LoginScreen = () => {
             style={globalStyles.input}
             placeholder="Email"
             placeholderTextColor="#bbb" 
-            // value={email}
-            // onChangeText={setEmail}
+            value={email}
+            onChangeText={setEmail}
             keyboardType="email-address"
           />
 
@@ -77,17 +46,16 @@ const LoginScreen = () => {
             placeholder="Mot de passe"
             placeholderTextColor="#bbb"
             secureTextEntry
-            // value={password}
-            // onChangeText={setPassword}
+            value={password}
+            onChangeText={setPassword}
           />
 
           <Button 
             buttonStyle={globalStyles.buttonStyle} 
             title="Se connecter"
             titleStyle={globalStyles.titleStyle} 
-            // onPress={handleLogin}
+            onPress={handleLogin}
           />
-
 
       <Text style={globalStyles.footerAuthTextStyle}>Vous n'avez pas de compte ?</Text>
       <Text style={globalStyles.footerAuthLinkStyle} onPress={() => router.replace("/register")}>
