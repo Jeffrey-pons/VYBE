@@ -27,7 +27,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: '',
           tabBarIcon: ({ color, size }) => (
             <Image
               source={require('../../assets/images/icons/icon_home.png')}
@@ -40,7 +40,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
+          title: '',
           tabBarIcon: ({ color, size }) => (
             <Image
               source={require('../../assets/images/icons/icon_loupe.png')}
@@ -66,7 +66,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'profile',
+          title: '',
           tabBarIcon: ({ color, size }) => (
             <Image
               source={require('../../assets/images/icons/icon_user.png')}

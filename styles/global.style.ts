@@ -25,8 +25,6 @@ const globalStyles = StyleSheet.create({
     paddingLeft: 30,
     paddingRight: 30,
     marginTop: 20,
-    fontSize: 16,
-    fontWeight: 'bold',
   },
   titleStyle: {
     color: "black",
