@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { loadFonts } from '@/utils/fonts.utils';
+import { loadFonts } from '@/utils/fontsUtils';
 
 SplashScreen.preventAutoHideAsync();
 
