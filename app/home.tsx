@@ -1,17 +1,16 @@
-import { Text, View, Image, ActivityIndicator  } from "react-native";
+import { Text, View, Image, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 import { Button } from "react-native-elements";
 import globalStyles from "@/styles/global.style";
 
 const WelcomeScreen = () => {
-
     return (
-        <View style={globalStyles.container}>
+        <View style={styles.container}>
          <Image
-        style={globalStyles.tinyLogo}
-        source={require('../assets/images/logos/VYBE_logo_white_transparent (2).png')}
+        style={styles.logoHomePage}
+        source={require('../assets/images/logos/VYBE_logo_white_transparent_home.png')}
       />
-      <Text style={globalStyles.TitleWhiteStyle}>TROUVE LES{'\n'}ÉVÈNEMENTS{'\n'}RIEN QUE POUR TOI</Text>
+      <Text style={globalStyles.titleWhiteStyle}>TROUVE LES{'\n'}ÉVÈNEMENTS{'\n'}RIEN QUE POUR TOI</Text>
         <Link href={"/login"} asChild>
             <Button 
             buttonStyle={globalStyles.buttonStyle} 
@@ -20,6 +19,20 @@ const WelcomeScreen = () => {
         </Link>
         </View>
     )
-}
+};
+
+const styles = StyleSheet.create({
+    logoHomePage: {
+        resizeMode: "center",
+      },
+      container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        display: "flex",
+        flexGrow: 1,
+        gap: 40,
+      },
+});
 
 export default WelcomeScreen;

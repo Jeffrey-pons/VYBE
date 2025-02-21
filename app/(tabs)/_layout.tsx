@@ -53,7 +53,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="tickets"
         options={{
-          title: 'tickets',
+          title: '',
           tabBarIcon: ({ color, size }) => (
             <Image
               source={require('../../assets/images/icons/icon_ticket.png')}
