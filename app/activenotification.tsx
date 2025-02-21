@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Switch, Image, TouchableOpacity } from 'react-native';
 import ProgressBar from '@/components/ProgressBar';
 import { router } from 'expo-router';
-import globalStyles from '@/styles/global.style';
+import globalStyles from '@/styles/globalStyle';
 import { Button } from 'react-native-elements';
 import SkipButton from '@/components/SkipButton';
 // import * as Notifications from "expo-notifications"

@@ -2,8 +2,8 @@ import React , { useState, useEffect } from "react";
 import { Dimensions, TextInput, View, Text, StyleSheet, Image, Alert } from "react-native";
 import { Button } from "react-native-elements";
 import { router } from "expo-router";
-import globalStyles from "@/styles/global.style";
-import { registerUser } from "@/services/auth.service";
+import globalStyles from "@/styles/globalStyle";
+import { registerUser } from "@/services/authService";
 
 const RegisterScreen: React.FC = () => {
   const [name, setName] = useState<string>("");

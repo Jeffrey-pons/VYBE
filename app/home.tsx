@@ -1,7 +1,7 @@
 import { Text, View, Image, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 import { Button } from "react-native-elements";
-import globalStyles from "@/styles/global.style";
+import globalStyles from "@/styles/globalStyle";
 
 const WelcomeScreen = () => {
     return (

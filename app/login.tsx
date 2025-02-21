@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { TextInput, View, Text, StyleSheet, Image, Alert} from "react-native";
 import { Button } from "react-native-elements";
 import { router } from "expo-router";
-import globalStyles from "@/styles/global.style"; 
-import { loginUser } from "@/services/auth.service";
+import globalStyles from "@/styles/globalStyle"; 
+import { loginUser } from "@/services/authService";
 
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState<string>("");

@@ -4,7 +4,7 @@ import { Button } from 'react-native-elements';
 import ProgressBar from '@/components/ProgressBar';
 // import * as Location from 'expo-location';
 import { router } from "expo-router";
-import globalStyles from '@/styles/global.style'; 
+import globalStyles from '@/styles/globalStyle'; 
 
 const LocationScreen = () => {
 //   const [city, setCity] = useState('');

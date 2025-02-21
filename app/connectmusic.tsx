@@ -5,7 +5,7 @@ import ProgressBar from '@/components/ProgressBar';
 import Entypo from '@expo/vector-icons/Entypo';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import { router } from 'expo-router';
-import globalStyles from '@/styles/global.style';
+import globalStyles from '@/styles/globalStyle';
 import SkipButton from '@/components/SkipButton';
 
 const MusicScreen = () => {
