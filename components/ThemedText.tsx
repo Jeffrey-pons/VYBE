@@ -2,30 +2,17 @@ import { Text, type TextProps, StyleSheet } from 'react-native';
 import { Theme } from '@/constants/Theme';
 
 export type ThemedTextProps = TextProps & {
-  lightColor?: string;
-  darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitleAuth' | 'subtitle' | 'link';
+  type?: 'default' | 'title' | 'section' | 'authTitle' | 'authSubtitle' | 'subtitle' | 'link' | 'profileInitials';
 };
 
 export function ThemedText({
   style, 
-  darkColor = Theme.text, 
   type = 'default',
   ...rest
 }: ThemedTextProps) {
-
   return (
     <Text
-      style={[
-        { color : darkColor},
-        type === 'default' ? styles.default : undefined,
-        type === 'title' ? styles.title : undefined,
-        type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
-        type === 'subtitleAuth' ? styles.subtitle : undefined,
-        type === 'subtitle' ? styles.subtitle : undefined,
-        type === 'link' ? styles.link : undefined,
-        style,
-      ]}
+      style={[styles.default, styles[type], style]}
       {...rest}
     />
   );
@@ -33,22 +20,34 @@ export function ThemedText({
 
 const styles = StyleSheet.create({
   default: {
-    fontSize: 16,
-    lineHeight: 24,
+    fontFamily: "FunnelSans-Regular",
+    color: Theme.text,
+    fontSize: 24,
+    marginTop: 14,
   },
-  defaultSemiBold: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '600',
+  profileInitials: {
+    fontSize: 28,
+    marginTop: 14,
+  },
+  section: {
+    fontSize: 24,
+    marginTop: 14,
   },
   title: {
     fontSize: 38,
     fontWeight: 'bold',
   },
-  subtitleAuth: {
+  authTitle: {
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: "center",
+    marginBottom: 30,
+  },
+  authSubtitle: {
+    fontSize: 18,
+    marginBottom: 36,
+    color: 'white',
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 20,

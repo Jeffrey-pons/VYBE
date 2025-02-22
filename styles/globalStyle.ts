@@ -32,15 +32,16 @@ const globalStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  TextButtonStyle: {
+    color: "black",
+    fontFamily: "FunnelSans-Regular",
+    fontSize: 20,
+    // fontWeight: 'bold',
+  },
   logoAuthStyle: {
     width: 150,  
     height: 150,  
     resizeMode: "contain",  
-  },
-  headerTextStyle: {
-    fontFamily: "FunnelSans-Regular",
-    marginBottom: 30,
-    fontSize: 30,
   },
   input: {
     height: 50,
@@ -67,13 +68,6 @@ const globalStyles = StyleSheet.create({
     textDecorationLine: "underline",
     fontFamily: "FunnelSans-Regular"
   },
-  subtitleAuthStyle: {
-    fontSize: 18,
-    marginBottom: 36,
-    color: 'white',
-    textAlign: 'center',
-     fontFamily: "FunnelSans-Regular"
-  }
 });
 
 export default globalStyles;

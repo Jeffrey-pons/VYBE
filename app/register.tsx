@@ -20,8 +20,8 @@ const RegisterScreen: React.FC = () => {
 
   const handleSignUp = async () => {
     try {
-      await registerUser(email, password);
-      if (isMounted) {
+      const response = await registerUser(email, password);
+      if (isMounted && response) {
         Alert.alert("Succès", "Compte créé avec succès !");
         router.replace("/login");
       }
@@ -40,7 +40,7 @@ const RegisterScreen: React.FC = () => {
         style={globalStyles.logoAuthStyle}
         source={require('../assets/images/icons/icon_register.png')}
       />
-      <ThemedText type="subtitleAuth" style={globalStyles.headerTextStyle}>Inscris-toi !</ThemedText>
+      <ThemedText type="authTitle">Inscris-toi !</ThemedText>
 
       <View style={styles.rowContainer}>
         <TextInput
@@ -58,7 +58,6 @@ const RegisterScreen: React.FC = () => {
         // onChangeText={setLastname}
         />
       </View>
-
       <TextInput
         style={globalStyles.input}
         placeholder="Email"
@@ -67,7 +66,6 @@ const RegisterScreen: React.FC = () => {
         onChangeText={setEmail}
         keyboardType="email-address"
       />
-
       <TextInput
         style={globalStyles.input}
         placeholder="Téléphone"
@@ -75,7 +73,6 @@ const RegisterScreen: React.FC = () => {
         // value={phone}
         // onChangeText={setPhone}
       />
-
       <TextInput
         style={globalStyles.input}
         placeholder="Mot de passe"
@@ -84,14 +81,12 @@ const RegisterScreen: React.FC = () => {
         value={password}
         onChangeText={setPassword}
       />
-
       <Button 
         buttonStyle={globalStyles.buttonStyle} 
         title="S'inscrire"
         titleStyle={globalStyles.titleStyle} 
         onPress={handleSignUp} 
       />
-
       <Text style={globalStyles.footerAuthTextStyle}>Vous avez déjà un compte ?</Text>
       <Text style={globalStyles.footerAuthLinkStyle} onPress={() => router.replace("/login")}>
         Connectez-vous ici

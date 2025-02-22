@@ -1,5 +1,5 @@
 import { PropsWithChildren, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity , View} from 'react-native';
 import { Theme } from '@/constants/Theme';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -17,14 +17,15 @@ export function Collapsible({ children, title }: PropsWithChildren & { title: st
         activeOpacity={0.8}>
         <IconSymbol
           name="chevron.right"
-          size={18}
+          size={22}
           weight="medium"
           color={Theme.text}
-          style={{ transform: [{ rotate: isOpen ? '90deg' : '0deg' }] }}
+          style={{ transform: [{ rotate: isOpen ? '90deg' : '0deg' }], marginTop: 14 }}
         />
 
-        <ThemedText type="defaultSemiBold">{title}</ThemedText>
+        <ThemedText type="default" style={styles.title}>{title}</ThemedText>
       </TouchableOpacity>
+      <View style={styles.separator} />
       {isOpen && <ThemedText style={styles.content}>{children}</ThemedText>}
     </ThemedText>
   );
@@ -39,5 +40,14 @@ const styles = StyleSheet.create({
   content: {
     marginTop: 6,
     marginLeft: 24,
+  },
+  title: {
+    flex: 1, 
+  },
+  separator: {
+    height: 1, 
+    backgroundColor: '#ddd', 
+    width: '100%',
+    marginTop: 5,
   },
 });
