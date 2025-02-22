@@ -4,6 +4,8 @@ import { Button } from "react-native-elements";
 import { router } from "expo-router";
 import globalStyles from "@/styles/globalStyle"; 
 import { loginUser } from "@/services/authService";
+import { ThemedText } from "@/components/ThemedText";
+
 
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -29,7 +31,7 @@ const LoginScreen: React.FC = () => {
         style={globalStyles.logoAuthStyle}
         source={require('../assets/images/icons/icon_login.png')}
       />
-      <Text style={globalStyles.headerTextStyle}>Connecte toi !</Text>
+      <ThemedText type="subtitleAuth" style={globalStyles.headerTextStyle}>Connecte toi !</ThemedText>
 
 
           <TextInput

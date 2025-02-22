@@ -2,6 +2,7 @@ import { Text, View, Image, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 import { Button } from "react-native-elements";
 import globalStyles from "@/styles/globalStyle";
+import { ThemedText } from "@/components/ThemedText";
 
 const WelcomeScreen = () => {
     return (
@@ -10,7 +11,7 @@ const WelcomeScreen = () => {
         style={styles.logoHomePage}
         source={require('../assets/images/logos/VYBE_logo_white_transparent_home.png')}
       />
-      <Text style={globalStyles.titleWhiteStyle}>TROUVE LES{'\n'}ÉVÈNEMENTS{'\n'}RIEN QUE POUR TOI</Text>
+      <ThemedText type="title"style={globalStyles.titleWhiteStyle}>TROUVE LES{'\n'}ÉVÈNEMENTS{'\n'}RIEN QUE POUR TOI</ThemedText>
         <Link href={"/login"} asChild>
             <Button 
             buttonStyle={globalStyles.buttonStyle} 

@@ -4,6 +4,7 @@ import { Button } from "react-native-elements";
 import { router } from "expo-router";
 import globalStyles from "@/styles/globalStyle";
 import { registerUser } from "@/services/authService";
+import { ThemedText } from "@/components/ThemedText";
 
 const RegisterScreen: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -39,7 +40,7 @@ const RegisterScreen: React.FC = () => {
         style={globalStyles.logoAuthStyle}
         source={require('../assets/images/icons/icon_register.png')}
       />
-      <Text style={globalStyles.headerTextStyle}>Inscris-toi !</Text>
+      <ThemedText type="subtitleAuth" style={globalStyles.headerTextStyle}>Inscris-toi !</ThemedText>
 
       <View style={styles.rowContainer}>
         <TextInput

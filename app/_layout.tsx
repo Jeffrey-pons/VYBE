@@ -4,16 +4,13 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { loadFonts } from '@/utils/fontsUtils';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
-  //Chargement des polices
   useEffect(() => {
     const loadAppFonts = async () => {
       try {
@@ -32,7 +29,7 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={DarkTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="login"/>

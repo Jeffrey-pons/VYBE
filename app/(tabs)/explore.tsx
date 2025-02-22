@@ -4,7 +4,6 @@ import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 
 export default function TabTwoScreen() {
@@ -19,9 +18,9 @@ export default function TabTwoScreen() {
           style={styles.headerImage}
         />
       }>
-      <ThemedView style={styles.titleContainer}>
+      <ThemedText style={styles.titleContainer}>
         <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
+      </ThemedText>
       <ThemedText>This app includes example code to help you get started.</ThemedText>
       <Collapsible title="File-based routing">
         <ThemedText>
@@ -68,7 +67,7 @@ export default function TabTwoScreen() {
       <Collapsible title="Light and dark mode components">
         <ThemedText>
           This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
+          <ThemedText type="defaultSemiBold">useColorSchems</ThemedText> hook lets you inspect
           what the user's current color scheme is, and so you can adjust UI colors accordingly.
         </ThemedText>
         <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">

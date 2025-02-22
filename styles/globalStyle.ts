@@ -3,10 +3,8 @@ const { width } = Dimensions.get('window');
 const globalStyles = StyleSheet.create({
   
   titleWhiteStyle: {
-    color: "#fff",
     fontWeight: "bold",
     fontFamily: "Fugaz-One",
-    fontSize: 39,
     textAlign: "center",
   },
   buttonStyle: {
@@ -40,12 +38,9 @@ const globalStyles = StyleSheet.create({
     resizeMode: "contain",  
   },
   headerTextStyle: {
-    fontSize: 30,
-    fontWeight: "bold",
-    marginBottom: 30,
-    color: "#fff", 
     fontFamily: "FunnelSans-Regular",
-    textAlign: "center",
+    marginBottom: 30,
+    fontSize: 30,
   },
   input: {
     height: 50,
