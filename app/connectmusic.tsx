@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, Image } from 'react-native';
 import { Button } from 'react-native-elements';
 import ProgressBar from '@/components/ProgressBar';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -15,7 +15,7 @@ const MusicScreen = () => {
   };
 
 return (
-    <View style={styles.container}>
+    <View style={globalStyles.container}>
       <ProgressBar step={2} totalSteps={3} />
       <Image
         style={globalStyles.logoAuthStyle}
@@ -50,14 +50,5 @@ return (
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: "center",  
-},
-});
 
 export default MusicScreen;

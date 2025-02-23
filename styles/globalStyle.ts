@@ -1,11 +1,16 @@
 import { StyleSheet, Dimensions } from 'react-native';
 const { width } = Dimensions.get('window');
 const globalStyles = StyleSheet.create({
-  
-  titleWhiteStyle: {
-    fontWeight: "bold",
-    fontFamily: "Fugaz-One",
-    textAlign: "center",
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  containerX: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 20,
   },
   buttonStyle: {
     backgroundColor: "white",
@@ -27,6 +32,7 @@ const globalStyles = StyleSheet.create({
   titleStyle: {
     color: "black",
     fontFamily: "FunnelSans-Regular",
+    fontWeight: '500',
   },
   titleSecondStyle: {
     fontSize: 16,

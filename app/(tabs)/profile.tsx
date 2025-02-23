@@ -25,7 +25,7 @@ const getInitials = (firstName: string, lastName: string) => {
   return (
     <ScrollView>
       <Logo />
-      <View style={styles.container}>
+      <View style={globalStyles.containerX}>
         <View style={styles.centeredContainer}>
           <View style={styles.avatarContainer}>
             <ThemedText type="title">
@@ -36,38 +36,48 @@ const getInitials = (firstName: string, lastName: string) => {
         </View>
 
         <Collapsible title="Coordonnées">
-          <ThemedText>Prénom : </ThemedText>
-          <ThemedText>Nom : </ThemedText>
-          <ThemedText>Email : </ThemedText>
+          <View>
+            <View style={styles.subContainerCoordonees}>
+              <ThemedText type="text">Nom : </ThemedText>
+              <ThemedText type="text">Prénom : </ThemedText>
+            </View>
+            <ThemedText type="text">Email : </ThemedText>
+            <ThemedText type="text">Numéro : </ThemedText>
+            <ThemedText type="text">Mot de passe : </ThemedText>
+            <View style={styles.buttonContainer}>
+              <Button title="Modifier" buttonStyle={styles.buttonUpdatedProfileStyle} titleStyle={styles.titleUpdatedProfileStyle}></Button>
+            </View>
+          </View>
+
         </Collapsible>
 
         <Collapsible title="Localisation">
-          <ThemedText>Ville Actuelle : {'Détection en cours...'}</ThemedText>
+          <ThemedText type="text">Ville Actuelle : {'Détection en cours...'}</ThemedText>
           {/* <LocationComponent onCityDetected={handleCityDetected} /> */}
         </Collapsible>
 
-        <Collapsible title="Confidentialité">
-          <ThemedText>{"Public"}</ThemedText>
+        <Collapsible title="Connecte ta musique">
+          <ThemedText type="text">{"Public"}</ThemedText>
         </Collapsible>
 
         <Collapsible title="Notifications">
-          <ThemedText>{ 0} points</ThemedText>
+          <ThemedText type="text">{ 0} points</ThemedText>
         </Collapsible>
 
         <Collapsible title="Lieu favoris">
-          <ThemedText>{ 0} points</ThemedText>
+          <ThemedText type="text">Aucun Lieu favoris n'a encore été ajouté.</ThemedText>
         </Collapsible>
 
-        <Collapsible title="Paramètres">
-          <ThemedText>{ 0} points</ThemedText>
+        <Collapsible title="Politique de confidentialité">
+          <ThemedText type="text">{ 0} points</ThemedText>
         </Collapsible>
 
         <Collapsible title="CGU">
-          <ThemedText>{"Aucune"}</ThemedText>
+          <ThemedText type="text">{"Aucune"}</ThemedText>
         </Collapsible>
 
         <Collapsible title="F.A.Q">
-          <ThemedText>{ "Aucun"}</ThemedText>
+          <ThemedText type="text">{ "Aucun"}</ThemedText>
         </Collapsible>
 
         <View style={styles.subcontainer}>
@@ -80,10 +90,10 @@ const getInitials = (firstName: string, lastName: string) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: "90%",
-    margin: "auto"
-  },
+  // container: {
+  //   width: "90%",
+  //   margin: "auto"
+  // },
   subcontainer: {
     paddingTop: 20, 
     width: "70%",
@@ -99,16 +109,10 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     borderWidth: 2,
-    borderColor: Theme.text,
+    borderColor: Theme.colors.text,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
-  },
-  avatarText: {
-    color: '#fff',
-    fontSize: 40,
-    fontFamily: "FunnelSans-Regular",
-    marginBottom: 2,
   },
   buttonDeletedeStyle: {
     backgroundColor: "grey",
@@ -123,7 +127,31 @@ const styles = StyleSheet.create({
   },
   titleDeletedStyle: {
     fontFamily: "FunnelSans-Regular",
-  }
+  },
+  buttonUpdatedProfileStyle: {
+    backgroundColor: "white",
+    borderRadius: 100,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingRight: 40,
+    paddingLeft: 40,
+    marginBottom: 16,
+    marginTop: 10,
+  },
+  titleUpdatedProfileStyle: {
+    color: "black",
+    fontFamily: "FunnelSans-Regular",
+  },
+  buttonContainer: {
+    alignItems: 'center',
+    textAlign: 'center',
+    marginTop: 10, 
+  },
+  subContainerCoordonees: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    color: "red",
+  },
 });
 
 export default ProfileScreen;

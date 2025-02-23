@@ -1,18 +1,13 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { StyleSheet, Platform, View, ScrollView } from 'react-native';
+import globalStyles from '@/styles/globalStyle';
 import { ThemedText } from '@/components/ThemedText';
+import Logo from '@/components/LogoHeader';
 
 export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#FFFFFF', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('../../assets/images/logos/VYBE_logo_black_transparent.png')}
-          style={styles.reactLogo}
-        />
-      }>
+<ScrollView>
+  <Logo/>
+  <View style={globalStyles.containerX}>
       <ThemedText style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>
       </ThemedText>
@@ -47,7 +42,8 @@ export default function HomeScreen() {
           <ThemedText type="default">app-example</ThemedText>.
         </ThemedText>
       </ThemedText>
-    </ParallaxScrollView>
+      </View>
+      </ScrollView>
   );
 }
 

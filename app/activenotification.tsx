@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Switch, Image, TouchableOpacity } from 'react-native';
+import React, { useState} from 'react';
+import { View, StyleSheet, Switch, Image, TouchableOpacity } from 'react-native';
 import ProgressBar from '@/components/ProgressBar';
 import { router } from 'expo-router';
 import globalStyles from '@/styles/globalStyle';
@@ -18,7 +18,7 @@ const NotificationScreen = () => {
     router.replace('/(tabs)'); 
   };
   return (
-    <View style={styles.container}>
+    <View style={globalStyles.container}>
       <ProgressBar step={3} totalSteps={3} />
       <Image
         style={globalStyles.logoAuthStyle}
@@ -42,14 +42,5 @@ const NotificationScreen = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: "center",  
-  },
-});
 
 export default NotificationScreen;

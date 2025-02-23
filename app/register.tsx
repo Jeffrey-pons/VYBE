@@ -35,7 +35,7 @@ const RegisterScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={globalStyles.container}>
       <Image
         style={globalStyles.logoAuthStyle}
         source={require('../assets/images/icons/icon_register.png')}
@@ -96,12 +96,6 @@ const RegisterScreen: React.FC = () => {
 };
 const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
   rowContainer: {
     flexDirection: "row",
     justifyContent: "space-between",

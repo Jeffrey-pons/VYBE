@@ -2,7 +2,7 @@ import { Text, type TextProps, StyleSheet } from 'react-native';
 import { Theme } from '@/constants/Theme';
 
 export type ThemedTextProps = TextProps & {
-  type?: 'default' | 'title' | 'section' | 'authTitle' | 'authSubtitle' | 'subtitle' | 'link' | 'profileInitials';
+  type?: 'default' | 'title' | 'text' | 'sectionProfile' | 'authTitle' | 'authSubtitle' | 'subtitle' | 'link' | 'profileInitials';
 };
 
 export function ThemedText({
@@ -20,42 +20,44 @@ export function ThemedText({
 
 const styles = StyleSheet.create({
   default: {
-    fontFamily: "FunnelSans-Regular",
-    color: Theme.text,
-    fontSize: 24,
-    marginTop: 14,
+    fontFamily: Theme.typography.fontFamily,
+    color: Theme.colors.text,
+    fontSize: Theme.typography.kilo.fontSize,
+    marginTop: 14, // Exception
   },
   profileInitials: {
-    fontSize: 28,
-    marginTop: 14,
+    fontSize: Theme.typography.megaBold.fontSize,
   },
-  section: {
-    fontSize: 24,
-    marginTop: 14,
+  sectionProfile: {
+    fontSize: Theme.typography.kilo.fontSize,
   },
   title: {
-    fontSize: 38,
-    fontWeight: 'bold',
+    fontSize: Theme.typography.giga.fontSize,
+    fontWeight: Theme.typography.giga.fontWeight,
+  },
+  text: {
+    color: Theme.colors.text,
+    fontSize: Theme.typography.deca.fontSize,
   },
   authTitle: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    textAlign: "center",
-    marginBottom: 30,
+    fontSize: Theme.typography.mega.fontSize,
+    fontWeight: Theme.typography.megaMedium.fontWeight, 
+    textAlign: Theme.alignments.textCenter.textAlign,
+    marginBottom: 30,// Exception
   },
   authSubtitle: {
-    fontSize: 18,
-    marginBottom: 36,
-    color: 'white',
-    textAlign: 'center',
+    fontSize: Theme.typography.base.fontSize,
+    marginBottom: 36,// Exception
+    color: Theme.colors.text,
+    textAlign: Theme.alignments.textCenter.textAlign,
   },
   subtitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: Theme.typography.deca.fontSize,
+    fontWeight: Theme.typography.decaBold.fontWeight,
   },
   link: {
-    lineHeight: 30,
-    fontSize: 16,
-    color: '#0a7ea4',
+    lineHeight: Theme.typography.hecto.lineHeight,
+    fontSize: Theme.typography.deci.fontSize,
+    color: Theme.colors.violetShade1,
   },
 });

@@ -9,7 +9,7 @@ import { ThemedText } from '@/components/ThemedText';
 
 const LocationScreen = () => {
   return (
-    <View style={styles.container}>
+    <View style={globalStyles.container}>
       <ProgressBar step={1} totalSteps={3} />
       <Image
         style={globalStyles.logoAuthStyle}
@@ -40,12 +40,6 @@ const LocationScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: "center",
-  },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',

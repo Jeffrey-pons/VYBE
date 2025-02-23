@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextInput, View, Text, StyleSheet, Image, Alert} from "react-native";
+import { TextInput, View, Text, Image, Alert} from "react-native";
 import { Button } from "react-native-elements";
 import { router } from "expo-router";
 import globalStyles from "@/styles/globalStyle"; 
@@ -27,7 +27,7 @@ const LoginScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={globalStyles.container}>
       <Image
         style={globalStyles.logoAuthStyle}
         source={require('../assets/images/icons/icon_login.png')}
@@ -60,14 +60,5 @@ const LoginScreen: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-});
 
 export default LoginScreen;

@@ -9,7 +9,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Theme.text, 
+        tabBarActiveTintColor: Theme.colors.text, 
         headerShown: false,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({

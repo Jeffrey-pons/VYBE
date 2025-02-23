@@ -19,11 +19,11 @@ export function Collapsible({ children, title }: PropsWithChildren & { title: st
           name="chevron.right"
           size={22}
           weight="medium"
-          color={Theme.text}
+          color={Theme.colors.text}
           style={{ transform: [{ rotate: isOpen ? '90deg' : '0deg' }], marginTop: 14 }}
         />
 
-        <ThemedText type="default" style={styles.title}>{title}</ThemedText>
+        <ThemedText type="sectionProfile" style={styles.title}>{title}</ThemedText>
       </TouchableOpacity>
       <View style={styles.separator} />
       {isOpen && <ThemedText style={styles.content}>{children}</ThemedText>}

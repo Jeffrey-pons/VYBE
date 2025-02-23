@@ -1,13 +1,19 @@
 import React from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
 
 const Logo = () => {
+  const handleLogoPress = () => {
+        router.replace('/(tabs)'); 
+  }
   return (
-      <Image
+    <TouchableOpacity onPress={handleLogoPress} activeOpacity={0.7}>
+      <Image 
         source={require('../assets/images/logos/VYBE_logo_white_transparent.png')}
         resizeMode="contain"
         style={styles.logo}
       />
+    </TouchableOpacity>
   );
 };
 
