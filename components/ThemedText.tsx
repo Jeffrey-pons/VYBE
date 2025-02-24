@@ -59,5 +59,6 @@ const styles = StyleSheet.create({
     lineHeight: Theme.typography.hecto.lineHeight,
     fontSize: Theme.typography.deci.fontSize,
     color: Theme.colors.violetShade1,
+    textDecorationLine: "underline"
   },
 });

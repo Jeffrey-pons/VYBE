@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   content: {
     marginTop: 6,
-    marginLeft: 24,
+    padding: 18,
   },
   title: {
     flex: 1, 

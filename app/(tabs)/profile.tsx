@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Switch, StyleSheet } from 'react-native';
-import { router } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText'; 
 import { Button } from 'react-native-elements';
 import { Collapsible } from '@/components/Collapsible';
 import { Theme } from '@/constants/Theme';
 import Logo from '@/components/LogoHeader';
 import globalStyles from '@/styles/globalStyle';
+import Entypo from '@expo/vector-icons/Entypo';
+import Fontisto from '@expo/vector-icons/Fontisto';
 import { Link } from 'expo-router';
-
 
 const ProfileScreen: React.FC = () => {
   const [isPushEnabled, setIsPushEnabled] = useState<boolean>(true);
@@ -40,7 +40,7 @@ const getInitials = (firstName: string, lastName: string) => {
         </View>
 
         <Collapsible title="Coordonnées">
-          <View>
+          <View style={styles.containercoord}>
             <View style={styles.subContainerCoordonees}>
               <ThemedText type="text">Nom : </ThemedText>
               <ThemedText type="text">Prénom : </ThemedText>
@@ -52,7 +52,6 @@ const getInitials = (firstName: string, lastName: string) => {
               <Button title="Modifier" buttonStyle={styles.buttonUpdatedProfileStyle} titleStyle={styles.titleUpdatedProfileStyle}></Button>
             </View>
           </View>
-
         </Collapsible>
 
         <Collapsible title="Localisation">
@@ -61,7 +60,28 @@ const getInitials = (firstName: string, lastName: string) => {
         </Collapsible>
 
         <Collapsible title="Connecte ta musique">
-          <ThemedText type="text">{"Public"}</ThemedText>
+        <View>
+          <ThemedText type="text">
+          Connectez votre compte Spotify ou Apple Music pour améliorer l'expérience.
+          On te recommandera des évènements qui correspondent à tes goûts.
+        </ThemedText>
+        </View>
+        <View style={styles.musicButtonsContainer}>
+        <Button 
+          title="  Spotify" 
+          onPress={() => alert('Spotify connecté')} 
+          icon={<Entypo name="spotify" size={24} color="black" />} 
+          buttonStyle={globalStyles.buttonStyle}
+          titleStyle={globalStyles.titleStyle}
+        />
+        <Button 
+          title="  Apple Music" 
+          onPress={() => alert('Apple Music connecté')} 
+          icon={<Fontisto name="applemusic" size={24} color="black" />} 
+          buttonStyle={globalStyles.buttonStyle}
+          titleStyle={globalStyles.titleStyle}
+        />
+        </View>
         </Collapsible>
 
         <Collapsible title="Notifications">
@@ -125,16 +145,18 @@ const getInitials = (firstName: string, lastName: string) => {
         </Collapsible>
 
         <Collapsible title="Politique de confidentialité">
-          <ThemedText type="text">
-            Nous collectons certaines données personnelles pour améliorer votre expérience. 
+         <View>
+          <ThemedText type="text">Nous collectons certaines données personnelles pour améliorer votre expérience. 
             Vos informations ne seront jamais partagées sans votre consentement. 
           </ThemedText>
             <Link href={'/privacy'} asChild>
             <ThemedText type='link'>Lire la politique complète</ThemedText>
             </Link>
+         </View>
         </Collapsible>
 
         <Collapsible title="CGU">
+        <View>
           <ThemedText type="text">
             L'utilisation de notre application implique l'acceptation de nos conditions générales d'utilisation. 
             Nous nous engageons à garantir une expérience utilisateur fluide et sécurisée.
@@ -142,13 +164,56 @@ const getInitials = (firstName: string, lastName: string) => {
             <Link href={'/terms-of-service'} asChild>
             <ThemedText type='link'>Lire la politique complète</ThemedText>
             </Link>
+         </View>
         </Collapsible>
 
         <Collapsible title="F.A.Q">
-          <ThemedText type="text">{ "Aucun"}</ThemedText>
-        </Collapsible>
+        <View style={styles.faqBox}>
+          <View style={styles.faqItem}>
+            <Collapsible title="Comment fonctionne l'application ?">
+              <ThemedText type="text" style={styles.faqText}>
+                Notre application vous permet de découvrir et réserver des événements en fonction de vos préférences musicales et géographiques.
+              </ThemedText>
+            </Collapsible>
+          </View>
 
-        <View style={styles.subcontainer}>
+          <View style={styles.faqItem}>
+            <Collapsible title="Comment activer les notifications ?">
+              <ThemedText type="text" style={styles.faqText}>
+                Vous pouvez activer ou désactiver les notifications dans la section "Notifications" de votre profil.
+              </ThemedText>
+            </Collapsible>
+          </View>
+
+          <View style={styles.faqItem}>
+            <Collapsible title="Puis-je modifier mes informations personnelles ?">
+              <ThemedText type="text" style={styles.faqText}>
+                Oui, rendez-vous dans la section "Coordonnées" pour mettre à jour votre nom, email et numéro de téléphone.
+              </ThemedText>
+            </Collapsible>
+          </View>
+
+          <View style={styles.faqItem}>
+            <Collapsible title="Comment supprimer mon compte ?">
+              <ThemedText type="text" style={styles.faqText}>
+                Vous pouvez supprimer votre compte en cliquant sur le bouton "Supprimer mon compte" dans les paramètres du profil.
+              </ThemedText>
+            </Collapsible>
+          </View>
+
+          <View style={styles.faqItem}>
+            <Collapsible title="L'application est-elle gratuite ?">
+              <ThemedText type="text" style={styles.faqText}>
+                Oui, l'application est gratuite, mais certains événements peuvent nécessiter un billet payant.
+              </ThemedText>
+            </Collapsible>
+          </View>
+        </View>
+      </Collapsible>
+
+
+
+        <View style={styles.containerButtonProfile}>
         <Button title="Se déconnecter" buttonStyle={globalStyles.buttonStyle} titleStyle={globalStyles.TextButtonStyle}  />
         <Button title="Supprimer mon compte" buttonStyle={styles.buttonDeletedeStyle} titleStyle={styles.titleDeletedStyle} />
         </View>
@@ -158,14 +223,13 @@ const getInitials = (firstName: string, lastName: string) => {
 };
 
 const styles = StyleSheet.create({
-  subcontainer: {
+  containerButtonProfile: {
     paddingTop: 20, 
     width: "70%",
     margin: "auto"
 
   },
   centeredContainer: {
-    justifyContent: 'center',
     alignItems: 'center',
   },
   avatarContainer: {
@@ -207,15 +271,18 @@ const styles = StyleSheet.create({
     fontFamily: "FunnelSans-Regular",
   },
   buttonContainer: {
+    width: '100%', 
     alignItems: 'center', 
-    justifyContent: 'center', 
-    flexDirection: 'row', 
-    alignSelf: 'center', 
-    width: '100%',  
+    justifyContent: 'center',
     marginTop: 10, 
+    display: 'flex',
   },
   subContainerCoordonees: {
     flexDirection: "row",
+  },
+  containercoord: {
+    width: '100%', 
+    marginTop: 10, 
   },
   //////
   infoBox: {
@@ -254,8 +321,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     display: 'flex',
     margin: 'auto',
-
-
   },
   sectionDescription: {
     color: Theme.colors.silver,
@@ -276,6 +341,34 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 'auto',
   },
+  ///////////////
+  faqBox: {
+    width: '95%',
+    display: 'flex',
+    margin: 'auto',
+  },
+  faqItem: {
+    padding: 14,
+    borderRadius: 8,
+    marginVertical: 8, 
+    borderWidth: 1,
+    borderColor: "#555",
+  },
+  
+  faqText: {
+    color: Theme.colors.violetShade1, 
+    fontSize: Theme.typography.deca.fontSize,
+    lineHeight: Theme.typography.deca.lineHeight,
+  },
+  musicButtonsContainer: {
+    flexDirection: "column", 
+    alignItems: "center", 
+    justifyContent: "center",
+    width: "100%",
+    paddingTop: 10,
+    gap: 12, 
+  },
+  
 });
 
 export default ProfileScreen;

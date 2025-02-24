@@ -4,74 +4,69 @@ import { ThemedText } from "@/components/ThemedText";
 import { Theme } from "@/constants/Theme";
 import { Button } from "react-native-elements";
 import { router } from "expo-router";
+import Logo from "@/components/LogoHeader";
+import globalStyles from "@/styles/globalStyle";
 
 const TermsOfServiceScreen = () => {
   return (
-    <ScrollView style={styles.container}>
-      <ThemedText type="title" style={styles.title}>
-        Conditions Générales d'Utilisation (CGU)
-      </ThemedText>
+    <ScrollView>
+      <Logo/>
+      <View style={globalStyles.containerX}>
+        <ThemedText type="title">
+        Conditions Générales d'Utilisation
+        </ThemedText>
 
-      <ThemedText type="text" style={styles.sectionTitle}>1. Introduction</ThemedText>
-      <ThemedText type="text">
+        <ThemedText type="text" style={styles.sectionTitle}>1. Introduction</ThemedText>
+        <ThemedText type="text">
         En utilisant notre application, vous acceptez nos conditions générales d'utilisation. 
         Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser nos services.
-      </ThemedText>
+        </ThemedText>
 
-      <ThemedText type="text" style={styles.sectionTitle}>2. Accès et utilisation des services</ThemedText>
-      <ThemedText type="text">
-        Vous devez être âgé d'au moins 16 ans pour utiliser notre application. Vous êtes responsable 
-        de l'exactitude des informations que vous fournissez.
-      </ThemedText>
+        <ThemedText type="text" style={styles.sectionTitle}>2. Accès au service</ThemedText>
+        <ThemedText type="text">
+        Vybe est accessible à toute personne majeure ou mineure avec autorisation parentale. L'utilisateur est responsable de l'utilisation de son compte.
+        </ThemedText>
 
-      <ThemedText type="text" style={styles.sectionTitle}>3. Données personnelles</ThemedText>
-      <ThemedText type="text">
-        Nous collectons certaines informations personnelles pour améliorer votre expérience. 
-        Consultez notre politique de confidentialité pour en savoir plus.
-      </ThemedText>
+        <ThemedText type="text" style={styles.sectionTitle}>3. Utilisation de l'application</ThemedText>
+        <ThemedText type="text">
+        L'utilisateur s'engage à :
+      - Fournir des informations exactes lors de l'inscription; 
+      - Respecter les autres utilisateurs et ne pas diffuser de contenu offensant;
+      - Ne pas utiliser l'application à des fins illégales;
+        </ThemedText>
 
-      <ThemedText type="text" style={styles.sectionTitle}>4. Responsabilité</ThemedText>
-      <ThemedText type="text">
+        <ThemedText type="text" style={styles.sectionTitle}>4. Responsabilité</ThemedText>
+        <ThemedText type="text">
         Nous nous efforçons de garantir un service fiable mais nous ne sommes pas responsables des 
-        interruptions ou erreurs indépendantes de notre volonté.
-      </ThemedText>
+        interruptions ou erreurs indépendantes de notre volonté.        </ThemedText>
 
-      <ThemedText type="text" style={styles.sectionTitle}>5. Modification des CGU</ThemedText>
-      <ThemedText type="text">
-        Nous nous réservons le droit de modifier ces CGU à tout moment. Les mises à jour seront publiées 
-        dans cette section.
-      </ThemedText>
+        <ThemedText type="text" style={styles.sectionTitle}>5. Propriété intellectuelle</ThemedText>
+        <ThemedText type="text">
+        Tout le contenu de Vybe (logo, design, textes) est protégé par le droit d'auteur et ne peut être utilisé sans autorisation.</ThemedText>
 
-      <View style={styles.buttonContainer}>
-        <Button title="Retour" buttonStyle={styles.button} onPress={() => router.back()} />
+        <ThemedText type="text" style={styles.sectionTitle}>6. Modification des CGU</ThemedText>
+        <ThemedText type="text">
+        Vybe se réserve le droit de modifier ces CGU à tout moment. Les utilisateurs seront informés des mises à jour.</ThemedText>
+
+        <ThemedText type="text" style={styles.sectionTitle}>7. Contact</ThemedText>
+        <ThemedText type="text">
+        Pour toute question relative aux CGU, contactez-nous à : <b>support@vybe.com</b></ThemedText>
+
+        <View style={styles.buttonContainer}>
+          <Button title="Retour" buttonStyle={globalStyles.buttonStyle} titleStyle={globalStyles.TextButtonStyle} onPress={() => router.back()} />
+        </View>
       </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Theme.colors.background,
-    padding: 20,
-  },
-  title: {
-    textAlign: "center",
-    marginBottom: 20,
-  },
   sectionTitle: {
-    fontWeight: "bold",
-    marginTop: 15,
+    marginTop: 35,
   },
   buttonContainer: {
-    marginTop: 20,
+    marginTop: 35,
     alignItems: "center",
-  },
-  button: {
-    backgroundColor: Theme.colors.primary,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
   },
 });
 
