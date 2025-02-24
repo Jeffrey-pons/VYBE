@@ -44,6 +44,8 @@ const globalStyles = StyleSheet.create({
     fontSize: 20,
     // fontWeight: 'bold',
   },
+  
+  // Page Auth 
   logoAuthStyle: {
     width: 150,  
     height: 150,  

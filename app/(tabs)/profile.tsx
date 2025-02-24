@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, ActivityIndicator, Alert, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ScrollView, View, Switch, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText'; 
 import { Button } from 'react-native-elements';
@@ -8,8 +7,13 @@ import { Collapsible } from '@/components/Collapsible';
 import { Theme } from '@/constants/Theme';
 import Logo from '@/components/LogoHeader';
 import globalStyles from '@/styles/globalStyle';
+import { Link } from 'expo-router';
 
-const ProfileScreen = () => {
+
+const ProfileScreen: React.FC = () => {
+  const [isPushEnabled, setIsPushEnabled] = useState<boolean>(true);
+  const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(true);
+  const [isLastTicketsEnabled, setIsLastTicketsEnabled] = useState<boolean>(true);
 
 const getInitials = (firstName: string, lastName: string) => {
     const initials = [];
@@ -61,7 +65,59 @@ const getInitials = (firstName: string, lastName: string) => {
         </Collapsible>
 
         <Collapsible title="Notifications">
-          <ThemedText type="text">{ 0} points</ThemedText>
+        <View style={styles.infoBox}>
+        <ThemedText type="title" style={styles.infoTitle}>
+          On te tient au courant !
+        </ThemedText>
+        <ThemedText type="text" style={styles.infoDescription}>
+          Découvre les derniers évènements, les mises en vente de billets etc...
+        </ThemedText>
+        <Button title="ACTIVER LES NOTIFICATIONS" buttonStyle={styles.activateButton} titleStyle={styles.titleUpdatedProfileStyle}/>
+      </View>
+          <View style={styles.sectionNotification}>
+          <ThemedText type="title">Modification de tes évènements</ThemedText>
+          <ThemedText type="text" style={styles.sectionDescription}>
+          Programmation, horaire ou lieu, on te tient au courant s'il y a du changement
+        </ThemedText>
+        <View style={styles.separator} />
+        <View style={styles.switchRow}>
+          <ThemedText type="text">Push</ThemedText>
+          <Switch
+            trackColor={{ false: "#767577", true: Theme.colors.violet}}
+            thumbColor={isEmailEnabled ? Theme.colors.text : Theme.colors.text}
+            onValueChange={() => setIsPushEnabled(!isPushEnabled)}
+            value={isPushEnabled}
+          />
+        </View>
+        <View style={styles.separator} />
+        <View style={styles.switchRow}>
+          <ThemedText type="text">Email</ThemedText>
+          <Switch
+            trackColor={{ false: "#767577", true: Theme.colors.violet}}
+            thumbColor={isEmailEnabled ? Theme.colors.text : Theme.colors.text}
+            onValueChange={() => setIsEmailEnabled(!isEmailEnabled)}
+            value={isEmailEnabled}
+          />
+        </View>
+        <View style={styles.separator} />
+      </View>
+      <View style={styles.sectionNotification}>
+        <ThemedText type="title">Derniers billets disponibles à la vente</ThemedText>
+        <ThemedText type="text" style={styles.sectionDescription}>
+          Être au courant des disponibilités, dès que les places d'un évènement sont dispo à l'achat
+        </ThemedText>
+        <View style={styles.separator} />
+        <View style={styles.switchRow}>
+          <ThemedText type="text">Push</ThemedText>
+          <Switch
+            trackColor={{ false: "#767577", true: Theme.colors.violet}}
+            thumbColor={isEmailEnabled ? Theme.colors.text : Theme.colors.text}
+            onValueChange={() => setIsLastTicketsEnabled(!isLastTicketsEnabled)}
+            value={isLastTicketsEnabled}
+          />
+        </View>
+        <View style={styles.separator} />
+      </View>
         </Collapsible>
 
         <Collapsible title="Lieu favoris">
@@ -69,11 +125,23 @@ const getInitials = (firstName: string, lastName: string) => {
         </Collapsible>
 
         <Collapsible title="Politique de confidentialité">
-          <ThemedText type="text">{ 0} points</ThemedText>
+          <ThemedText type="text">
+            Nous collectons certaines données personnelles pour améliorer votre expérience. 
+            Vos informations ne seront jamais partagées sans votre consentement. 
+          </ThemedText>
+            <Link href={'/privacy'} asChild>
+            <ThemedText type='link'>Lire la politique complète</ThemedText>
+            </Link>
         </Collapsible>
 
         <Collapsible title="CGU">
-          <ThemedText type="text">{"Aucune"}</ThemedText>
+          <ThemedText type="text">
+            L'utilisation de notre application implique l'acceptation de nos conditions générales d'utilisation. 
+            Nous nous engageons à garantir une expérience utilisateur fluide et sécurisée.
+          </ThemedText>
+            <Link href={'/terms-of-service'} asChild>
+            <ThemedText type='link'>Lire la politique complète</ThemedText>
+            </Link>
         </Collapsible>
 
         <Collapsible title="F.A.Q">
@@ -90,10 +158,6 @@ const getInitials = (firstName: string, lastName: string) => {
 };
 
 const styles = StyleSheet.create({
-  // container: {
-  //   width: "90%",
-  //   margin: "auto"
-  // },
   subcontainer: {
     paddingTop: 20, 
     width: "70%",
@@ -143,14 +207,74 @@ const styles = StyleSheet.create({
     fontFamily: "FunnelSans-Regular",
   },
   buttonContainer: {
-    alignItems: 'center',
-    textAlign: 'center',
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    flexDirection: 'row', 
+    alignSelf: 'center', 
+    width: '100%',  
     marginTop: 10, 
   },
   subContainerCoordonees: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    color: "red",
+  },
+  //////
+  infoBox: {
+    backgroundColor: "black",
+    width: '95%',
+    padding: 16,
+    borderRadius: 10,
+    borderColor: 'white',
+    borderWidth: 1,
+    gap: 10,
+    display: 'flex',
+    textAlign: 'center',
+    margin: 'auto',
+  },
+  infoTitle: {
+    textAlign: "center",
+    marginBottom: 8,
+  },
+  infoDescription: {
+    textAlign: "center",
+    marginBottom: 12,
+    color: Theme.colors.silver,
+  },
+  activateButton: {
+    backgroundColor: Theme.colors.text,
+    color: Theme.colors.background,
+    paddingVertical: 10,
+    borderRadius: 20,
+    width: "80%",
+    textAlign: 'center',
+    margin: 'auto',
+  },
+  sectionNotification: {
+    padding: 16,
+    borderRadius: 10,
+    marginBottom: 20,
+    display: 'flex',
+    margin: 'auto',
+
+
+  },
+  sectionDescription: {
+    color: Theme.colors.silver,
+    marginBottom: 12,
+  },
+  switchRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: "#444",
+    width: '100%',
+    marginVertical: 10, 
+    display: 'flex',
+    textAlign: 'center',
+    margin: 'auto',
   },
 });
 
