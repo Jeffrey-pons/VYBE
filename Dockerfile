@@ -7,6 +7,6 @@ RUN npm install -g @expo/ngrok
 RUN npm install
 COPY . .
 
-EXPOSE 19000
+EXPOSE 8082
 
 CMD ["npx", "expo", "start", "--tunnel"]
