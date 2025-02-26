@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import { View, StyleSheet, Switch, Image, TouchableOpacity } from 'react-native';
+import { View, Switch, Image } from 'react-native';
 import ProgressBar from '@/components/ProgressBar';
 import { router } from 'expo-router';
 import globalStyles from '@/styles/globalStyle';

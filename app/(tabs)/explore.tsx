@@ -10,7 +10,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
 
 const FilterScreen: React.FC = () => {
-  const [search, setSearch] = useState('');
+  // const [search, setSearch] = useState('');
   const [date, setDate] = useState('');
   const [city, setCity] = useState('');
   const [keyword, setKeyword] = useState('');
@@ -57,14 +57,14 @@ const FilterScreen: React.FC = () => {
   };
 
   const filteredEvents = events.filter((event) => {
-    const matchesSearch = !search || (event.title.fr && event.title.fr.toLowerCase().includes(search.toLowerCase()));
+    // const matchesSearch = !search || (event.title.fr && event.title.fr.toLowerCase().includes(search.toLowerCase()));
     const matchesDate = !date || event.dateRange?.fr?.includes(date);
     const matchesCity = !city || (event.location?.city && event.location.city.toLowerCase() === city.toLowerCase());
     
     const matchesKeyword = !keyword || (
       event.keywords && Array.isArray(event.keywords.fr) && event.keywords.fr.some((k) => k.toLowerCase().includes(keyword.toLowerCase()))
     );
-    return matchesSearch && matchesDate && matchesCity && matchesKeyword;
+    // return matchesSearch && matchesDate && matchesCity && matchesKeyword;
     
   });  
 
@@ -183,26 +183,26 @@ const FilterScreen: React.FC = () => {
       />
        {selectedEvent && (
         <Modal visible={modalVisible} transparent animationType="none">
-          <View style={globalStyles.modalOverlay}>
-            <View style={globalStyles.modalContainer}>
+          <View >
+            <View >
               {selectedEvent.image && (
                 <Image 
                   source={{ uri: `${selectedEvent.image?.base || ''}${selectedEvent.image?.filename}` }}
                   style={styles.eventImageDetail}
                 />
               )}
-              <Text style={globalStyles.modalTitle}>{selectedEvent.title?.fr || 'Titre non disponible'}</Text>
-              <Text style={globalStyles.modalDate}>
+              <Text>{selectedEvent.title?.fr || 'Titre non disponible'}</Text>
+              <Text>
                 {selectedEvent.dateRange?.fr || 'Date non disponible'}
               </Text>
-              <Text style={globalStyles.modalDescription}>
+              <Text >
                 {selectedEvent.description?.fr || 'Aucune description disponible'}
               </Text>
-              <Text style={globalStyles.modalEventPrice}>
+              <Text >
                 {selectedEvent.price ? `${selectedEvent.price} €` : 'Prix non disponible'}
               </Text>
-              <TouchableOpacity style={globalStyles.closeModalButton} onPress={closeModal}>
-                <Text style={globalStyles.closeModalButtonText}>Fermer</Text>
+              <TouchableOpacity onPress={closeModal}>
+                <Text >Fermer</Text>
               </TouchableOpacity>
             </View>
           </View>

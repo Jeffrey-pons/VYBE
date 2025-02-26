@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import { Theme } from '@/constants/Theme';
 const { width } = Dimensions.get('window');
 const globalStyles = StyleSheet.create({
   container: {
@@ -13,8 +14,7 @@ const globalStyles = StyleSheet.create({
     padding: 20,
   },
   buttonStyle: {
-    backgroundColor: "white",
-    color: "white",
+    backgroundColor: Theme.colors.text,
     borderRadius: 100,
     paddingTop: 16,
     paddingBottom: 16,
@@ -23,26 +23,25 @@ const globalStyles = StyleSheet.create({
     marginBottom: 16,
   },
   buttonSecondStyle: {
-    backgroundColor: '#b36dff',
+    backgroundColor: Theme.colors.violet,
     borderRadius: 100,
     paddingLeft: 30,
     paddingRight: 30,
     marginTop: 20,
   },
   titleStyle: {
-    color: "black",
-    fontFamily: "FunnelSans-Regular",
-    fontWeight: '500',
+    color: Theme.colors.background,
+    fontFamily: Theme.typography.fontFamily,
+    fontWeight: Theme.typography.megaBold.fontWeight,
   },
   titleSecondStyle: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: Theme.typography.deciBold.fontSize,
+    fontWeight: Theme.typography.deciBold.fontWeight,
   },
   TextButtonStyle: {
-    color: "black",
-    fontFamily: "FunnelSans-Regular",
-    fontSize: 20,
-    // fontWeight: 'bold',
+    color: Theme.colors.background,
+    fontFamily: Theme.typography.fontFamily,
+    fontSize: Theme.typography.deca.fontSize,
   },
   
   // Page Auth 
@@ -58,23 +57,23 @@ const globalStyles = StyleSheet.create({
     marginBottom: 15,
     borderWidth: 1,
     borderRadius: 100,
-    backgroundColor: "white", 
-    color: "black", 
-    fontSize: 18,
-    fontFamily: "FunnelSans-Regular",
+    backgroundColor: Theme.colors.text,
+    color: Theme.colors.background,
+    fontSize: Theme.typography.base.fontSize,
+    fontFamily: Theme.typography.fontFamily,
   },
   footerAuthTextStyle: {
-    fontSize: 16,
+    fontSize: Theme.typography.deci.fontSize,
     color: "#bbb", 
     marginTop: 10,
-    fontFamily: "FunnelSans-Regular"
+    fontFamily: Theme.typography.fontFamily,
   },
   footerAuthLinkStyle: {
-    fontSize: 16,
-    color: "#b36dff", 
+    fontSize: Theme.typography.deci.fontSize,
+    color: Theme.colors.violet,
     marginTop: 5,
     textDecorationLine: "underline",
-    fontFamily: "FunnelSans-Regular"
+    fontFamily: Theme.typography.fontFamily,
   },
 });
 

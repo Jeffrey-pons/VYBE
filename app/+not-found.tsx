@@ -1,4 +1,4 @@
-import { Link, Stack } from 'expo-router';
+import { Link } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
 import globalStyles from '@/styles/globalStyle';
 import Logo from '@/components/LogoHeader';

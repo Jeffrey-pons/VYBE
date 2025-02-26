@@ -1,7 +1,6 @@
 import React from "react";
 import { ScrollView, View, StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
-import { Theme } from "@/constants/Theme";
 import { Button } from "react-native-elements";
 import { router } from "expo-router";
 import Logo from "@/components/LogoHeader";

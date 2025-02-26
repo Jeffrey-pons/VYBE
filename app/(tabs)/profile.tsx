@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ScrollView, View, Switch, StyleSheet } from 'react-native';
 import { ThemedText } from '@/components/ThemedText'; 
 import { Button } from 'react-native-elements';
@@ -15,16 +15,16 @@ const ProfileScreen: React.FC = () => {
   const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(true);
   const [isLastTicketsEnabled, setIsLastTicketsEnabled] = useState<boolean>(true);
 
-const getInitials = (firstName: string, lastName: string) => {
-    const initials = [];
-    if (firstName) {
-      initials.push(firstName.charAt(0).toUpperCase());
-    }
-    if (lastName) {
-      initials.push(lastName.charAt(0).toUpperCase());
-    }
-    return initials.join('');
-  };
+// const getInitials = (firstName: string, lastName: string) => {
+//     const initials = [];
+//     if (firstName) {
+//       initials.push(firstName.charAt(0).toUpperCase());
+//     }
+//     if (lastName) {
+//       initials.push(lastName.charAt(0).toUpperCase());
+//     }
+//     return initials.join('');
+//   };
 
   return (
     <ScrollView>
@@ -244,7 +244,6 @@ const styles = StyleSheet.create({
   },
   buttonDeletedeStyle: {
     backgroundColor: "grey",
-    color: "white",
     borderRadius: 100,
     paddingTop: 10,
     paddingBottom: 10,
