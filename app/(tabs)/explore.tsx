@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, Modal, I
 import Icon from 'react-native-vector-icons/MaterialIcons';
 // import { fetchFiveUpcomingEvents } from '@/services/openAgenda.api';
 import EvilIcons from 'react-native-vector-icons/EvilIcons'; 
-import { Event } from '@/interfaces/event';
+import { Event } from '@/interfaces/Event';
 import { cities } from '@/utils/citiesUtils';
 import globalStyles from '@/styles/globalStyle';
 import { ThemedText } from '@/components/ThemedText';

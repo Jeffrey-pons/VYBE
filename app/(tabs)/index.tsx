@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal } fr
 // import LocationComponent from '@/components/Location'; 
 import { ThemedText } from '@/components/ThemedText';
 // import { fetchEventsByCategory, fetchEventsTonight, fetchEventsThisWeek } from '@/services/openAgenda.api';
-import { Event } from '@/interfaces/event';
+import { Event } from '@/interfaces/Event';
 import Logo from '@/components/LogoHeader';
 import globalStyles from '@/styles/globalStyle';
 
