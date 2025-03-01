@@ -1,4 +1,4 @@
-# ![VYBE](./assets/images/logos/VYBE_logo_white_transparent%20(2).png)
+# ![VYBE](./assets/images/logos/VYBE_logo_white_transparent_home.png)
 
 # VYBE - L'Application qui répertorie tous les évènements à proximité de toi
 
@@ -46,32 +46,6 @@ Ou avec npm :
 npm start
 ```
 
-## 🛠️ Utilisation
-### Obtenir un nouveau projet
-Lorsque vous êtes prêt, lancez :
-
-```bash
-npm run reset-project
-```
-
-Cette commande déplacera le code de démarrage dans le répertoire **app-example** et créera un répertoire **app** vierge dans lequel vous pourrez commencer à développer.
-
-### Proposer une amélioration ou une correction
-1. Forker le projet
-2. Créez une branche pour votre modification :
-   ```bash
-   git checkout -b feature/amélioration
-   ```
-3. Faites vos modifications et committez-les :
-   ```bash
-   git commit -m "Ajout d'une nouvelle fonctionnalité"
-   ```
-4. Poussez votre branche :
-   ```bash
-   git push origin feature/amélioration
-   ```
-5. Ouvrez une **Pull Request** depuis GitHub
-
 ## 🏗️ Construit avec
 ### Langages & Frameworks
 - **React Native** - [Documentation](https://reactnative.dev/)
@@ -91,8 +65,4 @@ Consultez la documentation officielle pour en savoir plus :
 - [Expo documentation](https://docs.expo.dev/)
 - [React Native documentation](https://reactnative.dev/docs/getting-started)
 - [Firebase documentation](https://firebase.google.com/docs)
-
-## 🏷️ Gestion des versions
-Nous utilisons la **gestion sémantique des versions** (SemVer) pour la numérotation des versions. Consultez [la page des Releases](https://github.com/VYBE-Project/vybe-app/releases) pour voir les dernières versions.
-
 

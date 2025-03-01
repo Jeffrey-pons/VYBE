@@ -2,30 +2,17 @@ import { Text, type TextProps, StyleSheet } from 'react-native';
 import { Theme } from '@/constants/Theme';
 
 export type ThemedTextProps = TextProps & {
-  lightColor?: string;
-  darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitleAuth' | 'subtitle' | 'link';
+  type?: 'default' | 'title' | 'text' | 'sectionProfile' | 'authTitle' | 'authSubtitle' | 'subtitle' | 'link' | 'profileInitials';
 };
 
 export function ThemedText({
   style, 
-  darkColor = Theme.text, 
   type = 'default',
   ...rest
 }: ThemedTextProps) {
-
   return (
     <Text
-      style={[
-        { color : darkColor},
-        type === 'default' ? styles.default : undefined,
-        type === 'title' ? styles.title : undefined,
-        type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
-        type === 'subtitleAuth' ? styles.subtitle : undefined,
-        type === 'subtitle' ? styles.subtitle : undefined,
-        type === 'link' ? styles.link : undefined,
-        style,
-      ]}
+      style={[styles.default, styles[type], style]}
       {...rest}
     />
   );
@@ -33,30 +20,45 @@ export function ThemedText({
 
 const styles = StyleSheet.create({
   default: {
-    fontSize: 16,
-    lineHeight: 24,
+    fontFamily: Theme.typography.fontFamily,
+    color: Theme.colors.text,
+    fontSize: Theme.typography.kilo.fontSize,
+    marginTop: 14, // Exception
   },
-  defaultSemiBold: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '600',
+  profileInitials: {
+    fontSize: Theme.typography.megaBold.fontSize,
+  },
+  sectionProfile: {
+    fontSize: Theme.typography.kilo.fontSize,
   },
   title: {
-    fontSize: 38,
-    fontWeight: 'bold',
+    fontSize: Theme.typography.giga.fontSize,
+    fontWeight: Theme.typography.giga.fontWeight,
   },
-  subtitleAuth: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    textAlign: "center",
+  text: {
+    color: Theme.colors.text,
+    fontSize: Theme.typography.deca.fontSize,
+  },
+  authTitle: {
+    fontSize: Theme.typography.mega.fontSize,
+    fontWeight: Theme.typography.megaMedium.fontWeight, 
+    textAlign: Theme.alignments.textCenter.textAlign,
+    marginBottom: 30,// Exception
+  },
+  authSubtitle: {
+    fontSize: Theme.typography.base.fontSize,
+    marginBottom: 36,// Exception
+    color: Theme.colors.text,
+    textAlign: Theme.alignments.textCenter.textAlign,
   },
   subtitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: Theme.typography.deca.fontSize,
+    fontWeight: Theme.typography.decaBold.fontWeight,
   },
   link: {
-    lineHeight: 30,
-    fontSize: 16,
-    color: '#0a7ea4',
+    lineHeight: Theme.typography.hecto.lineHeight,
+    fontSize: Theme.typography.deci.fontSize,
+    color: Theme.colors.violetShade1,
+    textDecorationLine: "underline"
   },
 });
