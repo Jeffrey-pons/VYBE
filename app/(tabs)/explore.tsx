@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, Modal, Image } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-// import { fetchFiveUpcomingEvents } from '@/services/openAgenda.api';
-import EvilIcons from 'react-native-vector-icons/EvilIcons'; 
+import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, Modal, Image, ScrollView } from 'react-native';
 import { Event } from '@/interfaces/Event';
 import { cities } from '@/utils/citiesUtils';
 import globalStyles from '@/styles/globalStyle';
 import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
+
+// A améliorer en snd partie !!!!!!!!
 
 const FilterScreen: React.FC = () => {
   // const [search, setSearch] = useState('');
@@ -79,136 +78,146 @@ const FilterScreen: React.FC = () => {
   };
 
   return (
-    <View style={globalStyles.containerX}>
-      {/* Recherche par mot clé */}
-      <View style={styles.searchContainer}>
-        <Icon name="search" size={20} color="#aaa" style={styles.searchIcon} />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Rechercher un événement ou un.e artiste"
-          placeholderTextColor="#aaa"
-          value={keyword}
-          onChangeText={handleKeywordChange}
-        />
-      </View>
-
-      {/* Filtres sous forme de boutons */}
-      <View style={styles.filterContainer}>
-        <TouchableOpacity style={styles.filterButton}>
-        <EvilIcons name="calendar" size={20} color="white"/>
-          <Text style={styles.filterButtonText}>{date || 'DATE'}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton} onPress={() => setShowCityInput(true)}>
-        <EvilIcons name="location" size={20} color="white" />
-          <Text style={styles.filterButtonText}>{city || 'LIEU'}</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* DATE */}
-      {showDatePicker && (
-        <input
-          type="date"
-          value={date}
-          onChange={handleDateChange}
-          // style={styles.dateInput}
-        />
-      )}
-
-      {/* LIEU */}
-      <Modal visible={showCityInput} transparent animationType="none">
-        <View style={styles.modalContainer}>
-          <FlatList
-            data={cities}
-            keyExtractor={(item) => item.value}
-            contentContainerStyle={styles.gridContainer}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => handleCitySelect(item.value)} // Sélectionner la ville
-              >
-                <Text style={styles.cityButtonText}>{item.label}</Text>
-              </TouchableOpacity>
-            )}
+    <ScrollView>
+      <View style={globalStyles.containerX}>
+        <View style={styles.searchContainer}>
+          <Image
+            style={styles.searchIcon}
+            source={require('../../assets/images/icons/icon_loupe.png')}
+            accessibilityLabel="Icône de recherche"
           />
-            <TouchableOpacity
-              style={[styles.buttonModaleCity, { padding: 10, borderRadius: 5, marginVertical: 10 }]}
-              onPress={() => {
-                setCity(''); // Réinitialiser la ville
-                setShowCityInput(false); // Fermer la modale
-              }}
-            >
-              <Text style={{ color: 'white', textAlign: 'center', fontFamily: "FunnelSans-Regular" }}>
-                Réinitialiser le lieu
-              </Text>
-            </TouchableOpacity>
-           <TouchableOpacity
-            style={[styles.buttonModaleCity, { padding: 10, borderRadius: 5 }]}
-            onPress={() => setShowCityInput(false)}
-          >
-            <Text style={{ color: 'white', textAlign: 'center', fontFamily: "FunnelSans-Regular" }}>
-              Fermer
-            </Text>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Rechercher un événement ou un.e artiste"
+            value={keyword}
+            onChangeText={handleKeywordChange}
+          />
+        </View>
+
+        <View style={styles.filterContainer}>
+          <TouchableOpacity style={styles.filterButton}>
+            <Image
+              style={styles.searchIcon}
+              source={require('../../assets/images/icons/icon_calender.png')}
+              accessibilityLabel="Icône de calendrier"
+            />
+            <Text style={styles.filterButtonText}>{date || 'DATE'}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterButton} onPress={() => setShowCityInput(true)}>
+            <Image
+              style={styles.searchIcon}
+              source={require('../../assets/images/icons/icon_choice_location.png')}
+              accessibilityLabel="Icône de calendrier"
+            />
+            <Text style={styles.filterButtonText}>{city || 'LIEU'}</Text>
           </TouchableOpacity>
         </View>
-      </Modal>
 
-      {/* EVENTS */}
-      <FlatList
-        data={filteredEvents}
-        keyExtractor={(item, index) => String(index)}
-        ListEmptyComponent={<ThemedText type="text">Aucun événement trouvé</ThemedText>}
-        renderItem={({ item }) => (
-          <View style={styles.eventCard}>
-             {item.image && item.image.base && item.image.filename ? (
-            <Image source={{ uri: `${item.image.base}${item.image.filename}` }} style={styles.eventImage}/>
-          ) : (
-            <View /> 
-          )}
-            <View>
-              <Text style={styles.eventTitle}>{item.title.fr || "Titre non disponible"}</Text>
-              <Text style={styles.eventTextDate}>
-                {item.location?.city || "Ville inconnue"} - {item.dateRange?.fr || "Date non disponible"}
-              </Text>
-              {item.location?.latitude && item.location?.longitude && (
-                <Text style={styles.eventText}>
-                  Adresse: {item.location.name} | {item.location.address} 
-                </Text>
-              )}
-              <Text style={styles.eventText}>Prix: {item.price || "Non spécifié"}</Text>
-              <TouchableOpacity onPress={() => handleEventClick(item)}>
-                <Text style={styles.eventText}>Voir plus</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+        {showDatePicker && (
+          <input
+            type="date"
+            value={date}
+            onChange={handleDateChange}
+            // style={styles.dateInput}
+          />
         )}
-      />
-       {selectedEvent && (
-        <Modal visible={modalVisible} transparent animationType="none">
-          <View >
-            <View >
-              {selectedEvent.image && (
-                <Image 
-                  source={{ uri: `${selectedEvent.image?.base || ''}${selectedEvent.image?.filename}` }}
-                  style={styles.eventImageDetail}
-                />
+
+        <Modal visible={showCityInput} transparent animationType="none">
+          <View style={styles.modalContainer}>
+            <FlatList
+              data={cities}
+              keyExtractor={(item) => item.value}
+              contentContainerStyle={styles.gridContainer}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  onPress={() => handleCitySelect(item.value)} // Sélectionner la ville
+                >
+                  <Text style={styles.cityButtonText}>{item.label}</Text>
+                </TouchableOpacity>
               )}
-              <Text>{selectedEvent.title?.fr || 'Titre non disponible'}</Text>
-              <Text>
-                {selectedEvent.dateRange?.fr || 'Date non disponible'}
-              </Text>
-              <Text >
-                {selectedEvent.description?.fr || 'Aucune description disponible'}
-              </Text>
-              <Text >
-                {selectedEvent.price ? `${selectedEvent.price} €` : 'Prix non disponible'}
-              </Text>
-              <TouchableOpacity onPress={closeModal}>
-                <Text >Fermer</Text>
+            />
+              <TouchableOpacity
+                style={[styles.buttonModaleCity, { padding: 10, borderRadius: 5, marginVertical: 10 }]}
+                onPress={() => {
+                  setCity(''); // Réinitialiser la ville
+                  setShowCityInput(false); // Fermer la modale
+                }}
+              >
+                <Text style={{ color: 'white', textAlign: 'center', fontFamily: "FunnelSans-Regular" }}>
+                  Réinitialiser le lieu
+                </Text>
               </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={[styles.buttonModaleCity, { padding: 10, borderRadius: 5 }]}
+              onPress={() => setShowCityInput(false)}
+            >
+              <Text style={{ color: 'white', textAlign: 'center', fontFamily: "FunnelSans-Regular" }}>
+                Fermer
+              </Text>
+            </TouchableOpacity>
           </View>
         </Modal>
-      )}
-    </View>
+
+        {/* EVENTS */}
+        <FlatList
+          data={filteredEvents}
+          keyExtractor={(item, index) => String(index)}
+          ListEmptyComponent={<ThemedText type="text">Aucun événement trouvé</ThemedText>}
+          renderItem={({ item }) => (
+            <View style={styles.eventCard}>
+              {item.image && item.image.base && item.image.filename ? (
+              <Image source={{ uri: `${item.image.base}${item.image.filename}` }} style={styles.eventImage} accessibilityLabel="Preview de l'évènements"/>
+            ) : (
+              <View /> 
+            )}
+              <View>
+                <Text style={styles.eventTitle}>{item.title.fr || "Titre non disponible"}</Text>
+                <Text style={styles.eventTextDate}>
+                  {item.location?.city || "Ville inconnue"} - {item.dateRange?.fr || "Date non disponible"}
+                </Text>
+                {item.location?.latitude && item.location?.longitude && (
+                  <Text style={styles.eventText}>
+                    Adresse: {item.location.name} | {item.location.address} 
+                  </Text>
+                )}
+                <Text style={styles.eventText}>Prix: {item.price || "Non spécifié"}</Text>
+                <TouchableOpacity onPress={() => handleEventClick(item)}>
+                  <Text style={styles.eventText}>Voir plus</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        />
+        {selectedEvent && (
+          <Modal visible={modalVisible} transparent animationType="none">
+            <View >
+              <View >
+                {selectedEvent.image && (
+                  <Image 
+                    source={{ uri: `${selectedEvent.image?.base || ''}${selectedEvent.image?.filename}` }}
+                    style={styles.eventImageDetail}
+                    accessibilityLabel="Image de l'évènement"
+                  />
+                )}
+                <Text>{selectedEvent.title?.fr || 'Titre non disponible'}</Text>
+                <Text>
+                  {selectedEvent.dateRange?.fr || 'Date non disponible'}
+                </Text>
+                <Text >
+                  {selectedEvent.description?.fr || 'Aucune description disponible'}
+                </Text>
+                <Text >
+                  {selectedEvent.price ? `${selectedEvent.price} €` : 'Prix non disponible'}
+                </Text>
+                <TouchableOpacity onPress={closeModal}>
+                  <Text >Fermer</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        )}
+      </View>
+    </ScrollView>
   );
 };
 
@@ -226,6 +235,9 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     marginRight: 5,
+    color: "#aaa",
+    width: 20,
+    height: 20
   },
   searchInput: {
     flex: 1,

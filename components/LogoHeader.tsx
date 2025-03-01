@@ -12,6 +12,8 @@ const Logo = () => {
         source={require('../assets/images/logos/VYBE_logo_white_transparent.png')}
         resizeMode="contain"
         style={styles.logo}
+        accessibilityLabel="Logo Vybe Header"
+        accessible={true}
       />
     </TouchableOpacity>
   );

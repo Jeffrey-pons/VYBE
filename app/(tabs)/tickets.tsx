@@ -3,6 +3,8 @@ import { ThemedText } from "@/components/ThemedText";
 import { ScrollView, View } from 'react-native';
 import globalStyles from "@/styles/globalStyle";
 
+// A améliorer en snd partie !!!!!!!!
+
 const TicketsScreen = () => {
     return (
         <ScrollView>

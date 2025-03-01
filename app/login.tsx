@@ -31,6 +31,7 @@ const LoginScreen: React.FC = () => {
       <Image
         style={globalStyles.logoAuthStyle}
         source={require('../assets/images/icons/icon_login.png')}
+        accessibilityLabel="Icône de connexion"
       />
       <ThemedText type="authTitle">Connecte toi !</ThemedText>
       <TextInput

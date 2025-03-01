@@ -14,6 +14,7 @@ const LocationScreen = () => {
       <Image
         style={globalStyles.logoAuthStyle}
         source={require('../assets/images/icons/icon_location.png')}
+        accessibilityLabel="Icône de Localisation"
       />
       <ThemedText type="authTitle">Voir ce qu'il se passe{'\n'}près de chez toi</ThemedText>
       <ThemedText type="authSubtitle">Découvre ce qui se passe dans ta ville !</ThemedText>

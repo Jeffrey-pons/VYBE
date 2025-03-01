@@ -39,6 +39,7 @@ const RegisterScreen: React.FC = () => {
       <Image
         style={globalStyles.logoAuthStyle}
         source={require('../assets/images/icons/icon_register.png')}
+        accessibilityLabel="Icône d'inscription"
       />
       <ThemedText type="authTitle">Inscris-toi !</ThemedText>
 
