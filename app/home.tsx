@@ -10,7 +10,7 @@ const WelcomeScreen = () => {
         <View style={styles.containerHomePage}>
           <Image
             source={require('../assets/images/logos/VYBE_logo_white_transparent_home.png')}
-            accessibilityLabel="Logo Vybe"
+            alt="Logo Vybe"
           />
           <ThemedText type="title"style={styles.welcomeTitle}>TROUVE LES{'\n'}ÉVÈNEMENTS{'\n'}RIEN QUE POUR TOI</ThemedText>
           <Link href={"/login"} asChild>

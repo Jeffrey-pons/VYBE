@@ -20,7 +20,7 @@ return (
       <Image
         style={globalStyles.logoAuthStyle}
         source={require('../assets/images/icons/icon_connect_your_music.gif')}
-        accessibilityLabel="Icône de musique"
+        alt="Icône de musique"
       />
       <SkipButton onPress={handleSkip} />
       <ThemedText type="authTitle">Connecte ta musique</ThemedText>

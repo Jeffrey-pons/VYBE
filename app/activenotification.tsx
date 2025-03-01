@@ -23,7 +23,7 @@ const NotificationScreen = () => {
       <Image
         style={globalStyles.logoAuthStyle}
         source={require('../assets/images/icons/icon_notification.png')}
-        accessibilityLabel="Icône de notification"
+        alt="Icône de notification"
       />
       <SkipButton onPress={handleSkip} />
       <ThemedText type="authTitle">Choisis tes notifications</ThemedText>
