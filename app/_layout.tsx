@@ -5,6 +5,9 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import { View } from 'react-native';
 import { useLoadFonts } from '@/hooks/useLoadFonts';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { LoadingProvider } from '@/contexts/LoadingContext';
+import Loader from '@/components/Loader';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -15,18 +18,23 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={DarkTheme}>
-      <View style={{ flex: 1 }}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)"/>
-          <Stack.Screen name="login"/>
-          <Stack.Screen name="register"/>
-          <Stack.Screen name="findlocation"/>
-          <Stack.Screen name="connectmusic"/>
-          <Stack.Screen name="activenotification"/>
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      </View>
-      <StatusBar style="auto" />
+      <LoadingProvider>
+        <AuthProvider>
+          <View style={{ flex: 1 }}>
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="(tabs)"/>
+              <Stack.Screen name="login"/>
+              <Stack.Screen name="register"/>
+              <Stack.Screen name="findlocation"/>
+              <Stack.Screen name="connectmusic"/>
+              <Stack.Screen name="activenotification"/>
+              <Stack.Screen name="+not-found" />
+            </Stack>
+            <Loader/>
+            <StatusBar style="auto" />
+          </View>
+        </AuthProvider>
+      </LoadingProvider>
     </ThemeProvider>
   );
 }

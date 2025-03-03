@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Switch, StyleSheet } from 'react-native';
 import { ThemedText } from '@/components/ThemedText'; 
 import { Button } from 'react-native-elements';
@@ -9,22 +9,30 @@ import globalStyles from '@/styles/globalStyle';
 import Entypo from '@expo/vector-icons/Entypo';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import { Link } from 'expo-router';
+import { logoutUser, deleteUserAccount, getUserInfo } from '@/services/authService';
+import { auth } from '@/config/firebaseConfig';
+import { updateCurrentUser } from 'firebase/auth';
 
 const ProfileScreen: React.FC = () => {
   const [isPushEnabled, setIsPushEnabled] = useState<boolean>(true);
   const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(true);
   const [isLastTicketsEnabled, setIsLastTicketsEnabled] = useState<boolean>(true);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [userData, setUserData] = useState<any>(null);
 
-// const getInitials = (firstName: string, lastName: string) => {
-//     const initials = [];
-//     if (firstName) {
-//       initials.push(firstName.charAt(0).toUpperCase());
-//     }
-//     if (lastName) {
-//       initials.push(lastName.charAt(0).toUpperCase());
-//     }
-//     return initials.join('');
-//   };
+useEffect(() => {
+  const currentUser = auth.currentUser;
+  if (currentUser) {
+    setUserId(currentUser.uid);
+    getUserInfo(currentUser.uid)
+      .then((data) => {
+        setUserData(data);
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la récupération des informations de l'utilisateur", error);
+      });
+  }
+}, []);
 
   return (
     <ScrollView>
@@ -33,21 +41,21 @@ const ProfileScreen: React.FC = () => {
         <View style={styles.centeredContainer}>
           <View style={styles.avatarContainer}>
             <ThemedText type="title">
-              {/* {userData.name.charAt(0).toUpperCase()}{userData.lastname.charAt(0).toUpperCase()} */}
+              {userData?.name?.charAt(0).toUpperCase()}{userData?.lastname?.charAt(0).toUpperCase()}
             </ThemedText>
           </View>
-          <ThemedText type="profileInitials">TestonsJ Ensemble</ThemedText>
+          <ThemedText type="profileInitials">{userData?.name} {userData?.lastname}</ThemedText>
         </View>
 
         <Collapsible title="Coordonnées">
           <View style={styles.containercoord}>
             <View style={styles.subContainerCoordonees}>
-              <ThemedText type="text">Nom : </ThemedText>
-              <ThemedText type="text">Prénom : </ThemedText>
+              <ThemedText type="text">Nom : {userData?.lastname}</ThemedText>
+              <ThemedText type="text">Prénom : {userData?.name}</ThemedText>
             </View>
-            <ThemedText type="text">Email : </ThemedText>
-            <ThemedText type="text">Numéro : </ThemedText>
-            <ThemedText type="text">Mot de passe : </ThemedText>
+            <ThemedText type="text">Email : {userData?.mail}</ThemedText>
+            <ThemedText type="text">Numéro : {userData?.phoneNumber}</ThemedText>
+            <ThemedText type="text">Mot de passe : ********</ThemedText>
             <View style={styles.buttonContainer}>
               <Button title="Modifier" buttonStyle={styles.buttonUpdatedProfileStyle} titleStyle={styles.titleUpdatedProfileStyle}></Button>
             </View>
@@ -214,8 +222,8 @@ const ProfileScreen: React.FC = () => {
 
 
         <View style={styles.containerButtonProfile}>
-        <Button title="Se déconnecter" buttonStyle={globalStyles.buttonStyle} titleStyle={globalStyles.TextButtonStyle}  />
-        <Button title="Supprimer mon compte" buttonStyle={styles.buttonDeletedeStyle} titleStyle={styles.titleDeletedStyle} />
+        <Button title="Se déconnecter" buttonStyle={globalStyles.buttonStyle} titleStyle={globalStyles.TextButtonStyle} onPress={logoutUser}/>
+        <Button title="Supprimer mon compte" buttonStyle={styles.buttonDeletedeStyle} titleStyle={styles.titleDeletedStyle} onPress={() => userId && deleteUserAccount(userId)}/>
         </View>
       </View>
     </ScrollView>
@@ -278,6 +286,7 @@ const styles = StyleSheet.create({
   },
   subContainerCoordonees: {
     flexDirection: "row",
+    justifyContent: "stretch",
   },
   containercoord: {
     width: '100%', 
