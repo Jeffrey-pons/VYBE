@@ -10,6 +10,7 @@ const RegisterScreen: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [lastname, setLastname] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isMounted, setIsMounted] = useState<boolean>(true);
 
@@ -20,7 +21,14 @@ const RegisterScreen: React.FC = () => {
 
   const handleSignUp = async () => {
     try {
-      const response = await registerUser(email, password);
+      const userData = {
+        name,
+        lastname,
+        email,
+        phoneNumber: phone,
+        password,
+      };
+      const response = await registerUser(userData);
       if (isMounted && response) {
         Alert.alert("Succès", "Compte créé avec succès !");
         router.replace("/login");
@@ -48,15 +56,15 @@ const RegisterScreen: React.FC = () => {
           style={[globalStyles.input, styles.halfInput]}
           placeholder="Prénom"
           placeholderTextColor="#bbb"
-          // value={name}
-        // onChangeText={setName}
+          value={name}
+          onChangeText={setName}
         />
         <TextInput
           style={[globalStyles.input, styles.halfInput]}
           placeholder="Nom"
           placeholderTextColor="#bbb"
-             // value={lastname}
-        // onChangeText={setLastname}
+          value={lastname}
+          onChangeText={setLastname}
         />
       </View>
       <TextInput
@@ -71,8 +79,8 @@ const RegisterScreen: React.FC = () => {
         style={globalStyles.input}
         placeholder="Téléphone"
         placeholderTextColor="#bbb"
-        // value={phone}
-        // onChangeText={setPhone}
+        value={phone}
+        onChangeText={setPhone}
       />
       <TextInput
         style={globalStyles.input}
@@ -86,7 +94,7 @@ const RegisterScreen: React.FC = () => {
         buttonStyle={globalStyles.buttonStyle} 
         title="S'inscrire"
         titleStyle={globalStyles.titleStyle} 
-        onPress={handleSignUp} 
+        onPress={handleSignUp}  
       />
       <Text style={globalStyles.footerAuthTextStyle}>Vous avez déjà un compte ?</Text>
       <Text style={globalStyles.footerAuthLinkStyle} onPress={() => router.replace("/login")}>

@@ -107,7 +107,7 @@ const FilterScreen: React.FC = () => {
             <Image
               style={styles.searchIcon}
               source={require('../../assets/images/icons/icon_choice_location.png')}
-              alt="Icône de calendrier"
+              alt="Icône de lieu"
             />
             <Text style={styles.filterButtonText}>{city || 'LIEU'}</Text>
           </TouchableOpacity>
