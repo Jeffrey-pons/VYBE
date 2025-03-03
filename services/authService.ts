@@ -18,7 +18,9 @@ export const registerUser = async (data: RegisterDTO): Promise<AuthResponse> => 
 
     const userRef = doc(db, "users", userCredential.user.uid);
     await setDoc(userRef, {
-      ...data,
+      name: data.name,
+      lastname: data.lastname,
+      phoneNumber: data.phoneNumber,
       createdAt: new Date(),
     });
 
