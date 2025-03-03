@@ -1,7 +1,8 @@
-import { RegisterDTO } from '@/dtos/AuthDto';
+import { RegisterDTO, LoginDTO } from '@/dtos/AuthDto';
 import { auth, db } from "@/config/firebaseConfig";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User, deleteUser } from "firebase/auth";
+import { router } from "expo-router";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User, deleteUser, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 
 interface AuthResponse {
   user: User;
@@ -10,7 +11,7 @@ interface AuthResponse {
 export const registerUser = async (data: RegisterDTO): Promise<AuthResponse> => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
-
+    
     const userRef = doc(db, "users", userCredential.user.uid);
     await setDoc(userRef, {
       name: data.name,
@@ -39,6 +40,7 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
 export const logoutUser = async (): Promise<void> => {
   try {
     await signOut(auth);
+    router.replace('/home')
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -70,17 +72,27 @@ export const getUserInfo = async (userId: string): Promise<any> => {
   }
 };
 
-export const deleteUserAccount = async (userId: string): Promise<void> => {
+export const deleteUserAccount = async (userId: string, password: string): Promise<void> => {
   try {
     const userRef = doc(db, "users", userId);
     await deleteDoc(userRef);
 
     const user = auth.currentUser;
     if (user) {
+      await reauthenticateUser(user, password);
       await deleteUser(user);
+      router.replace('/home')
     }
   } catch (error: any) {
     console.error("Error deleting user account:", error);
     throw new Error(error.message);
   }
 };
+
+export const reauthenticateUser = async (user: User, password: string) => {
+  const credential = EmailAuthProvider.credential(user.email!, password);
+  await reauthenticateWithCredential(user, credential);
+};
+
+
+

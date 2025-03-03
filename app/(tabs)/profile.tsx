@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Switch, StyleSheet } from 'react-native';
+import { ScrollView, View, Switch, StyleSheet, TextInput, Modal } from 'react-native';
 import { ThemedText } from '@/components/ThemedText'; 
 import { Button } from 'react-native-elements';
 import { Collapsible } from '@/components/Collapsible';
@@ -19,6 +19,32 @@ const ProfileScreen: React.FC = () => {
   const [isLastTicketsEnabled, setIsLastTicketsEnabled] = useState<boolean>(true);
   const [userId, setUserId] = useState<string | null>(null);
   const [userData, setUserData] = useState<any>(null);
+  const [password, setPassword] = useState<string>('');
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  const handleDeleteAccount = async () => {
+    if (!userId) {
+      alert("Utilisateur non identifié !");
+      return;
+    }
+  
+    const confirmDelete = window.confirm("Es-tu sûr de vouloir supprimer ton compte ? Cette action est irréversible.");
+    if (!confirmDelete) return;
+  
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        await deleteUserAccount(userId, password); 
+        await user.delete(); 
+        alert("Compte supprimé avec succès.");
+      } else {
+        alert("Aucun utilisateur connecté.");
+      }
+    } catch (error: any) {
+      console.error("Erreur lors de la suppression du compte:", error);
+      alert("Une erreur est survenue lors de la suppression du compte.");
+    }
+  };
 
 useEffect(() => {
   const currentUser = auth.currentUser;
@@ -223,9 +249,38 @@ useEffect(() => {
 
         <View style={styles.containerButtonProfile}>
         <Button title="Se déconnecter" buttonStyle={globalStyles.buttonStyle} titleStyle={globalStyles.TextButtonStyle} onPress={logoutUser}/>
-        <Button title="Supprimer mon compte" buttonStyle={styles.buttonDeletedeStyle} titleStyle={styles.titleDeletedStyle} onPress={() => userId && deleteUserAccount(userId)}/>
+        <Button title="Supprimer mon compte" buttonStyle={styles.buttonDeletedeStyle} titleStyle={styles.titleDeletedStyle}   onPress={() => setIsModalVisible(true)} />
         </View>
       </View>
+      <Modal visible={isModalVisible} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <ThemedText type="title">Confirmer la suppression</ThemedText>
+            <ThemedText type="text">
+              Pour supprimer votre compte, veuillez entrer votre mot de passe.
+            </ThemedText>
+            <TextInput
+              placeholder="Mot de passe"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+              style={styles.input}
+            />
+            <View style={styles.modalButtons}>
+              <Button 
+                title="Annuler" 
+                buttonStyle={styles.cancelButton} 
+                onPress={() => setIsModalVisible(false)} 
+              />
+              <Button 
+                title="Confirmer" 
+                buttonStyle={styles.confirmButton} 
+                onPress={handleDeleteAccount} 
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -376,7 +431,53 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     gap: 12, 
   },
-  
+  ////// modal mais style à revoir
+   // Modal styles
+   modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  input: {
+    width: '100%',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  cancelButton: {
+    backgroundColor: '#bbb',
+    borderRadius: 5,
+    paddingVertical: 10,
+    flex: 1,
+    marginRight: 5,
+  },
+  confirmButton: {
+    backgroundColor: 'red',
+    borderRadius: 5,
+    paddingVertical: 10,
+    flex: 1,
+    marginLeft: 5,
+  }
 });
 
 export default ProfileScreen;
