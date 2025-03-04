@@ -1,6 +1,6 @@
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { fontMap } from "../utils/fontsUtils";
 
 export const useLoadFonts = () => {
@@ -14,7 +14,7 @@ export const useLoadFonts = () => {
           await SplashScreen.hideAsync();
           setAppReady(true);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.warn("Erreur de chargement des fonts", error);
       }
     };

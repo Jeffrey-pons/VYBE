@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { Button } from 'react-native-elements';
 import ProgressBar from '@/components/ProgressBar';
 // import * as Location from 'expo-location';
@@ -9,34 +9,36 @@ import { ThemedText } from '@/components/ThemedText';
 
 const LocationScreen = () => {
   return (
-    <View style={globalStyles.container}>
-      <ProgressBar step={1} totalSteps={3} />
-      <Image
-        style={globalStyles.logoAuthStyle}
-        source={require('../assets/images/icons/icon_location.png')}
-        alt="Icône de Localisation"
-      />
-      <ThemedText type="authTitle">Voir ce qu'il se passe{'\n'}près de chez toi</ThemedText>
-      <ThemedText type="authSubtitle">Découvre ce qui se passe dans ta ville !</ThemedText>
-      <Button
-        title="Utiliser ma position"
-        buttonStyle={globalStyles.buttonStyle}
-        titleStyle={globalStyles.titleStyle}
-        // onPress={handleUseLocation}
-      />
-      <Text style={styles.cityText}>Choisir ma position</Text>
-      <View>
-      {/* {city && */}
-      <Text style={styles.cityChoice}>Ville sélectionnée : </Text>
+    <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
+      <View style={globalStyles.container}>
+        <ProgressBar step={1} totalSteps={3} />
+        <Image
+          style={globalStyles.logoAuthStyle}
+          source={require('../assets/images/icons/icon_location.png')}
+          alt="Icône de Localisation"
+        />
+        <ThemedText type="authTitle">Voir ce qu'il se passe près de chez toi</ThemedText>
+        <ThemedText type="authSubtitle">Découvre ce qui se passe dans ta ville !</ThemedText>
+        <Button
+          title="Utiliser ma position"
+          buttonStyle={globalStyles.buttonStyle}
+          titleStyle={globalStyles.titleStyle}
+          // onPress={handleUseLocation}
+        />
+        <Text style={styles.cityText}>Choisir ma position</Text>
+        <View>
+        {/* {city && */}
+        <Text style={styles.cityChoice}>Ville sélectionnée : </Text>
+        </View>
+        <Button
+          title="Suivant"
+          buttonStyle={globalStyles.buttonSecondStyle}
+          titleStyle={globalStyles.titleSecondStyle}
+          onPress={() => router.replace('/connectmusic')}
+          // disabled={!city}
+        />
       </View>
-      <Button
-        title="Suivant"
-        buttonStyle={globalStyles.buttonSecondStyle}
-        titleStyle={globalStyles.titleSecondStyle}
-        onPress={() => router.replace('/connectmusic')}
-        // disabled={!city}
-      />
-    </View>
+    </ScrollView>
   );
 };
 

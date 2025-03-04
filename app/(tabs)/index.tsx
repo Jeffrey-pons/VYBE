@@ -396,6 +396,7 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
     borderRadius: 8,
     borderWidth: 2,
+    color: "green",
     width: '12%',
     padding: 10,
   },

@@ -249,14 +249,14 @@ useEffect(() => {
 
         <View style={styles.containerButtonProfile}>
         <Button title="Se déconnecter" buttonStyle={globalStyles.buttonStyle} titleStyle={globalStyles.TextButtonStyle} onPress={logoutUser}/>
-        <Button title="Supprimer mon compte" buttonStyle={styles.buttonDeletedeStyle} titleStyle={styles.titleDeletedStyle}   onPress={() => setIsModalVisible(true)} />
+        <Button title="Supprimer mon compte" buttonStyle={globalStyles.buttonDeletedeStyle} titleStyle={globalStyles.titleDeletedStyle}   onPress={() => setIsModalVisible(true)} />
         </View>
       </View>
       <Modal visible={isModalVisible} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <ThemedText type="title">Confirmer la suppression</ThemedText>
-            <ThemedText type="text">
+            <ThemedText type="title" style={styles.textModal}>Confirmer la suppression</ThemedText>
+            <ThemedText type="text" style={styles.textModal}>
               Pour supprimer votre compte, veuillez entrer votre mot de passe.
             </ThemedText>
             <TextInput
@@ -269,12 +269,14 @@ useEffect(() => {
             <View style={styles.modalButtons}>
               <Button 
                 title="Annuler" 
-                buttonStyle={styles.cancelButton} 
+                buttonStyle={globalStyles.buttonDeletedeStyle} 
+                titleStyle={globalStyles.titleDeletedStyle}
                 onPress={() => setIsModalVisible(false)} 
               />
               <Button 
                 title="Confirmer" 
-                buttonStyle={styles.confirmButton} 
+                buttonStyle={globalStyles.buttonSecondStyle} 
+                titleStyle={globalStyles.titleSecondStyle} 
                 onPress={handleDeleteAccount} 
               />
             </View>
@@ -290,7 +292,6 @@ const styles = StyleSheet.create({
     paddingTop: 20, 
     width: "70%",
     margin: "auto"
-
   },
   centeredContainer: {
     alignItems: 'center',
@@ -304,19 +305,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
-  },
-  buttonDeletedeStyle: {
-    backgroundColor: "grey",
-    borderRadius: 100,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingRight: 40,
-    paddingLeft: 40,
-    marginBottom: 16,
-    marginTop: 10,
-  },
-  titleDeletedStyle: {
-    fontFamily: "FunnelSans-Regular",
   },
   buttonUpdatedProfileStyle: {
     backgroundColor: "white",
@@ -341,7 +329,7 @@ const styles = StyleSheet.create({
   },
   subContainerCoordonees: {
     flexDirection: "row",
-    justifyContent: "stretch",
+    justifyContent: "space-between",
   },
   containercoord: {
     width: '100%', 
@@ -435,7 +423,6 @@ const styles = StyleSheet.create({
    // Modal styles
    modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -443,13 +430,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
-    width: '80%',
+    width: '90%',
     alignItems: 'center',
-  },
-  modalText: {
-    fontSize: 16,
-    marginBottom: 10,
-    textAlign: 'center',
   },
   input: {
     width: '100%',
@@ -457,26 +439,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    marginBottom: 10,
+    marginBottom: 20,
+    marginTop: 20,
   },
   modalButtons: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    justifyContent: "space-evenly",
+    gap: 15,
   },
-  cancelButton: {
-    backgroundColor: '#bbb',
-    borderRadius: 5,
-    paddingVertical: 10,
-    flex: 1,
-    marginRight: 5,
-  },
-  confirmButton: {
-    backgroundColor: 'red',
-    borderRadius: 5,
-    paddingVertical: 10,
-    flex: 1,
-    marginLeft: 5,
+  textModal: {
+    color: "black",
   }
 });
 

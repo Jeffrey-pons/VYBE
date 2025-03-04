@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     fontSize: Theme.typography.mega.fontSize,
     fontWeight: Theme.typography.megaMedium.fontWeight, 
     textAlign: Theme.alignments.textCenter.textAlign,
-    marginBottom: 30,// Exception
+    marginBottom: 30,// Exceptionc
   },
   authSubtitle: {
     fontSize: Theme.typography.base.fontSize,

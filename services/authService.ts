@@ -2,6 +2,8 @@ import { RegisterDTO, LoginDTO } from '@/dtos/AuthDto';
 import { auth, db } from "@/config/firebaseConfig";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { router } from "expo-router";
+import { Alert } from "react-native";
+
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User, deleteUser, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 
 interface AuthResponse {
@@ -40,6 +42,7 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
 export const logoutUser = async (): Promise<void> => {
   try {
     await signOut(auth);
+    Alert.alert("Succès", "Déconnexion reussie");
     router.replace('/home')
   } catch (error: any) {
     throw new Error(error.message);
