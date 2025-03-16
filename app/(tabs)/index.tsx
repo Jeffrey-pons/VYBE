@@ -6,11 +6,13 @@ import { ThemedText } from '@/components/ThemedText';
 import { Event } from '@/interfaces/Event';
 import Logo from '@/components/LogoHeader';
 import globalStyles from '@/styles/globalStyle';
+import { useLocation } from '@/contexts/LocationContext';
 
 // A améliorer en snd partie !!!!!!!!
 
 const App = () => {
-  const [city, setCity] = useState<string | null>(null);
+  const { city } = useLocation();
+  // const [city, setCity] = useState<string | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -86,10 +88,6 @@ const App = () => {
         alt="Icône de choix de localisation"
       />
     </ThemedText>
-
-    {/* {!city &&  (
-        // <LocationComponent onCityDetected={handleCityDetected} />
-      )} */}
         
           <View style={styles.categoriesContainer}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow} contentOffset={{ x: 0, y: 0 }} >

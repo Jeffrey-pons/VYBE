@@ -1,13 +1,30 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, ScrollView, TextInput } from 'react-native';
 import { Button } from 'react-native-elements';
 import ProgressBar from '@/components/ProgressBar';
-// import * as Location from 'expo-location';
 import { router } from "expo-router";
+import { useLocation } from '@/contexts/LocationContext';
 import globalStyles from '@/styles/globalStyle'; 
 import { ThemedText } from '@/components/ThemedText';
+import { getLocation } from '@/services/locationService';
 
 const LocationScreen = () => {
+  const { city, updateLocation } = useLocation(); 
+  const [manualCity, setManualCity] = useState<string | null>(null);
+
+  const handleManualCityChange = (text: string) => {
+    setManualCity(text);
+    updateLocation(text); // Mettre à jour la ville via le contexte
+  };
+
+  const handleUseLocation = async () => {
+    await getLocation({
+      onCityDetected: (city) => {
+        updateLocation(city); // Mettre à jour la ville dans le contexte
+      }
+    });
+  };
+
   return (
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
       <View style={globalStyles.container}>
@@ -19,16 +36,27 @@ const LocationScreen = () => {
         />
         <ThemedText type="authTitle">Voir ce qu'il se passe près de chez toi</ThemedText>
         <ThemedText type="authSubtitle">Découvre ce qui se passe dans ta ville !</ThemedText>
+
         <Button
           title="Utiliser ma position"
           buttonStyle={globalStyles.buttonStyle}
           titleStyle={globalStyles.titleStyle}
-          // onPress={handleUseLocation}
+          onPress={handleUseLocation}
         />
         <Text style={styles.cityText}>Choisir ma position</Text>
+        <TextInput
+          // style={styles.input}
+          value={manualCity || ''}
+          onChangeText={handleManualCityChange}
+          placeholder="Entrez votre ville"
+        />
+        <Button
+          title="Valider"
+          onPress={() => updateLocation(manualCity || '')}
+        />
         <View>
         {/* {city && */}
-        <Text style={styles.cityChoice}>Ville sélectionnée : </Text>
+        <Text style={styles.cityChoice}>Ville sélectionnée : { city} </Text>
         </View>
         <Button
           title="Suivant"

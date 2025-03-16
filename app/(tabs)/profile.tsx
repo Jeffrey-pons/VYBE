@@ -12,8 +12,10 @@ import { Link } from 'expo-router';
 import { logoutUser, deleteUserAccount, getUserInfo, updateUserInfo } from '@/services/authService';
 import { auth } from '@/config/firebaseConfig';
 import { updateCurrentUser } from 'firebase/auth';
+import { useLocation } from '@/contexts/LocationContext';
 
 const ProfileScreen: React.FC = () => {
+    const { city } = useLocation();
   const [isPushEnabled, setIsPushEnabled] = useState<boolean>(true);
   const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(true);
   const [isLastTicketsEnabled, setIsLastTicketsEnabled] = useState<boolean>(true);
@@ -183,8 +185,8 @@ useEffect(() => {
 
 
         <Collapsible title="Localisation">
-          <ThemedText type="text">Ville Actuelle : {'Détection en cours...'}</ThemedText>
-          {/* <LocationComponent onCityDetected={handleCityDetected} /> */}
+          <ThemedText type="text">Ville Actuelle : { city }</ThemedText>
+         
         </Collapsible>
 
         <Collapsible title="Connecte ta musique">
