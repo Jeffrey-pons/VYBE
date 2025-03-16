@@ -15,7 +15,7 @@ import { updateCurrentUser } from 'firebase/auth';
 import { useLocation } from '@/contexts/LocationContext';
 
 const ProfileScreen: React.FC = () => {
-    const { city } = useLocation();
+  const { city } = useLocation();
   const [isPushEnabled, setIsPushEnabled] = useState<boolean>(true);
   const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(true);
   const [isLastTicketsEnabled, setIsLastTicketsEnabled] = useState<boolean>(true);
@@ -28,8 +28,6 @@ const ProfileScreen: React.FC = () => {
   const [email, setEmail] = useState(userData?.mail || '');
   const [phoneNumber, setPhoneNumber] = useState(userData?.phoneNumber || '');
   const [isModalVisibleTwo, setIsModalVisibleTwo] = useState<boolean>(false);
-
-
 
   const handleDeleteAccount = async () => {
     if (!userId) {
@@ -67,7 +65,6 @@ const ProfileScreen: React.FC = () => {
     }
   };
 
-
   const handleUpdateUserInfo = async () => {
     if (!userId) {
       alert("Utilisateur non identifié !");
@@ -92,22 +89,21 @@ const ProfileScreen: React.FC = () => {
       alert("Une erreur est survenue lors de la mise à jour des informations.");
     }
   };
-  
 
-useEffect(() => {
-  const currentUser = auth.currentUser;
-  if (currentUser) {
-    setUserId(currentUser.uid);
-    fetchUserInfo(currentUser.uid)
-    getUserInfo(currentUser.uid)
-      .then((data) => {
-        setUserData(data);
-      })
-      .catch((error) => {
-        console.error("Erreur lors de la récupération des informations de l'utilisateur", error);
-      });
-  }
-}, []);
+  useEffect(() => {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      setUserId(currentUser.uid);
+      fetchUserInfo(currentUser.uid)
+      getUserInfo(currentUser.uid)
+        .then((data) => {
+          setUserData(data);
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la récupération des informations de l'utilisateur", error);
+        });
+    }
+  }, []);
 
   return (
     <ScrollView>

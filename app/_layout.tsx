@@ -1,7 +1,6 @@
 import 'react-native-reanimated';
 import { View } from 'react-native';
 import { Stack } from 'expo-router';
-import Loader from '@/components/Loader';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { useLoadFonts } from '@/hooks/useLoadFonts';

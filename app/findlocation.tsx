@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-elements';
 import ProgressBar from '@/components/ProgressBar';
 import { router } from "expo-router";
@@ -11,16 +11,17 @@ import { getLocation } from '@/services/locationService';
 const LocationScreen = () => {
   const { city, updateLocation } = useLocation(); 
   const [manualCity, setManualCity] = useState<string | null>(null);
+  const [showInput, setShowInput] = useState(false);
 
   const handleManualCityChange = (text: string) => {
     setManualCity(text);
-    updateLocation(text); // Mettre à jour la ville via le contexte
+    updateLocation(text); 
   };
 
   const handleUseLocation = async () => {
     await getLocation({
       onCityDetected: (city) => {
-        updateLocation(city); // Mettre à jour la ville dans le contexte
+        updateLocation(city);
       }
     });
   };
@@ -43,17 +44,24 @@ const LocationScreen = () => {
           titleStyle={globalStyles.titleStyle}
           onPress={handleUseLocation}
         />
-        <Text style={styles.cityText}>Choisir ma position</Text>
-        <TextInput
-          // style={styles.input}
-          value={manualCity || ''}
-          onChangeText={handleManualCityChange}
-          placeholder="Entrez votre ville"
-        />
-        <Button
-          title="Valider"
-          onPress={() => updateLocation(manualCity || '')}
-        />
+        <TouchableOpacity onPress={() => setShowInput(!showInput)}>
+          <Text style={styles.cityText}>Choisir ma position</Text>
+        </TouchableOpacity>
+
+        {showInput && (
+          <>
+            <TextInput
+              style={styles.input}
+              value={manualCity || ''}
+              onChangeText={handleManualCityChange}
+              placeholder="Entrez votre ville"
+            />
+            <Button
+              title="Valider"
+              onPress={() => updateLocation(manualCity || '')}
+            />
+          </>
+        )}
         <View>
         {/* {city && */}
         <Text style={styles.cityChoice}>Ville sélectionnée : { city} </Text>
@@ -71,16 +79,16 @@ const LocationScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  // input: {
-  //   borderWidth: 1,
-  //   borderColor: '#ccc',
-  //   borderRadius: 5,
-  //   padding: 10,
-  //   marginTop: 20,
-  //   marginBottom: 20,
-  //   backgroundColor: 'white',
-  //   color: 'black',
-  // },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 20,
+    marginBottom: 20,
+    backgroundColor: 'white',
+    color: 'black',
+  },
   cityText: {
     fontSize: 18,
     color: '#B36DFF',

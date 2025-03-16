@@ -88,6 +88,7 @@ const App = () => {
         alt="Icône de choix de localisation"
       />
     </ThemedText>
+
         
           <View style={styles.categoriesContainer}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow} contentOffset={{ x: 0, y: 0 }} >
