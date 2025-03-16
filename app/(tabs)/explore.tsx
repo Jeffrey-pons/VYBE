@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, Modal, Image, ScrollView } from 'react-native';
-import { Event } from '@/interfaces/Event';
 import { cities } from '@/utils/citiesUtils';
 import globalStyles from '@/styles/globalStyle';
 import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
+import { Event } from '@/interfaces/Event';
 
 // A améliorer en snd partie !!!!!!!!
 
@@ -84,7 +84,7 @@ const FilterScreen: React.FC = () => {
           <Image
             style={styles.searchIcon}
             source={require('../../assets/images/icons/icon_loupe.png')}
-            accessibilityLabel="Icône de recherche"
+            alt="Icône de recherche"
           />
           <TextInput
             style={styles.searchInput}
@@ -99,7 +99,7 @@ const FilterScreen: React.FC = () => {
             <Image
               style={styles.searchIcon}
               source={require('../../assets/images/icons/icon_calender.png')}
-              accessibilityLabel="Icône de calendrier"
+              alt="Icône de calendrier"
             />
             <Text style={styles.filterButtonText}>{date || 'DATE'}</Text>
           </TouchableOpacity>
@@ -107,7 +107,7 @@ const FilterScreen: React.FC = () => {
             <Image
               style={styles.searchIcon}
               source={require('../../assets/images/icons/icon_choice_location.png')}
-              accessibilityLabel="Icône de calendrier"
+              alt="Icône de lieu"
             />
             <Text style={styles.filterButtonText}>{city || 'LIEU'}</Text>
           </TouchableOpacity>
@@ -166,7 +166,7 @@ const FilterScreen: React.FC = () => {
           renderItem={({ item }) => (
             <View style={styles.eventCard}>
               {item.image && item.image.base && item.image.filename ? (
-              <Image source={{ uri: `${item.image.base}${item.image.filename}` }} style={styles.eventImage} accessibilityLabel="Preview de l'évènements"/>
+              <Image source={{ uri: `${item.image.base}${item.image.filename}` }} style={styles.eventImage} alt="Preview de l'évènements"/>
             ) : (
               <View /> 
             )}
@@ -196,7 +196,7 @@ const FilterScreen: React.FC = () => {
                   <Image 
                     source={{ uri: `${selectedEvent.image?.base || ''}${selectedEvent.image?.filename}` }}
                     style={styles.eventImageDetail}
-                    accessibilityLabel="Image de l'évènement"
+                    alt="Image de l'évènement"
                   />
                 )}
                 <Text>{selectedEvent.title?.fr || 'Titre non disponible'}</Text>

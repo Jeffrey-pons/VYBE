@@ -8,6 +8,10 @@ const globalStyles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
+  scrollContainer: {
+    flexGrow: 1, 
+    justifyContent: "center",
+  },
   containerX: {
     flex: 1,
     justifyContent: "center",
@@ -25,9 +29,12 @@ const globalStyles = StyleSheet.create({
   buttonSecondStyle: {
     backgroundColor: Theme.colors.violet,
     borderRadius: 100,
-    paddingLeft: 30,
-    paddingRight: 30,
-    marginTop: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingRight: 40,
+    paddingLeft: 40,
+    marginBottom: 16,
+    marginTop: 10,
   },
   titleStyle: {
     color: Theme.colors.background,
@@ -43,7 +50,19 @@ const globalStyles = StyleSheet.create({
     fontFamily: Theme.typography.fontFamily,
     fontSize: Theme.typography.deca.fontSize,
   },
-  
+  buttonDeletedeStyle: {
+    backgroundColor: "grey",
+    borderRadius: 100,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingRight: 40,
+    paddingLeft: 40,
+    marginBottom: 16,
+    marginTop: 10,
+  },
+  titleDeletedStyle: {
+    fontFamily: "FunnelSans-Regular",
+  },
   // Page Auth 
   logoAuthStyle: {
     width: 150,  

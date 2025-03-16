@@ -28,7 +28,7 @@ export default function TabLayout() {
             <Image
               source={require('../../assets/images/icons/icon_home.png')}
               style={{ width: size, height: size, tintColor: color }}
-              accessibilityLabel="Icône pour revenir au menu principal"
+              alt="Icône pour revenir au menu principal"
             />
           ),
         }}
@@ -41,7 +41,7 @@ export default function TabLayout() {
             <Image
               source={require('../../assets/images/icons/icon_loupe.png')}
               style={{ width: size, height: size, tintColor: color }}
-              accessibilityLabel="Icône de recherche"
+              alt="Icône de recherche"
             />
           ),
         }}
@@ -54,7 +54,7 @@ export default function TabLayout() {
             <Image
               source={require('../../assets/images/icons/icon_ticket.png')}
               style={{ width: size, height: size, tintColor: color }}
-              accessibilityLabel="Icône de la page de tickets"
+              alt="Icône de la page de tickets"
             />
           ),
         }}
@@ -67,7 +67,7 @@ export default function TabLayout() {
             <Image
               source={require('../../assets/images/icons/icon_user.png')}
               style={{ width: size, height: size, tintColor: color }}
-              accessibilityLabel="Icône de la page profil"
+              alt="Icône de la page profil"
             />
           ),
         }}

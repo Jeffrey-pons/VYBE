@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ScrollView, View, Switch, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, View, Switch, StyleSheet, TextInput, Modal } from 'react-native';
 import { ThemedText } from '@/components/ThemedText'; 
 import { Button } from 'react-native-elements';
 import { Collapsible } from '@/components/Collapsible';
@@ -9,22 +9,103 @@ import globalStyles from '@/styles/globalStyle';
 import Entypo from '@expo/vector-icons/Entypo';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import { Link } from 'expo-router';
+import { logoutUser, deleteUserAccount, getUserInfo, updateUserInfo } from '@/services/authService';
+import { auth } from '@/config/firebaseConfig';
+import { updateCurrentUser } from 'firebase/auth';
 
 const ProfileScreen: React.FC = () => {
   const [isPushEnabled, setIsPushEnabled] = useState<boolean>(true);
   const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(true);
   const [isLastTicketsEnabled, setIsLastTicketsEnabled] = useState<boolean>(true);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [userData, setUserData] = useState<any>(null);
+  const [password, setPassword] = useState<string>('');
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [name, setName] = useState(userData?.name || '');
+  const [lastname, setLastname] = useState(userData?.lastname || '');
+  const [email, setEmail] = useState(userData?.mail || '');
+  const [phoneNumber, setPhoneNumber] = useState(userData?.phoneNumber || '');
+  const [isModalVisibleTwo, setIsModalVisibleTwo] = useState<boolean>(false);
 
-// const getInitials = (firstName: string, lastName: string) => {
-//     const initials = [];
-//     if (firstName) {
-//       initials.push(firstName.charAt(0).toUpperCase());
-//     }
-//     if (lastName) {
-//       initials.push(lastName.charAt(0).toUpperCase());
-//     }
-//     return initials.join('');
-//   };
+
+
+  const handleDeleteAccount = async () => {
+    if (!userId) {
+      alert("Utilisateur non identifié !");
+      return;
+    }
+  
+    const confirmDelete = window.confirm("Es-tu sûr de vouloir supprimer ton compte ? Cette action est irréversible.");
+    if (!confirmDelete) return;
+  
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        await deleteUserAccount(userId, password); 
+        alert("Compte supprimé avec succès.");
+      } else {
+        alert("Aucun utilisateur connecté.");
+      }
+    } catch (error: any) {
+      console.error("Erreur lors de la suppression du compte:", error);
+      alert("Une erreur est survenue lors de la suppression du compte.");
+    }
+  };
+
+  const fetchUserInfo = async (userId: string) => {
+    try {
+      const userInfo = await getUserInfo(userId);
+      setUserData(userInfo);
+      setName(userInfo?.name || '');
+      setLastname(userInfo?.lastname || '');
+      setEmail(userInfo?.mail || '');
+      setPhoneNumber(userInfo?.phoneNumber || '');
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  };
+
+
+  const handleUpdateUserInfo = async () => {
+    if (!userId) {
+      alert("Utilisateur non identifié !");
+      return;
+    }
+  
+    try {
+      // Mise à jour de l'email dans Firebase
+      const user = auth.currentUser;
+      if (user) {
+        if (email !== user.email) {
+          await updateCurrentUser(user, { email }); // Mettre à jour l'email dans Firebase
+        }
+      }
+  
+      // Mise à jour des informations de l'utilisateur dans la base de données
+      await updateUserInfo(userId, { name, lastname, email, phoneNumber });
+      alert("Informations mises à jour avec succès.");
+      setIsModalVisibleTwo(false);  // Fermer la modal après la mise à jour
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des informations :", error);
+      alert("Une erreur est survenue lors de la mise à jour des informations.");
+    }
+  };
+  
+
+useEffect(() => {
+  const currentUser = auth.currentUser;
+  if (currentUser) {
+    setUserId(currentUser.uid);
+    fetchUserInfo(currentUser.uid)
+    getUserInfo(currentUser.uid)
+      .then((data) => {
+        setUserData(data);
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la récupération des informations de l'utilisateur", error);
+      });
+  }
+}, []);
 
   return (
     <ScrollView>
@@ -33,26 +114,73 @@ const ProfileScreen: React.FC = () => {
         <View style={styles.centeredContainer}>
           <View style={styles.avatarContainer}>
             <ThemedText type="title">
-              {/* {userData.name.charAt(0).toUpperCase()}{userData.lastname.charAt(0).toUpperCase()} */}
+              {userData?.name?.charAt(0).toUpperCase()}{userData?.lastname?.charAt(0).toUpperCase()}
             </ThemedText>
           </View>
-          <ThemedText type="profileInitials">TestonsJ Ensemble</ThemedText>
+          <ThemedText type="profileInitials">{userData?.name} {userData?.lastname}</ThemedText>
         </View>
 
         <Collapsible title="Coordonnées">
           <View style={styles.containercoord}>
             <View style={styles.subContainerCoordonees}>
-              <ThemedText type="text">Nom : </ThemedText>
-              <ThemedText type="text">Prénom : </ThemedText>
+              <ThemedText type="text">Nom : {userData?.lastname}</ThemedText>
+              <ThemedText type="text">Prénom : {userData?.name}</ThemedText>
             </View>
-            <ThemedText type="text">Email : </ThemedText>
-            <ThemedText type="text">Numéro : </ThemedText>
-            <ThemedText type="text">Mot de passe : </ThemedText>
+            <ThemedText type="text">Email : {userData?.mail}</ThemedText>
+            <ThemedText type="text">Numéro : {userData?.phoneNumber}</ThemedText>
+            <ThemedText type="text">Mot de passe : ********</ThemedText>
             <View style={styles.buttonContainer}>
-              <Button title="Modifier" buttonStyle={styles.buttonUpdatedProfileStyle} titleStyle={styles.titleUpdatedProfileStyle}></Button>
+              <Button title="Modifier" buttonStyle={styles.buttonUpdatedProfileStyle} titleStyle={styles.titleUpdatedProfileStyle} onPress={() => setIsModalVisibleTwo(true)}></Button>
             </View>
           </View>
         </Collapsible>
+
+        <Modal visible={isModalVisibleTwo} transparent animationType="slide">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <ThemedText type="title" style={styles.textModal}>Modifier tes informations</ThemedText>
+              <TextInput
+                placeholder="Nom"
+                value={name}
+                onChangeText={setName}
+                style={styles.input}
+              />
+              <TextInput
+                placeholder="Prénom"
+                value={lastname}
+                onChangeText={setLastname}
+                style={styles.input}
+              />
+              <TextInput
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+                style={styles.input}
+              />
+              <TextInput
+                placeholder="Numéro de téléphone"
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+                style={styles.input}
+              />
+              <View style={styles.modalButtons}>
+                <Button 
+                  title="Annuler" 
+                  buttonStyle={globalStyles.buttonDeletedeStyle} 
+                  titleStyle={globalStyles.titleDeletedStyle}
+                  onPress={() => setIsModalVisibleTwo(false)} 
+                />
+                <Button 
+                  title="Confirmer" 
+                  buttonStyle={globalStyles.buttonSecondStyle} 
+                  titleStyle={globalStyles.titleSecondStyle} 
+                  onPress={handleUpdateUserInfo} 
+                />
+              </View>
+            </View>
+          </View>
+        </Modal>
+
 
         <Collapsible title="Localisation">
           <ThemedText type="text">Ville Actuelle : {'Détection en cours...'}</ThemedText>
@@ -214,10 +342,41 @@ const ProfileScreen: React.FC = () => {
 
 
         <View style={styles.containerButtonProfile}>
-        <Button title="Se déconnecter" buttonStyle={globalStyles.buttonStyle} titleStyle={globalStyles.TextButtonStyle}  />
-        <Button title="Supprimer mon compte" buttonStyle={styles.buttonDeletedeStyle} titleStyle={styles.titleDeletedStyle} />
+        <Button title="Se déconnecter" buttonStyle={globalStyles.buttonStyle} titleStyle={globalStyles.TextButtonStyle} onPress={logoutUser}/>
+        <Button title="Supprimer mon compte" buttonStyle={globalStyles.buttonDeletedeStyle} titleStyle={globalStyles.titleDeletedStyle}   onPress={() => setIsModalVisible(true)} />
         </View>
       </View>
+      <Modal visible={isModalVisible} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <ThemedText type="title" style={styles.textModal}>Confirmer la suppression</ThemedText>
+            <ThemedText type="text" style={styles.textModal}>
+              Pour supprimer votre compte, veuillez entrer votre mot de passe.
+            </ThemedText>
+            <TextInput
+              placeholder="Mot de passe"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+              style={styles.input}
+            />
+            <View style={styles.modalButtons}>
+              <Button 
+                title="Annuler" 
+                buttonStyle={globalStyles.buttonDeletedeStyle} 
+                titleStyle={globalStyles.titleDeletedStyle}
+                onPress={() => setIsModalVisible(false)} 
+              />
+              <Button 
+                title="Confirmer" 
+                buttonStyle={globalStyles.buttonSecondStyle} 
+                titleStyle={globalStyles.titleSecondStyle} 
+                onPress={handleDeleteAccount} 
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -227,7 +386,6 @@ const styles = StyleSheet.create({
     paddingTop: 20, 
     width: "70%",
     margin: "auto"
-
   },
   centeredContainer: {
     alignItems: 'center',
@@ -241,19 +399,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
-  },
-  buttonDeletedeStyle: {
-    backgroundColor: "grey",
-    borderRadius: 100,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingRight: 40,
-    paddingLeft: 40,
-    marginBottom: 16,
-    marginTop: 10,
-  },
-  titleDeletedStyle: {
-    fontFamily: "FunnelSans-Regular",
   },
   buttonUpdatedProfileStyle: {
     backgroundColor: "white",
@@ -278,6 +423,7 @@ const styles = StyleSheet.create({
   },
   subContainerCoordonees: {
     flexDirection: "row",
+    justifyContent: "space-between",
   },
   containercoord: {
     width: '100%', 
@@ -367,7 +513,37 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     gap: 12, 
   },
-  
+  ////// modal mais style à revoir
+   // Modal styles
+   modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '90%',
+    alignItems: 'center',
+  },
+  input: {
+    width: '100%',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginBottom: 20,
+    marginTop: 20,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: "space-evenly",
+    gap: 15,
+  },
+  textModal: {
+    color: "black",
+  }
 });
 
 export default ProfileScreen;

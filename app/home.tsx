@@ -2,7 +2,7 @@ import { Link } from "expo-router";
 import { Button } from "react-native-elements";
 import globalStyles from "@/styles/globalStyle";
 import { ThemedText } from "@/components/ThemedText";
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, Platform } from "react-native";
 import { Theme } from "@/constants/Theme";
 
 const WelcomeScreen = () => {
@@ -10,7 +10,8 @@ const WelcomeScreen = () => {
         <View style={styles.containerHomePage}>
           <Image
             source={require('../assets/images/logos/VYBE_logo_white_transparent_home.png')}
-            accessibilityLabel="Logo Vybe"
+            alt="Logo Vybe"
+            style={styles.logoHome}
           />
           <ThemedText type="title"style={styles.welcomeTitle}>TROUVE LES{'\n'}ÉVÈNEMENTS{'\n'}RIEN QUE POUR TOI</ThemedText>
           <Link href={"/login"} asChild>
@@ -28,10 +29,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    display: "flex",
-    flexGrow: 1,
-    gap: 40,
+    gap: 50,
   },  
+  logoHome: {
+    ...(Platform.OS !== "web" && {
+      width: 300, 
+      height: 300, 
+      resizeMode: "contain",
+      marginBottom: -110,
+    }),
+  },
   welcomeTitle: {
     fontWeight: Theme.typography.megaBold.fontWeight,
     fontFamily: Theme.typography.fontFamilySecondary,

@@ -83,7 +83,7 @@ const App = () => {
       <Image
         style={styles.iconSize}
         source={require('../../assets/images/icons/icon_choice_location.png')}
-        accessibilityLabel="Icône de choix de localisation"
+        alt="Icône de choix de localisation"
       />
     </ThemedText>
 
@@ -106,7 +106,7 @@ const App = () => {
           <Image
             style={styles.iconSize}
             source={require('../../assets/images/icons/icon_tonight.png')}
-            accessibilityLabel="Icône de la catégorie Ce soir"
+            alt="Icône de la catégorie Ce soir"
           />
             <Text style={styles.categoryText}>Ce soir</Text>
           </TouchableOpacity>
@@ -124,7 +124,7 @@ const App = () => {
           <Image
             style={styles.iconSize}
             source={require('../../assets/images/icons/icon_calender.png')}
-            accessibilityLabel="Icône de la catégorie Cette semaine"
+            alt="Icône de la catégorie Cette semaine"
           />
             <Text style={styles.categoryText}>Cette semaine</Text>
           </TouchableOpacity>
@@ -142,7 +142,7 @@ const App = () => {
             <Image
             style={styles.iconSize}
             source={require('../../assets/images/icons/icon_concert.png')}
-            accessibilityLabel="Icône de la catégorie Concert"
+            alt="Icône de la catégorie Concert"
             />
             <Text style={styles.categoryText}>Concerts</Text>
           </TouchableOpacity>
@@ -160,7 +160,7 @@ const App = () => {
             <Image
             style={styles.iconSize}
             source={require('../../assets/images/icons/icon_festival.png')}
-            accessibilityLabel="Icône de la catégorie Festival"
+            alt="Icône de la catégorie Festival"
             />
             <Text style={styles.categoryText}>Festivals</Text>
           </TouchableOpacity>
@@ -177,7 +177,7 @@ const App = () => {
             <Image
               style={styles.iconSize}
               source={require('../../assets/images/icons/icon_spectacle.png')}
-              accessibilityLabel="Icône de la catégorie Spectacle"
+              alt="Icône de la catégorie Spectacle"
             />
             <Text style={styles.categoryText}>Spectacles</Text>
           </TouchableOpacity>
@@ -194,7 +194,7 @@ const App = () => {
             <Image
               style={styles.iconSize}
               source={require('../../assets/images/icons/icon_exposition.png')}
-              accessibilityLabel="Icône de la catégorie Exposition"
+              alt="Icône de la catégorie Exposition"
             />
             <Text style={styles.categoryText}>Expositions</Text>
           </TouchableOpacity>
@@ -211,7 +211,7 @@ const App = () => {
             <Image
               style={styles.iconSize}
               source={require('../../assets/images/icons/icon_humor.png')}
-              accessibilityLabel="Icône de la catégorie Humour"
+              alt="Icône de la catégorie Humour"
             />
             <Text style={styles.categoryText}>Humours</Text>
           </TouchableOpacity>
@@ -228,7 +228,7 @@ const App = () => {
             <Image
               style={styles.iconSize}
               source={require('../../assets/images/icons/icon_workshop.png')}
-              accessibilityLabel="Icône de la catégorie Atelier"
+              alt="Icône de la catégorie Atelier"
             />
             <Text style={styles.categoryText}>Ateliers</Text>
           </TouchableOpacity>
@@ -245,7 +245,7 @@ const App = () => {
             <Image
             style={styles.iconSize}
             source={require('../../assets/images/icons/icon_festival.png')}
-            accessibilityLabel="Icône de la catégorie Soirée"
+            alt="Icône de la catégorie Soirée"
             />
             <Text style={styles.categoryText}>Soirées</Text>
           </TouchableOpacity>
@@ -262,7 +262,7 @@ const App = () => {
             <Image
               style={styles.iconSize}
               source={require('../../assets/images/icons/icon_dj.png')}
-              accessibilityLabel="Icône de la catégorie Techno"
+              alt="Icône de la catégorie Techno"
             />
             <Text style={styles.categoryText}>DJ</Text>
           </TouchableOpacity>
@@ -275,7 +275,7 @@ const App = () => {
               <Image 
                 source={{ uri: `${event.image?.base || ''}${event.image?.filename}` }}
                 style={styles.eventImage}
-                accessibilityLabel="Preview de l'évènement"
+                alt="Preview de l'évènement"
               />
               
               <Text style={styles.eventTitle}>{event.title?.fr || 'Titre indisponible'}</Text>
@@ -309,7 +309,7 @@ const App = () => {
                  <Image 
                  source={{ uri: `${selectedEvent.image?.base || ''}${selectedEvent.image?.filename}` }}
                  style={styles.eventImage}
-                 accessibilityLabel="Image de l'évènement"
+                 alt="Image de l'évènement"
                />
               )}
                 <Text style={globalStyles.modalTitle}>{selectedEvent.title?.fr}</Text>
@@ -396,6 +396,7 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
     borderRadius: 8,
     borderWidth: 2,
+    color: "green",
     width: '12%',
     padding: 10,
   },
