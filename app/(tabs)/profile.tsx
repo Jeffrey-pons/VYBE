@@ -9,7 +9,7 @@ import globalStyles from '@/styles/globalStyle';
 import Entypo from '@expo/vector-icons/Entypo';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import { Link } from 'expo-router';
-import { logoutUser, deleteUserAccount, getUserInfo } from '@/services/authService';
+import { logoutUser, deleteUserAccount, getUserInfo, updateUserInfo } from '@/services/authService';
 import { auth } from '@/config/firebaseConfig';
 import { updateCurrentUser } from 'firebase/auth';
 
@@ -21,6 +21,13 @@ const ProfileScreen: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);
   const [password, setPassword] = useState<string>('');
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [name, setName] = useState(userData?.name || '');
+  const [lastname, setLastname] = useState(userData?.lastname || '');
+  const [email, setEmail] = useState(userData?.mail || '');
+  const [phoneNumber, setPhoneNumber] = useState(userData?.phoneNumber || '');
+  const [isModalVisibleTwo, setIsModalVisibleTwo] = useState<boolean>(false);
+
+
 
   const handleDeleteAccount = async () => {
     if (!userId) {
@@ -35,7 +42,6 @@ const ProfileScreen: React.FC = () => {
       const user = auth.currentUser;
       if (user) {
         await deleteUserAccount(userId, password); 
-        await user.delete(); 
         alert("Compte supprimé avec succès.");
       } else {
         alert("Aucun utilisateur connecté.");
@@ -46,10 +52,51 @@ const ProfileScreen: React.FC = () => {
     }
   };
 
+  const fetchUserInfo = async (userId: string) => {
+    try {
+      const userInfo = await getUserInfo(userId);
+      setUserData(userInfo);
+      setName(userInfo?.name || '');
+      setLastname(userInfo?.lastname || '');
+      setEmail(userInfo?.mail || '');
+      setPhoneNumber(userInfo?.phoneNumber || '');
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  };
+
+
+  const handleUpdateUserInfo = async () => {
+    if (!userId) {
+      alert("Utilisateur non identifié !");
+      return;
+    }
+  
+    try {
+      // Mise à jour de l'email dans Firebase
+      const user = auth.currentUser;
+      if (user) {
+        if (email !== user.email) {
+          await updateCurrentUser(user, { email }); // Mettre à jour l'email dans Firebase
+        }
+      }
+  
+      // Mise à jour des informations de l'utilisateur dans la base de données
+      await updateUserInfo(userId, { name, lastname, email, phoneNumber });
+      alert("Informations mises à jour avec succès.");
+      setIsModalVisibleTwo(false);  // Fermer la modal après la mise à jour
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des informations :", error);
+      alert("Une erreur est survenue lors de la mise à jour des informations.");
+    }
+  };
+  
+
 useEffect(() => {
   const currentUser = auth.currentUser;
   if (currentUser) {
     setUserId(currentUser.uid);
+    fetchUserInfo(currentUser.uid)
     getUserInfo(currentUser.uid)
       .then((data) => {
         setUserData(data);
@@ -83,10 +130,57 @@ useEffect(() => {
             <ThemedText type="text">Numéro : {userData?.phoneNumber}</ThemedText>
             <ThemedText type="text">Mot de passe : ********</ThemedText>
             <View style={styles.buttonContainer}>
-              <Button title="Modifier" buttonStyle={styles.buttonUpdatedProfileStyle} titleStyle={styles.titleUpdatedProfileStyle}></Button>
+              <Button title="Modifier" buttonStyle={styles.buttonUpdatedProfileStyle} titleStyle={styles.titleUpdatedProfileStyle} onPress={() => setIsModalVisibleTwo(true)}></Button>
             </View>
           </View>
         </Collapsible>
+
+        <Modal visible={isModalVisibleTwo} transparent animationType="slide">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <ThemedText type="title" style={styles.textModal}>Modifier tes informations</ThemedText>
+              <TextInput
+                placeholder="Nom"
+                value={name}
+                onChangeText={setName}
+                style={styles.input}
+              />
+              <TextInput
+                placeholder="Prénom"
+                value={lastname}
+                onChangeText={setLastname}
+                style={styles.input}
+              />
+              <TextInput
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+                style={styles.input}
+              />
+              <TextInput
+                placeholder="Numéro de téléphone"
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+                style={styles.input}
+              />
+              <View style={styles.modalButtons}>
+                <Button 
+                  title="Annuler" 
+                  buttonStyle={globalStyles.buttonDeletedeStyle} 
+                  titleStyle={globalStyles.titleDeletedStyle}
+                  onPress={() => setIsModalVisibleTwo(false)} 
+                />
+                <Button 
+                  title="Confirmer" 
+                  buttonStyle={globalStyles.buttonSecondStyle} 
+                  titleStyle={globalStyles.titleSecondStyle} 
+                  onPress={handleUpdateUserInfo} 
+                />
+              </View>
+            </View>
+          </View>
+        </Modal>
+
 
         <Collapsible title="Localisation">
           <ThemedText type="text">Ville Actuelle : {'Détection en cours...'}</ThemedText>
