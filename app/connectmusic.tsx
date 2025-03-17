@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, ScrollView } from 'react-native';
+import { View, Image, ScrollView, Alert } from 'react-native';
 import { Button } from 'react-native-elements';
 import ProgressBar from '@/components/ProgressBar';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -8,10 +8,25 @@ import { router } from 'expo-router';
 import globalStyles from '@/styles/globalStyle';
 import SkipButton from '@/components/SkipButton';
 import { ThemedText } from '@/components/ThemedText';
+import { auth } from '@/config/firebaseConfig';
+import { updateUserOnboardingProgress } from '@/services/authService';
 
 const MusicScreen = () => {
   const handleSkip = () => {
     router.replace('/activenotification'); 
+  };
+
+  const handleNext = async () => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        await updateUserOnboardingProgress(user.uid, { hasConnectedMusic: true });
+      }
+      router.replace("/activenotification"); 
+    } catch (error) {
+      console.error("Erreur :", error);
+      Alert.alert("Erreur", "Impossible de sauvegarder.");
+    }
   };
 
 return (
@@ -45,7 +60,7 @@ return (
       />
       <Button 
         title="Suivant" 
-        onPress={() => router.replace('/activenotification')} 
+        onPress={handleNext} 
         buttonStyle={globalStyles.buttonSecondStyle} 
         titleStyle={globalStyles.titleSecondStyle} 
       />

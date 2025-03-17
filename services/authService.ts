@@ -10,6 +10,12 @@ interface AuthResponse {
   user: User;
 }
 
+export interface UserProgress {
+  city?: string;
+  hasConnectedMusic?: boolean;
+  hasActiveNotification?: boolean;
+}
+
 export const registerUser = async (data: RegisterDTO): Promise<AuthResponse> => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
@@ -65,6 +71,31 @@ export const updateUserInfo = async (userId: string, updatedData: Partial<Regist
     await setDoc(userRef, updatedData, { merge: true });
   } catch (error: any) {
     console.error("Error updating user info:", error);
+    throw new Error(error.message);
+  }
+};
+
+export const updateUserOnboardingProgress = async (userId: string, data: Partial<UserProgress>) => {
+  try {
+    const userRef = doc(db, "users", userId);
+    await setDoc(userRef, data, { merge: true });
+  } catch (error: any) {
+    console.error("Erreur mise à jour progression :", error);
+    throw new Error(error.message);
+  }
+};
+
+export const getUserProgress = async (userId: string): Promise<UserProgress | null> => {
+  try {
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      return userSnap.data() as UserProgress;
+    }
+    return null;
+  } catch (error: any) {
+    console.error("Erreur récupération données utilisateur :", error);
     throw new Error(error.message);
   }
 };

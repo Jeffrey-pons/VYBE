@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { Button } from 'react-native-elements';
+import { auth } from "@/config/firebaseConfig";
 import ProgressBar from '@/components/ProgressBar';
 import { router } from "expo-router";
 import { useLocation } from '@/contexts/LocationContext';
 import globalStyles from '@/styles/globalStyle'; 
 import { ThemedText } from '@/components/ThemedText';
 import { getLocation } from '@/services/locationService';
+import { updateUserOnboardingProgress } from '@/services/authService';
+import locationIcon from '../assets/images/icons/icon_location.png';
 
 const LocationScreen = () => {
   const { city, updateLocation } = useLocation(); 
@@ -26,13 +29,32 @@ const LocationScreen = () => {
     });
   };
 
+  const handleNext = async () => {
+    if (!city) {
+      Alert.alert("Erreur", "Vous devez entrer une ville ou utiliser la géolocalisation avant de continuer.");
+      return;
+    }
+  
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        await updateUserOnboardingProgress(user.uid, { city });
+      }
+      
+      router.replace("/connectmusic"); 
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement de la ville :", error);
+      Alert.alert("Erreur", "Impossible d'enregistrer votre ville.");
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
       <View style={globalStyles.container}>
         <ProgressBar step={1} totalSteps={3} />
         <Image
           style={globalStyles.logoAuthStyle}
-          source={require('../assets/images/icons/icon_location.png')}
+          source={locationIcon}
           alt="Icône de Localisation"
         />
         <ThemedText type="authTitle">Voir ce qu'il se passe près de chez toi</ThemedText>
@@ -70,8 +92,7 @@ const LocationScreen = () => {
           title="Suivant"
           buttonStyle={globalStyles.buttonSecondStyle}
           titleStyle={globalStyles.titleSecondStyle}
-          onPress={() => router.replace('/connectmusic')}
-          // disabled={!city}
+          onPress={handleNext}
         />
       </View>
     </ScrollView>

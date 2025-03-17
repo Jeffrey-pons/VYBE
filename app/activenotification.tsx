@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import { View, Switch, Image, ScrollView } from 'react-native';
+import { View, Switch, Image, ScrollView, Alert } from 'react-native';
 import ProgressBar from '@/components/ProgressBar';
 import { router } from 'expo-router';
 import globalStyles from '@/styles/globalStyle';
@@ -7,6 +7,8 @@ import { Button } from 'react-native-elements';
 import SkipButton from '@/components/SkipButton';
 import { ThemedText } from '@/components/ThemedText';
 // import * as Notifications from "expo-notifications"
+import { auth } from '@/config/firebaseConfig';
+import { updateUserOnboardingProgress } from '@/services/authService';
 
 const NotificationScreen = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
@@ -17,6 +19,20 @@ const NotificationScreen = () => {
   const handleSkip = () => {
     router.replace('/(tabs)'); 
   };
+
+  const handleFinish = async () => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        await updateUserOnboardingProgress(user.uid, { hasActiveNotification: true });
+      }
+      router.replace("/(tabs)");
+    } catch (error) {
+      console.error("Erreur :", error);
+      Alert.alert("Erreur", "Impossible de sauvegarder.");
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
       <View style={globalStyles.container}>
@@ -37,7 +53,7 @@ const NotificationScreen = () => {
         />
         <Button
           title="Terminer"
-          onPress={() => router.replace('/(tabs)')} 
+          onPress={handleFinish} 
           buttonStyle={globalStyles.buttonSecondStyle} 
           titleStyle={globalStyles.titleSecondStyle} 
         />

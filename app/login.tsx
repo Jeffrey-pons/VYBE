@@ -15,7 +15,6 @@ const LoginScreen: React.FC = () => {
       const response = await loginUser(email, password);
       if (response) {
         Alert.alert("Succès", "Connexion reussie");
-        router.replace("/findlocation");
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
