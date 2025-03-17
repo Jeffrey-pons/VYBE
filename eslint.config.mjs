@@ -34,6 +34,7 @@ export default [
       "react-hooks": pluginReactHooks,
     },
     rules: {
+      "@typescript-eslint/no-require-imports": "error",
       "@typescript-eslint/no-unused-vars": "warn",
       "react/react-in-jsx-scope": "off",
       "react-hooks/rules-of-hooks": "error",
