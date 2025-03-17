@@ -16,7 +16,7 @@ const LocationScreen = () => {
     showInput, 
     handleManualCityChange, 
     handleUseLocation, 
-    handleNext, 
+    handleCityNext, 
     toggleInput 
   } = useLocationHandler();
 
@@ -65,7 +65,10 @@ const LocationScreen = () => {
           title="Suivant"
           buttonStyle={globalStyles.buttonSecondStyle}
           titleStyle={globalStyles.titleSecondStyle}
-          onPress={() => handleNext(auth.currentUser, router)}
+          onPress={() => {
+            handleCityNext(auth.currentUser, router);
+            router.replace('/connectmusic');
+          }}
         />
       </View>
     </ScrollView>

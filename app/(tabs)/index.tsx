@@ -1,24 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal, Button, TextInput } from 'react-native';
 // import LocationComponent from '@/components/Location'; 
 import { ThemedText } from '@/components/ThemedText';
 // import { fetchEventsByCategory, fetchEventsTonight, fetchEventsThisWeek } from '@/services/openAgenda.api';
 import { Event } from '@/interfaces/Event';
 import Logo from '@/components/LogoHeader';
+import { auth } from '@/config/firebaseConfig';
+import { router } from 'expo-router';
 import globalStyles from '@/styles/globalStyle';
-import { useLocation } from '@/contexts/LocationContext';
+import { useLocationHandler } from '@/hooks/useLocationHandler';
 import { iconChoiceLocation, iconTonight, iconThisWeek, iconConcert, iconFestival, iconSpectacle, iconExposition, iconHumor, iconAtelier, iconDj } from '@/utils/imagesUtils';
 
 // A améliorer en snd partie !!!!!!!!
 
 const App = () => {
-  const { city } = useLocation();
+  // const { city } = useLocation();
+  const { 
+    city, 
+    manualCity, 
+    showInput, 
+    handleManualCityChange, 
+    handleUseLocation, 
+    handleCityNext,
+    toggleInput 
+  } = useLocationHandler();
   // const [city, setCity] = useState<string | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 // A améliorer en snd partie
+
+// Gérer l'événement quand l'utilisateur appuie sur "Entrée"
+const handleCitySubmit = () => {
+  // Enregistrer la ville dans le contexte et en base de données
+  handleManualCityChange(manualCity || '');
+  handleCityNext(auth.currentUser, router);
+};
 
   useEffect(() => {
     if (city && events.length === 0) {
@@ -82,13 +100,37 @@ const App = () => {
     <Logo></Logo>
      <ThemedText style={styles.titleLocal}>
       Trouve ton prochain évènements à{' '}
-      <Text style={styles.underlinedCity}>{city}</Text>
+      <TouchableOpacity onPress={toggleInput}>
+          <Text style={styles.underlinedCity}>{city || "Choisir une ville"}</Text>
+        </TouchableOpacity>
       <Image
         style={styles.iconSize}
         source={iconChoiceLocation}
         alt="Icône de choix de localisation"
       />
     </ThemedText>
+    {showInput && (
+          <>
+            <TextInput
+               style={styles.textInput}
+              value={manualCity || ''}
+              onChangeText={handleManualCityChange}
+              placeholder="Entrez votre ville"
+              onSubmitEditing={handleCitySubmit} 
+              returnKeyType="done" 
+            />
+          </>
+        )}
+     {!showInput && (
+        <TextInput
+          style={styles.textInputInvisible}
+          value={manualCity || ''}
+          onChangeText={handleManualCityChange}
+          placeholder="Entrez votre ville"
+          onSubmitEditing={handleCitySubmit}
+          returnKeyType="done"
+        />
+      )}
 
         
           <View style={styles.categoriesContainer}>
@@ -351,6 +393,27 @@ const styles = StyleSheet.create({
     padding: 20,
     fontFamily: "Fugaz-One",
   },
+  textInput: {
+    position: 'absolute', 
+    top: 0, 
+    left: 0, 
+    fontSize: 18,
+    borderBottomWidth: 1,
+    
+    borderBottomColor: 'black',
+    width: '100%', 
+    height: '100%', 
+    opacity: 1, 
+  },
+  textInputInvisible: {
+    position: 'absolute', 
+    top: 0,
+    left: 0,
+    fontSize: 18,
+    opacity: 0, 
+    height: 0, 
+    width: '100%', 
+  },
   iconSize: {
     width: 50,  
     height: 50,  
@@ -376,8 +439,10 @@ const styles = StyleSheet.create({
     fontFamily: 'FunnelSans-Regular',
     fontSize: 28,
     textAlign: "center",
+    position: 'relative',
   },
   underlinedCity: {
+    fontFamily: "Fugaz-One",
     borderBottomWidth: 1, 
     borderBottomColor: 'white', 
     paddingBottom: 0.5, 

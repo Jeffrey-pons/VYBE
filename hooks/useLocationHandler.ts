@@ -10,19 +10,40 @@ export const useLocationHandler = () => {
 
   const handleManualCityChange = (text: string) => {
     setManualCity(text);
-    updateLocation(text);
+    updateLocation(text); 
   };
 
   const handleUseLocation = async () => {
-    await getLocation({
-      onCityDetected: (detectedCity) => {
-        updateLocation(detectedCity);
-      }
-    });
+    try {
+      await getLocation({
+        onCityDetected: (detectedCity) => {
+          updateLocation(detectedCity);
+        }
+      });
+    } catch (error) {
+      console.error("Erreur de géolocalisation", error);
+      alert("Impossible de détecter votre ville.");
+    }
   };
 
   const toggleInput = () => {
     setShowInput(prevState => !prevState);
+  };
+
+  const handleCityNext = async (user: { uid: string } | null, router: any) => {
+    if (!city) {
+      alert("Vous devez entrer une ville ou utiliser la géolocalisation avant de continuer.");
+      return;
+    }
+
+    try {
+      if (user) {
+        await updateUserOnboardingProgress(user.uid, { city });
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement de la ville :", error);
+      alert("Impossible d'enregistrer votre ville.");
+    }
   };
 
   return {
@@ -31,23 +52,7 @@ export const useLocationHandler = () => {
     showInput,
     handleManualCityChange,
     handleUseLocation,
-    handleNext: async (user: any, router: any) => {
-      if (!city) {
-        alert("Vous devez entrer une ville ou utiliser la géolocalisation avant de continuer.");
-        return;
-      }
-  
-      try {
-        if (user) {
-          await updateUserOnboardingProgress(user.uid, { city });
-        }
-        
-        router.replace("/connectmusic");
-      } catch (error) {
-        console.error("Erreur lors de l'enregistrement de la ville :", error);
-        alert("Impossible d'enregistrer votre ville.");
-      }
-    },
+    handleCityNext,
     toggleInput,
   };
 };
