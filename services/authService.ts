@@ -1,9 +1,11 @@
-import { RegisterDTO, LoginDTO } from '@/dtos/AuthDto';
+import { RegisterDTO } from '@/dtos/AuthDto';
 import { auth, db } from "@/config/firebaseConfig";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { router } from "expo-router";
 import { Alert } from "react-native";
-
+import { AuthServiceError } from '@/types/errors';
+import { handleAuthError, handleReauthError, isFirebaseError } from './errorHandlerService';
+import { FirebaseError } from 'firebase/app';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User, deleteUser, EmailAuthProvider, reauthenticateWithCredential, onAuthStateChanged, updateEmail, sendEmailVerification } from "firebase/auth";
 
 interface AuthResponse {
@@ -28,20 +30,31 @@ export const registerUser = async (data: RegisterDTO): Promise<AuthResponse> => 
       phoneNumber: data.phoneNumber,
       createdAt: new Date(),
     });
+    Alert.alert("Succès", "Inscription reussie");
     await signOut(auth);
     return { user: userCredential.user };
-  } catch (error: any) {
-    console.error("Firebase Auth Error:", error);
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof FirebaseError) {
+      throw handleAuthError(error, "Erreur d'inscription'");
+    } else {
+      console.error("Error:", error);
+      throw new Error("Erreur inconnue pendant l'inscription'.");
+    }
   }
 };
 
 export const loginUser = async (email: string, password: string): Promise<AuthResponse> => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    Alert.alert("Succès", "Connexion reussie");
     return { user: userCredential.user };
-  } catch (error: any) {
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof FirebaseError) {
+      throw handleAuthError(error, "Erreur de connexion");
+    } else {
+      console.error("Error:", error);
+      throw new Error("Erreur inconnue pendant la connexion.");
+    }
   }
 };
 
@@ -50,8 +63,13 @@ export const logoutUser = async (): Promise<void> => {
     await signOut(auth);
     Alert.alert("Succès", "Déconnexion reussie");
     router.replace('/home')
-  } catch (error: any) {
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof FirebaseError) {
+      throw handleAuthError(error, "Erreur de déconnexion");
+    } else {
+      console.error("Error:", error);
+      throw new Error("Erreur inconnue pendant la déconnexion.");
+    }
   }
 };
 
@@ -63,15 +81,26 @@ export const updateUserInfo = async (userId: string, updatedData: Partial<Regist
     if (userId !== user.uid) throw new Error("L'ID utilisateur ne correspond pas à l'utilisateur connecté.");
     
     if (updatedData.email && updatedData.email !== user.email) {
-      await updateEmail(user, updatedData.email);
-      console.log("Email mis à jour dans Firebase Auth");
+      try {
+        await updateEmail(user, updatedData.email);
+      } catch (error: unknown) {
+        if (error instanceof FirebaseError) {
+          throw handleAuthError(error, "Erreur de mise à jour de l'email", { showAlert: false });
+        } else {
+          console.error("Error:", error);
+          throw new Error("Erreur inconnue pendant la mise à jour de l'email.");
+        }
     }
-
+  }
     const userRef = doc(db, "users", userId);
     await setDoc(userRef, updatedData, { merge: true });
-  } catch (error: any) {
-    console.error("Error updating user info:", error);
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof FirebaseError) {
+      throw handleAuthError(error, "Erreur de mise à jour");
+    } else {
+      console.error("Error:", error);
+      throw new Error("Erreur inconnue pendant la mise à jour.");
+    }
   }
 };
 
@@ -79,9 +108,13 @@ export const updateUserOnboardingProgress = async (userId: string, data: Partial
   try {
     const userRef = doc(db, "users", userId);
     await setDoc(userRef, data, { merge: true });
-  } catch (error: any) {
-    console.error("Erreur mise à jour progression :", error);
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof FirebaseError) {
+      throw handleAuthError(error, "Erreur de mise à jour");
+    } else {
+      console.error("Error:", error);
+      throw new Error("Erreur inconnue pendant la mise à jour du progrès.");
+    }
   }
 };
 
@@ -94,9 +127,13 @@ export const getUserProgress = async (userId: string): Promise<UserProgress | nu
       return userSnap.data() as UserProgress;
     }
     return null;
-  } catch (error: any) {
-    console.error("Erreur récupération données utilisateur :", error);
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof FirebaseError) {
+      throw handleAuthError(error, "Erreur de récupération du progrès");
+    } else {
+      console.error("Error:", error);
+      throw new Error("Erreur inconnue pendant la récupération du progrès.");
+    }
   }
 };
 
@@ -108,38 +145,75 @@ export const getUserInfo = async (userId: string): Promise<any> => {
     if (userSnap.exists()) {
       return userSnap.data();
     } else {
-      throw new Error("No such user!");
+      throw new AuthServiceError("Utilisateur non trouvé.", "firestore/not-found");
     }
-  } catch (error: any) {
-    console.error("Error retrieving user info:", error);
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof FirebaseError) {
+      throw handleAuthError(error, "Erreur de récupération");
+    } else {
+      console.error("Error:", error);
+      throw new Error("Erreur inconnue pendant la récupération des informations.");
+    }
   }
 };
 
 export const deleteUserAccount = async (userId: string, password: string): Promise<void> => {
   try {
-
     const user = auth.currentUser;
 
-    if (!user) throw new Error("Aucun utilisateur connecté.");
+    if (!user) {
+      throw new AuthServiceError("Aucun utilisateur connecté.", "auth/no-user");
+    }
     
-    await reauthenticateUser(user, password);
+    try {
+      await reauthenticateUser(user, password);
+    } catch (error: unknown) {
+      Alert.alert("Erreur d'authentification", 
+        "Pour des raisons de sécurité, veuillez vérifier votre mot de passe avant de supprimer votre compte.");
+      throw handleAuthError(error, "Erreur d'authentification", { showAlert: false });
+    }
 
-    const userRef = doc(db, "users", userId);
-    await deleteDoc(userRef);
-
+    try {
+      const userRef = doc(db, "users", userId);
+      await deleteDoc(userRef);
+      
       await deleteUser(user);
       Alert.alert("Succès", "Compte supprimé avec succès");
-      router.replace('/home')
-  } catch (error: any) {
-    console.error("Error deleting user account:", error);
-    throw new Error(error.message);
+      router.replace('/home');
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) {
+        throw handleAuthError(error, "Erreur lors de la suppression");
+      } else {
+        console.error("Error:", error);
+        throw new Error("Erreur inconnue pendant la suppression.");
+      }
+    }
+  } catch (error: unknown) {
+    if (error instanceof FirebaseError) {
+      throw handleAuthError(error, "Erreur de suppression");
+    } else {
+      console.error("Error:", error);
+      throw new Error("Erreur inconnue pendant la suppression.");
+    }
   }
 };
 
 export const reauthenticateUser = async (user: User, password: string) => {
-  const credential = EmailAuthProvider.credential(user.email!, password);
-  await reauthenticateWithCredential(user, credential);
+  try {
+    if (!user.email) {
+      throw new AuthServiceError("Aucune adresse email associée à ce compte.", "auth/no-email");
+    }
+    
+    const credential = EmailAuthProvider.credential(user.email, password);
+    await reauthenticateWithCredential(user, credential);
+  } catch (error: unknown) {
+    if (error instanceof FirebaseError) {
+      throw handleAuthError(error, "Erreur de réauthentification");
+    } else {
+      console.error("Error:", error);
+      throw new Error("Erreur inconnue pendant la réauthentification.");
+    }
+  }
 };
 
 onAuthStateChanged(auth, (user) => {
@@ -150,43 +224,53 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-const handleUpdateEmail = async (newEmail: string) => {
-  const user = auth.currentUser;
-
-  if (!user) {
-    alert('Aucun utilisateur connecté.');
-    return;
-  }
-
-  // Vérifier si l'email de l'utilisateur est déjà vérifié
-  if (!user.emailVerified) {
-    try {
-      // Si l'email n'est pas vérifié, envoyez un email de vérification
-      await sendEmailVerification(user);
-      alert('Un email de vérification a été envoyé. Veuillez vérifier votre boîte de réception.');
-
-      // Vous pouvez aussi informer l'utilisateur que l'email ne sera mis à jour qu'après la vérification
-      console.log('L\'email n\'est pas vérifié, veuillez vérifier votre boîte de réception avant de changer l\'email.');
-
-      // Ne pas mettre à jour l'email immédiatement tant que l'utilisateur n'a pas vérifié son email
-      return;
-    } catch (error) {
-      console.error('Erreur lors de l\'envoi de l\'email de vérification', error);
-      alert('Une erreur est survenue lors de l\'envoi de l\'email de vérification.');
-    }
-  }
-
-  // Si l'email est déjà vérifié, mettre à jour l'email dans Firebase Auth
+export const handleUpdateEmail = async (newEmail: string) => {
   try {
-    // Mise à jour de l'email dans Firebase Auth
-    await updateEmail(user, newEmail);
-    console.log('Email mis à jour avec succès dans Firebase Auth');
+    const user = auth.currentUser;
 
-    // Après la mise à jour de l'email, mettez à jour les informations dans Firestore
-    await updateUserInfo(user.uid, { email: newEmail });
-    alert('Email mis à jour avec succès dans Firebase Auth et Firestore');
-  } catch (error) {
-    console.error('Erreur lors de la mise à jour de l\'email', error);
-    alert('Une erreur est survenue lors de la mise à jour de l\'email.');
+    if (!user) {
+      throw new AuthServiceError("Aucun utilisateur connecté.", "auth/no-user");
+    }
+
+    // Vérifier si l'email de l'utilisateur est déjà vérifié
+    if (!user.emailVerified) {
+      try {
+        // Si l'email n'est pas vérifié, envoyez un email de vérification
+        await sendEmailVerification(user);
+        Alert.alert(
+          "Vérification requise", 
+          "Un email de vérification a été envoyé. Veuillez vérifier votre boîte de réception avant de changer votre email."
+        );
+        return;
+      } catch (error: unknown) {
+        if (error instanceof FirebaseError) {
+          throw handleAuthError(error, "Erreur de vérification");
+        } else {
+          console.error("Error:", error);
+          throw new Error("Erreur inconnue pendant l'envoi de l'email de vérification.");
+        }
+      }
+    }
+
+    // Si l'email est déjà vérifié, mettre à jour l'email dans Firebase Auth
+    try {
+      // Mise à jour de l'email dans Firebase Auth
+      await updateEmail(user, newEmail);
+      console.log('Email mis à jour avec succès dans Firebase Auth');
+
+      // Après la mise à jour de l'email, mettez à jour les informations dans Firestore
+      await updateUserInfo(user.uid, { email: newEmail });
+      Alert.alert('Succès', 'Email mis à jour avec succès');
+    } catch (error: unknown) {
+      if (isFirebaseError(error) && error.code === 'auth/requires-recent-login') {
+        throw handleReauthError(error);
+      } else {
+        if (error instanceof FirebaseError) {
+          throw handleAuthError(error, "Erreur de mise à jour de l'email");
+        }
+      }
+    }
+  } catch (error: unknown) {
+    throw handleAuthError(error, "Erreur");
   }
 };

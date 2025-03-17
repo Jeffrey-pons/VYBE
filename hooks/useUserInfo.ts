@@ -3,9 +3,16 @@ import { auth } from '@/config/firebaseConfig';
 import { updateCurrentUser } from 'firebase/auth';
 import { getUserInfo, updateUserInfo, deleteUserAccount } from '@/services/authService';
 
+interface UserInfo {
+    name: string;
+    lastname: string;
+    email: string;
+    phoneNumber: string;
+  }
+
 export const useUserInfo = () => {
   const [userId, setUserId] = useState<string | null>(null);
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<UserInfo | null>(null);
   const [name, setName] = useState<string>('');
   const [lastname, setLastname] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -38,7 +45,7 @@ export const useUserInfo = () => {
       const user = auth.currentUser;
       if (user) {
         if (email !== user.email) {
-          await updateCurrentUser(user, { email }); // Mettre à jour l'email dans Firebase
+          await updateCurrentUser(user, { email }); 
         }
       }
 
@@ -46,9 +53,14 @@ export const useUserInfo = () => {
       await updateUserInfo(userId, { name, lastname, email, phoneNumber });
       alert("Informations mises à jour avec succès.");
       setIsModalVisibleTwo(false);  // Fermer la modal après la mise à jour
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour des informations :", error);
-      alert("Une erreur est survenue lors de la mise à jour des informations.");
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error("Erreur lors de la mise à jour des informations :", error.message);
+          alert("Une erreur est survenue lors de la mise à jour des informations.");
+        } else {
+          console.error("Erreur inconnue lors de la mise à jour.");
+          alert("Une erreur est survenue lors de la mise à jour des informations.");
+        }
     }
   };
 
@@ -69,9 +81,14 @@ export const useUserInfo = () => {
       } else {
         alert("Aucun utilisateur connecté.");
       }
-    } catch (error: any) {
-      console.error("Erreur lors de la suppression du compte:", error);
-      alert("Une erreur est survenue lors de la suppression du compte.");
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error("Erreur lors de la suppression du compte:", error.message);
+          alert("Une erreur est survenue lors de la suppression du compte.");
+        } else {
+          console.error("Erreur inconnue lors de la suppression.");
+          alert("Une erreur est survenue lors de la suppression du compte.");
+        }
     }
   };
 
