@@ -7,23 +7,33 @@ import { Button } from 'react-native-elements';
 import SkipButton from '@/components/SkipButton';
 import { ThemedText } from '@/components/ThemedText';
 // import * as Notifications from "expo-notifications"
+import { notificationIcon } from '@/utils/imagesUtils';
+import useOnboardingProgress from '@/hooks/useOnboardingProgress';
 
 const NotificationScreen = () => {
+  const { updateProgress, loading } = useOnboardingProgress();
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
   const handleNotificationToggle = () => {
     setNotificationsEnabled(prevState => !prevState);
   };
+
   const handleSkip = () => {
     router.replace('/(tabs)'); 
   };
+
+  const handleFinish = async () => {
+    await updateProgress({ hasActiveNotification: true });
+    router.replace('/(tabs)');
+  };
+
   return (
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
       <View style={globalStyles.container}>
         <ProgressBar step={3} totalSteps={3} />
         <Image
           style={globalStyles.logoAuthStyle}
-          source={require('../assets/images/icons/icon_notification.png')}
+          source={notificationIcon}
           alt="Icône de notification"
         />
         <SkipButton onPress={handleSkip} />
@@ -37,9 +47,10 @@ const NotificationScreen = () => {
         />
         <Button
           title="Terminer"
-          onPress={() => router.replace('/(tabs)')} 
+          onPress={handleFinish} 
           buttonStyle={globalStyles.buttonSecondStyle} 
           titleStyle={globalStyles.titleSecondStyle} 
+          loading={loading}
         />
       </View>
     </ScrollView>

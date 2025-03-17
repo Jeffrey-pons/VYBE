@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, Modal, Image, ScrollView } from 'react-native';
+import iconLoupe from '../../assets/images/icons/icon_loupe.png';
 import { cities } from '@/utils/citiesUtils';
+import iconCalendar from '../../assets/images/icons/icon_calender.png';
+import iconChoiceLocation from '../../assets/images/icons/icon_choice_location.png';
 import globalStyles from '@/styles/globalStyle';
 import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
@@ -83,7 +86,7 @@ const FilterScreen: React.FC = () => {
         <View style={styles.searchContainer}>
           <Image
             style={styles.searchIcon}
-            source={require('../../assets/images/icons/icon_loupe.png')}
+            source={iconLoupe}
             alt="Icône de recherche"
           />
           <TextInput
@@ -98,7 +101,7 @@ const FilterScreen: React.FC = () => {
           <TouchableOpacity style={styles.filterButton}>
             <Image
               style={styles.searchIcon}
-              source={require('../../assets/images/icons/icon_calender.png')}
+              source={iconCalendar}
               alt="Icône de calendrier"
             />
             <Text style={styles.filterButtonText}>{date || 'DATE'}</Text>
@@ -106,7 +109,7 @@ const FilterScreen: React.FC = () => {
           <TouchableOpacity style={styles.filterButton} onPress={() => setShowCityInput(true)}>
             <Image
               style={styles.searchIcon}
-              source={require('../../assets/images/icons/icon_choice_location.png')}
+              source={iconChoiceLocation}
               alt="Icône de lieu"
             />
             <Text style={styles.filterButtonText}>{city || 'LIEU'}</Text>

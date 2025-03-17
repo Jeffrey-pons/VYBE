@@ -4,6 +4,7 @@ import { auth, db } from "@/config/firebaseConfig";
 import { useRouter } from "expo-router";
 import { useLoading } from "./LoadingContext";
 import { getDoc, doc } from "firebase/firestore";
+import { useLocation } from "./LocationContext";
 
 interface AuthContextType {
   user: User | null;
@@ -16,6 +17,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [hasCheckedFirestore, setHasCheckedFirestore] = useState<boolean>(false);
   
   const { setLoading } = useLoading();
+  const { updateLocation } = useLocation(); 
   const router = useRouter();
 
   useEffect(() => {
@@ -31,18 +33,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const userDoc = await getDoc(doc(db, "users", currentUser.uid));
           if (userDoc.exists()) {
             const data = userDoc.data();
-            if (data.hasCompletedFindLocation && data.hasConnectedMusic && data.hasActiveNotification) {
-              router.replace("/"); // Connexion normale
+
+            if (data.city) {
+              updateLocation(data.city);  
+            }
+
+            if (data.city && data?.hasActiveNotification && data?.hasConnectedMusic) {
+              router.replace("/(tabs)"); 
             } else {
-              router.replace("/findlocation"); // Première connexion
+              router.replace("/findlocation"); 
             }
           } else {
-            router.replace("/home"); // Si l'utilisateur n'a pas encore de données dans Firestore
+            router.replace("/home"); 
           }
         }
       } else {
         setUser(null);
-        setHasCheckedFirestore(false); // Réinitialiser pour la prochaine connexion
+        setHasCheckedFirestore(false); 
         router.replace("/home");
       }
       setLoading(false);

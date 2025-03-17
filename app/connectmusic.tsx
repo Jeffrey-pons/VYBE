@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Image, ScrollView } from 'react-native';
+import { View, Image, ScrollView  } from 'react-native';
+import { musicIcon } from '@/utils/imagesUtils';
 import { Button } from 'react-native-elements';
 import ProgressBar from '@/components/ProgressBar';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -8,9 +9,17 @@ import { router } from 'expo-router';
 import globalStyles from '@/styles/globalStyle';
 import SkipButton from '@/components/SkipButton';
 import { ThemedText } from '@/components/ThemedText';
+import useOnboardingProgress from '@/hooks/useOnboardingProgress';
 
 const MusicScreen = () => {
+  const { updateProgress, loading } = useOnboardingProgress();
+
   const handleSkip = () => {
+    router.replace('/activenotification'); 
+  };
+
+  const handleNext = async () => {
+    await updateProgress({ hasConnectedMusic: true });
     router.replace('/activenotification'); 
   };
 
@@ -20,7 +29,7 @@ return (
       <ProgressBar step={2} totalSteps={3} />
       <Image
         style={globalStyles.logoAuthStyle}
-        source={require('../assets/images/icons/icon_connect_your_music.gif')}
+        source={musicIcon}
         alt="Icône de musique"
       />
       <SkipButton onPress={handleSkip} />
@@ -45,9 +54,10 @@ return (
       />
       <Button 
         title="Suivant" 
-        onPress={() => router.replace('/activenotification')} 
+        onPress={handleNext} 
         buttonStyle={globalStyles.buttonSecondStyle} 
         titleStyle={globalStyles.titleSecondStyle} 
+        loading={loading} 
       />
     </View>
   </ScrollView>
