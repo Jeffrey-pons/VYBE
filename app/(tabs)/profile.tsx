@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ScrollView, View, Switch, StyleSheet, TextInput, Modal } from 'react-native';
 import { ThemedText } from '@/components/ThemedText'; 
 import { Button } from 'react-native-elements';
@@ -9,101 +9,35 @@ import globalStyles from '@/styles/globalStyle';
 import Entypo from '@expo/vector-icons/Entypo';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import { Link } from 'expo-router';
-import { logoutUser, deleteUserAccount, getUserInfo, updateUserInfo } from '@/services/authService';
-import { auth } from '@/config/firebaseConfig';
-import { updateCurrentUser } from 'firebase/auth';
+import { logoutUser } from '@/services/authService';
 import { useLocation } from '@/contexts/LocationContext';
+import { useUserInfo } from '@/hooks/useUserInfo';
 
 const ProfileScreen: React.FC = () => {
   const { city } = useLocation();
   const [isPushEnabled, setIsPushEnabled] = useState<boolean>(true);
   const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(true);
   const [isLastTicketsEnabled, setIsLastTicketsEnabled] = useState<boolean>(true);
-  const [userId, setUserId] = useState<string | null>(null);
-  const [userData, setUserData] = useState<any>(null);
-  const [password, setPassword] = useState<string>('');
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [name, setName] = useState(userData?.name || '');
-  const [lastname, setLastname] = useState(userData?.lastname || '');
-  const [email, setEmail] = useState(userData?.mail || '');
-  const [phoneNumber, setPhoneNumber] = useState(userData?.phoneNumber || '');
-  const [isModalVisibleTwo, setIsModalVisibleTwo] = useState<boolean>(false);
+  const {
+    userData,
+    name,
+    setName,
+    lastname,
+    setLastname,
+    email,
+    setEmail,
+    phoneNumber,
+    setPhoneNumber,
+    password,
+    setPassword,
+    isModalVisible,
+    setIsModalVisible,
+    isModalVisibleTwo,
+    setIsModalVisibleTwo,
+    handleUpdateUserInfo,
+    handleDeleteAccount,
+  } = useUserInfo();
 
-  const handleDeleteAccount = async () => {
-    if (!userId) {
-      alert("Utilisateur non identifié !");
-      return;
-    }
-  
-    const confirmDelete = window.confirm("Es-tu sûr de vouloir supprimer ton compte ? Cette action est irréversible.");
-    if (!confirmDelete) return;
-  
-    try {
-      const user = auth.currentUser;
-      if (user) {
-        await deleteUserAccount(userId, password); 
-        alert("Compte supprimé avec succès.");
-      } else {
-        alert("Aucun utilisateur connecté.");
-      }
-    } catch (error: any) {
-      console.error("Erreur lors de la suppression du compte:", error);
-      alert("Une erreur est survenue lors de la suppression du compte.");
-    }
-  };
-
-  const fetchUserInfo = async (userId: string) => {
-    try {
-      const userInfo = await getUserInfo(userId);
-      setUserData(userInfo);
-      setName(userInfo?.name || '');
-      setLastname(userInfo?.lastname || '');
-      setEmail(userInfo?.mail || '');
-      setPhoneNumber(userInfo?.phoneNumber || '');
-    } catch (error) {
-      console.error('Error fetching user info:', error);
-    }
-  };
-
-  const handleUpdateUserInfo = async () => {
-    if (!userId) {
-      alert("Utilisateur non identifié !");
-      return;
-    }
-  
-    try {
-      // Mise à jour de l'email dans Firebase
-      const user = auth.currentUser;
-      if (user) {
-        if (email !== user.email) {
-          await updateCurrentUser(user, { email }); // Mettre à jour l'email dans Firebase
-        }
-      }
-  
-      // Mise à jour des informations de l'utilisateur dans la base de données
-      await updateUserInfo(userId, { name, lastname, email, phoneNumber });
-      alert("Informations mises à jour avec succès.");
-      setIsModalVisibleTwo(false);  // Fermer la modal après la mise à jour
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour des informations :", error);
-      alert("Une erreur est survenue lors de la mise à jour des informations.");
-    }
-  };
-
-  useEffect(() => {
-    const currentUser = auth.currentUser;
-    if (currentUser) {
-      setUserId(currentUser.uid);
-      fetchUserInfo(currentUser.uid)
-      getUserInfo(currentUser.uid)
-        .then((data) => {
-          setUserData(data);
-        })
-        .catch((error) => {
-          console.error("Erreur lors de la récupération des informations de l'utilisateur", error);
-        });
-    }
-  }, []);
 
   return (
     <ScrollView>

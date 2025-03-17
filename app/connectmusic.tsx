@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, ScrollView, Alert } from 'react-native';
+import { View, Image, ScrollView  } from 'react-native';
 import { musicIcon } from '@/utils/imagesUtils';
 import { Button } from 'react-native-elements';
 import ProgressBar from '@/components/ProgressBar';
@@ -9,25 +9,18 @@ import { router } from 'expo-router';
 import globalStyles from '@/styles/globalStyle';
 import SkipButton from '@/components/SkipButton';
 import { ThemedText } from '@/components/ThemedText';
-import { auth } from '@/config/firebaseConfig';
-import { updateUserOnboardingProgress } from '@/services/authService';
+import useOnboardingProgress from '@/hooks/useOnboardingProgress';
 
 const MusicScreen = () => {
+  const { updateProgress, loading } = useOnboardingProgress();
+
   const handleSkip = () => {
     router.replace('/activenotification'); 
   };
 
   const handleNext = async () => {
-    try {
-      const user = auth.currentUser;
-      if (user) {
-        await updateUserOnboardingProgress(user.uid, { hasConnectedMusic: true });
-      }
-      router.replace("/activenotification"); 
-    } catch (error) {
-      console.error("Erreur :", error);
-      Alert.alert("Erreur", "Impossible de sauvegarder.");
-    }
+    await updateProgress({ hasConnectedMusic: true });
+    router.replace('/activenotification'); 
   };
 
 return (
@@ -64,6 +57,7 @@ return (
         onPress={handleNext} 
         buttonStyle={globalStyles.buttonSecondStyle} 
         titleStyle={globalStyles.titleSecondStyle} 
+        loading={loading} 
       />
     </View>
   </ScrollView>

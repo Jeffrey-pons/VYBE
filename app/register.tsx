@@ -3,9 +3,9 @@ import { Dimensions, TextInput, View, Text, StyleSheet, Image, Alert, ScrollView
 import { Button } from "react-native-elements";
 import { router } from "expo-router";
 import globalStyles from "@/styles/globalStyle";
-import { registerUser } from "@/services/authService";
 import { ThemedText } from "@/components/ThemedText";
 import { registerIcon } from "@/utils/imagesUtils";
+import { useRegister } from "@/hooks/useRegister"; 
 
 const RegisterScreen: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -15,32 +15,26 @@ const RegisterScreen: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [isMounted, setIsMounted] = useState<boolean>(true);
 
+  const { handleSignUp, isLoading } = useRegister();
+
   useEffect(() => {
     setIsMounted(true);
     return () => setIsMounted(false);
   }, []);
 
-  const handleSignUp = async () => {
-    try {
-      const userData = {
-        name,
-        lastname,
-        email,
-        phoneNumber: phone,
-        password,
-      };
-      const response = await registerUser(userData);
-      if (isMounted && response) {
-        Alert.alert("Succès", "Compte créé avec succès !");
-        router.replace("/login");
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        Alert.alert("Erreur", error.message);
-      } else {
-        Alert.alert("Erreur", "Une erreur inconnue s'est produite.");
-      }
-    } 
+  const handleRegister = async () => {
+    const userData = {
+      name,
+      lastname,
+      email,
+      phoneNumber: phone,
+      password,
+    };
+
+    const response = await handleSignUp(userData); 
+    if (isMounted && response) {
+      router.replace("/login"); 
+    }
   };
 
   return (
@@ -96,7 +90,8 @@ const RegisterScreen: React.FC = () => {
           buttonStyle={globalStyles.buttonStyle} 
           title="S'inscrire"
           titleStyle={globalStyles.titleStyle} 
-          onPress={handleSignUp}  
+          onPress={handleRegister} 
+          loading={isLoading} 
         />
         <Text style={globalStyles.footerAuthTextStyle}>Vous avez déjà un compte ?</Text>
         <Text style={globalStyles.footerAuthLinkStyle} onPress={() => router.replace("/login")}>

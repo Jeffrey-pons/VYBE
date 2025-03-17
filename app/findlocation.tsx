@@ -1,52 +1,25 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, Image, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-elements';
-import { auth } from "@/config/firebaseConfig";
 import ProgressBar from '@/components/ProgressBar';
-import { router } from "expo-router";
-import { useLocation } from '@/contexts/LocationContext';
 import globalStyles from '@/styles/globalStyle'; 
 import { ThemedText } from '@/components/ThemedText';
-import { getLocation } from '@/services/locationService';
-import { updateUserOnboardingProgress } from '@/services/authService';
 import { locationIcon } from '@/utils/imagesUtils';
+import { auth } from "@/config/firebaseConfig";
+import { router } from "expo-router";
+import { useLocationHandler } from '@/hooks/useLocationHandler';
 
 const LocationScreen = () => {
-  const { city, updateLocation } = useLocation(); 
-  const [manualCity, setManualCity] = useState<string | null>(null);
-  const [showInput, setShowInput] = useState(false);
+  const { 
+    city, 
+    manualCity, 
+    showInput, 
+    handleManualCityChange, 
+    handleUseLocation, 
+    handleNext, 
+    toggleInput 
+  } = useLocationHandler();
 
-  const handleManualCityChange = (text: string) => {
-    setManualCity(text);
-    updateLocation(text); 
-  };
-
-  const handleUseLocation = async () => {
-    await getLocation({
-      onCityDetected: (city) => {
-        updateLocation(city);
-      }
-    });
-  };
-
-  const handleNext = async () => {
-    if (!city) {
-      Alert.alert("Erreur", "Vous devez entrer une ville ou utiliser la géolocalisation avant de continuer.");
-      return;
-    }
-  
-    try {
-      const user = auth.currentUser;
-      if (user) {
-        await updateUserOnboardingProgress(user.uid, { city });
-      }
-      
-      router.replace("/connectmusic"); 
-    } catch (error) {
-      console.error("Erreur lors de l'enregistrement de la ville :", error);
-      Alert.alert("Erreur", "Impossible d'enregistrer votre ville.");
-    }
-  };
 
   return (
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
@@ -66,7 +39,7 @@ const LocationScreen = () => {
           titleStyle={globalStyles.titleStyle}
           onPress={handleUseLocation}
         />
-        <TouchableOpacity onPress={() => setShowInput(!showInput)}>
+        <TouchableOpacity onPress={toggleInput}>
           <Text style={styles.cityText}>Choisir ma position</Text>
         </TouchableOpacity>
 
@@ -80,7 +53,7 @@ const LocationScreen = () => {
             />
             <Button
               title="Valider"
-              onPress={() => updateLocation(manualCity || '')}
+              onPress={() => handleManualCityChange(manualCity || '')}
             />
           </>
         )}
@@ -92,7 +65,7 @@ const LocationScreen = () => {
           title="Suivant"
           buttonStyle={globalStyles.buttonSecondStyle}
           titleStyle={globalStyles.titleSecondStyle}
-          onPress={handleNext}
+          onPress={() => handleNext(auth.currentUser, router)}
         />
       </View>
     </ScrollView>
