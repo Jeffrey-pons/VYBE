@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { TextInput, View, Text, Image, Alert, ScrollView} from "react-native";
 import { Button } from "react-native-elements";
 import { router } from "expo-router";
+import { loginIcon } from "../utils/imagesUtils";
 import globalStyles from "@/styles/globalStyle"; 
 import { loginUser } from "@/services/authService";
 import { ThemedText } from "@/components/ThemedText";
@@ -30,7 +31,7 @@ const LoginScreen: React.FC = () => {
       <View style={globalStyles.container}>
         <Image
           style={globalStyles.logoAuthStyle}
-          source={require('../assets/images/icons/icon_login.png')}
+          source={loginIcon}
           alt="Icône de connexion"
         />
         <ThemedText type="authTitle">Connecte toi !</ThemedText>

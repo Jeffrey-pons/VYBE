@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Image, ScrollView, Alert } from 'react-native';
+import { musicIcon } from '@/utils/imagesUtils';
 import { Button } from 'react-native-elements';
 import ProgressBar from '@/components/ProgressBar';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -35,7 +36,7 @@ return (
       <ProgressBar step={2} totalSteps={3} />
       <Image
         style={globalStyles.logoAuthStyle}
-        source={require('../assets/images/icons/icon_connect_your_music.gif')}
+        source={musicIcon}
         alt="Icône de musique"
       />
       <SkipButton onPress={handleSkip} />

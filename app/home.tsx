@@ -4,12 +4,13 @@ import globalStyles from "@/styles/globalStyle";
 import { ThemedText } from "@/components/ThemedText";
 import { View, Image, StyleSheet, Platform } from "react-native";
 import { Theme } from "@/constants/Theme";
+import { vybeLogo } from '../utils/imagesUtils';
 
 const WelcomeScreen = () => {
     return (
         <View style={styles.containerHomePage}>
           <Image
-            source={require('../assets/images/logos/VYBE_logo_white_transparent_home.png')}
+            source={vybeLogo}
             alt="Logo Vybe"
             style={styles.logoHome}
           />

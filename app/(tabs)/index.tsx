@@ -7,6 +7,7 @@ import { Event } from '@/interfaces/Event';
 import Logo from '@/components/LogoHeader';
 import globalStyles from '@/styles/globalStyle';
 import { useLocation } from '@/contexts/LocationContext';
+import { iconChoiceLocation, iconTonight, iconThisWeek, iconConcert, iconFestival, iconSpectacle, iconExposition, iconHumor, iconAtelier, iconDj } from '@/utils/imagesUtils';
 
 // A améliorer en snd partie !!!!!!!!
 
@@ -84,7 +85,7 @@ const App = () => {
       <Text style={styles.underlinedCity}>{city}</Text>
       <Image
         style={styles.iconSize}
-        source={require('../../assets/images/icons/icon_choice_location.png')}
+        source={iconChoiceLocation}
         alt="Icône de choix de localisation"
       />
     </ThemedText>
@@ -104,7 +105,7 @@ const App = () => {
         >
           <Image
             style={styles.iconSize}
-            source={require('../../assets/images/icons/icon_tonight.png')}
+            source={iconTonight}
             alt="Icône de la catégorie Ce soir"
           />
             <Text style={styles.categoryText}>Ce soir</Text>
@@ -122,7 +123,7 @@ const App = () => {
             >
           <Image
             style={styles.iconSize}
-            source={require('../../assets/images/icons/icon_calender.png')}
+            source={iconThisWeek}
             alt="Icône de la catégorie Cette semaine"
           />
             <Text style={styles.categoryText}>Cette semaine</Text>
@@ -140,7 +141,7 @@ const App = () => {
             >
             <Image
             style={styles.iconSize}
-            source={require('../../assets/images/icons/icon_concert.png')}
+            source={iconConcert}
             alt="Icône de la catégorie Concert"
             />
             <Text style={styles.categoryText}>Concerts</Text>
@@ -158,7 +159,7 @@ const App = () => {
             >
             <Image
             style={styles.iconSize}
-            source={require('../../assets/images/icons/icon_festival.png')}
+            source={iconFestival}
             alt="Icône de la catégorie Festival"
             />
             <Text style={styles.categoryText}>Festivals</Text>
@@ -175,7 +176,7 @@ const App = () => {
             >
             <Image
               style={styles.iconSize}
-              source={require('../../assets/images/icons/icon_spectacle.png')}
+              source={iconSpectacle}
               alt="Icône de la catégorie Spectacle"
             />
             <Text style={styles.categoryText}>Spectacles</Text>
@@ -192,7 +193,7 @@ const App = () => {
             >
             <Image
               style={styles.iconSize}
-              source={require('../../assets/images/icons/icon_exposition.png')}
+              source={iconExposition}
               alt="Icône de la catégorie Exposition"
             />
             <Text style={styles.categoryText}>Expositions</Text>
@@ -209,7 +210,7 @@ const App = () => {
             >
             <Image
               style={styles.iconSize}
-              source={require('../../assets/images/icons/icon_humor.png')}
+              source={iconHumor}
               alt="Icône de la catégorie Humour"
             />
             <Text style={styles.categoryText}>Humours</Text>
@@ -226,7 +227,7 @@ const App = () => {
             >
             <Image
               style={styles.iconSize}
-              source={require('../../assets/images/icons/icon_workshop.png')}
+              source={iconAtelier}
               alt="Icône de la catégorie Atelier"
             />
             <Text style={styles.categoryText}>Ateliers</Text>
@@ -243,7 +244,7 @@ const App = () => {
             >
             <Image
             style={styles.iconSize}
-            source={require('../../assets/images/icons/icon_festival.png')}
+            source={iconFestival}
             alt="Icône de la catégorie Soirée"
             />
             <Text style={styles.categoryText}>Soirées</Text>
@@ -260,7 +261,7 @@ const App = () => {
             >
             <Image
               style={styles.iconSize}
-              source={require('../../assets/images/icons/icon_dj.png')}
+              source={iconDj}
               alt="Icône de la catégorie Techno"
             />
             <Text style={styles.categoryText}>DJ</Text>

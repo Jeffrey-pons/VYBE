@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import globalStyles from "@/styles/globalStyle";
 import { registerUser } from "@/services/authService";
 import { ThemedText } from "@/components/ThemedText";
+import { registerIcon } from "@/utils/imagesUtils";
 
 const RegisterScreen: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -47,7 +48,7 @@ const RegisterScreen: React.FC = () => {
       <View style={globalStyles.container}>
         <Image
           style={globalStyles.logoAuthStyle}
-          source={require('../assets/images/icons/icon_register.png')}
+          source={registerIcon}
           alt="Icône d'inscription"
         />
         <ThemedText type="authTitle">Inscris-toi !</ThemedText>

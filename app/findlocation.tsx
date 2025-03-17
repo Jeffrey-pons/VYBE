@@ -9,7 +9,7 @@ import globalStyles from '@/styles/globalStyle';
 import { ThemedText } from '@/components/ThemedText';
 import { getLocation } from '@/services/locationService';
 import { updateUserOnboardingProgress } from '@/services/authService';
-import locationIcon from '../assets/images/icons/icon_location.png';
+import { locationIcon } from '@/utils/imagesUtils';
 
 const LocationScreen = () => {
   const { city, updateLocation } = useLocation(); 

@@ -3,6 +3,7 @@ import React from 'react';
 import { Platform, Image } from 'react-native';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Theme } from '@/constants/Theme';
+import { iconHome, iconLoupe, iconTicket, iconUser } from '@/utils/imagesUtils';
 
 export default function TabLayout() {
 
@@ -26,7 +27,7 @@ export default function TabLayout() {
           title: '',
           tabBarIcon: ({ color, size }) => (
             <Image
-              source={require('../../assets/images/icons/icon_home.png')}
+              source={iconHome}
               style={{ width: size, height: size, tintColor: color }}
               alt="Icône pour revenir au menu principal"
             />
@@ -39,7 +40,7 @@ export default function TabLayout() {
           title: '',
           tabBarIcon: ({ color, size }) => (
             <Image
-              source={require('../../assets/images/icons/icon_loupe.png')}
+              source={iconLoupe}
               style={{ width: size, height: size, tintColor: color }}
               alt="Icône de recherche"
             />
@@ -52,7 +53,7 @@ export default function TabLayout() {
           title: '',
           tabBarIcon: ({ color, size }) => (
             <Image
-              source={require('../../assets/images/icons/icon_ticket.png')}
+              source={iconTicket}
               style={{ width: size, height: size, tintColor: color }}
               alt="Icône de la page de tickets"
             />
@@ -65,7 +66,7 @@ export default function TabLayout() {
           title: '',
           tabBarIcon: ({ color, size }) => (
             <Image
-              source={require('../../assets/images/icons/icon_user.png')}
+              source={iconUser}
               style={{ width: size, height: size, tintColor: color }}
               alt="Icône de la page profil"
             />

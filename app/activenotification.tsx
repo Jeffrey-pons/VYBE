@@ -9,6 +9,7 @@ import { ThemedText } from '@/components/ThemedText';
 // import * as Notifications from "expo-notifications"
 import { auth } from '@/config/firebaseConfig';
 import { updateUserOnboardingProgress } from '@/services/authService';
+import { notificationIcon } from '@/utils/imagesUtils';
 
 const NotificationScreen = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
@@ -39,7 +40,7 @@ const NotificationScreen = () => {
         <ProgressBar step={3} totalSteps={3} />
         <Image
           style={globalStyles.logoAuthStyle}
-          source={require('../assets/images/icons/icon_notification.png')}
+          source={notificationIcon}
           alt="Icône de notification"
         />
         <SkipButton onPress={handleSkip} />
