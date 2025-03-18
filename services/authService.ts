@@ -33,13 +33,9 @@ export const registerUser = async (data: RegisterDTO): Promise<AuthResponse> => 
     Alert.alert("Succès", "Inscription reussie");
     await signOut(auth);
     return { user: userCredential.user };
-  } catch (error: unknown) {
-    if (error instanceof FirebaseError) {
-      throw handleAuthError(error, "Erreur d'inscription'");
-    } else {
-      console.error("Error:", error);
-      throw new Error("Erreur inconnue pendant l'inscription'.");
-    }
+  } catch (error: any) {
+    console.error("Firebase Auth Error:", error);
+    throw new Error(error.message);
   }
 };
 
@@ -48,13 +44,9 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     Alert.alert("Succès", "Connexion reussie");
     return { user: userCredential.user };
-  } catch (error: unknown) {
-    if (error instanceof FirebaseError) {
-      throw handleAuthError(error, "Erreur de connexion");
-    } else {
-      console.error("Error:", error);
-      throw new Error("Erreur inconnue pendant la connexion.");
-    }
+  } catch (error: any) {
+    console.error("Firebase Auth Error:", error);
+    throw new Error(error.message);
   }
 };
 
@@ -63,13 +55,8 @@ export const logoutUser = async (): Promise<void> => {
     await signOut(auth);
     Alert.alert("Succès", "Déconnexion reussie");
     router.replace('/home')
-  } catch (error: unknown) {
-    if (error instanceof FirebaseError) {
-      throw handleAuthError(error, "Erreur de déconnexion");
-    } else {
-      console.error("Error:", error);
-      throw new Error("Erreur inconnue pendant la déconnexion.");
-    }
+  } catch (error: any) {
+    throw new Error(error.message);
   }
 };
 
@@ -83,7 +70,7 @@ export const updateUserInfo = async (userId: string, updatedData: Partial<Regist
     if (updatedData.email && updatedData.email !== user.email) {
       try {
         await updateEmail(user, updatedData.email);
-      } catch (error: unknown) {
+      } catch (error: any) {
         if (error instanceof FirebaseError) {
           throw handleAuthError(error, "Erreur de mise à jour de l'email", { showAlert: false });
         } else {
@@ -94,13 +81,9 @@ export const updateUserInfo = async (userId: string, updatedData: Partial<Regist
   }
     const userRef = doc(db, "users", userId);
     await setDoc(userRef, updatedData, { merge: true });
-  } catch (error: unknown) {
-    if (error instanceof FirebaseError) {
-      throw handleAuthError(error, "Erreur de mise à jour");
-    } else {
-      console.error("Error:", error);
-      throw new Error("Erreur inconnue pendant la mise à jour.");
-    }
+  } catch (error: any) {
+    console.error("Error updating user info:", error);
+    throw new Error(error.message);
   }
 };
 
@@ -108,13 +91,9 @@ export const updateUserOnboardingProgress = async (userId: string, data: Partial
   try {
     const userRef = doc(db, "users", userId);
     await setDoc(userRef, data, { merge: true });
-  } catch (error: unknown) {
-    if (error instanceof FirebaseError) {
-      throw handleAuthError(error, "Erreur de mise à jour");
-    } else {
-      console.error("Error:", error);
-      throw new Error("Erreur inconnue pendant la mise à jour du progrès.");
-    }
+  } catch (error: any) {
+    console.error("Erreur mise à jour progression :", error);
+    throw new Error(error.message);
   }
 };
 
@@ -127,13 +106,9 @@ export const getUserProgress = async (userId: string): Promise<UserProgress | nu
       return userSnap.data() as UserProgress;
     }
     return null;
-  } catch (error: unknown) {
-    if (error instanceof FirebaseError) {
-      throw handleAuthError(error, "Erreur de récupération du progrès");
-    } else {
-      console.error("Error:", error);
-      throw new Error("Erreur inconnue pendant la récupération du progrès.");
-    }
+  } catch (error: any) {
+    console.error("Erreur récupération données utilisateur :", error);
+    throw new Error(error.message);
   }
 };
 
@@ -147,13 +122,9 @@ export const getUserInfo = async (userId: string): Promise<any> => {
     } else {
       throw new AuthServiceError("Utilisateur non trouvé.", "firestore/not-found");
     }
-  } catch (error: unknown) {
-    if (error instanceof FirebaseError) {
-      throw handleAuthError(error, "Erreur de récupération");
-    } else {
-      console.error("Error:", error);
-      throw new Error("Erreur inconnue pendant la récupération des informations.");
-    }
+  } catch (error: any) {
+    console.error("Error retrieving user info:", error);
+    throw new Error(error.message);
   }
 };
 
@@ -180,21 +151,13 @@ export const deleteUserAccount = async (userId: string, password: string): Promi
       await deleteUser(user);
       Alert.alert("Succès", "Compte supprimé avec succès");
       router.replace('/home');
-    } catch (error: unknown) {
-      if (error instanceof FirebaseError) {
-        throw handleAuthError(error, "Erreur lors de la suppression");
-      } else {
-        console.error("Error:", error);
-        throw new Error("Erreur inconnue pendant la suppression.");
-      }
+    } catch (error: any) {
+      console.error("Error deleting user account:", error);
+      throw new Error(error.message);
     }
-  } catch (error: unknown) {
-    if (error instanceof FirebaseError) {
-      throw handleAuthError(error, "Erreur de suppression");
-    } else {
-      console.error("Error:", error);
-      throw new Error("Erreur inconnue pendant la suppression.");
-    }
+  } catch (error: any) {
+    console.error("Error deleting user account:", error);
+    throw new Error(error.message);
   }
 };
 
@@ -206,13 +169,9 @@ export const reauthenticateUser = async (user: User, password: string) => {
     
     const credential = EmailAuthProvider.credential(user.email, password);
     await reauthenticateWithCredential(user, credential);
-  } catch (error: unknown) {
-    if (error instanceof FirebaseError) {
-      throw handleAuthError(error, "Erreur de réauthentification");
-    } else {
-      console.error("Error:", error);
-      throw new Error("Erreur inconnue pendant la réauthentification.");
-    }
+  } catch (error: any) {
+    console.error("Erreur", error);
+    throw new Error(error.message);
   }
 };
 
@@ -261,14 +220,9 @@ export const handleUpdateEmail = async (newEmail: string) => {
       // Après la mise à jour de l'email, mettez à jour les informations dans Firestore
       await updateUserInfo(user.uid, { email: newEmail });
       Alert.alert('Succès', 'Email mis à jour avec succès');
-    } catch (error: unknown) {
-      if (isFirebaseError(error) && error.code === 'auth/requires-recent-login') {
-        throw handleReauthError(error);
-      } else {
-        if (error instanceof FirebaseError) {
-          throw handleAuthError(error, "Erreur de mise à jour de l'email");
-        }
-      }
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi de l\'email de vérification', error);
+      alert('Une erreur est survenue lors de l\'envoi de l\'email de vérification.');
     }
   } catch (error: unknown) {
     throw handleAuthError(error, "Erreur");

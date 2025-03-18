@@ -23,7 +23,8 @@ const Logo = () => {
 const styles = StyleSheet.create({
   logo: {
     width: 250, 
-    height: 150
+    height: 150,
+    marginTop: 50,
   },
 });
 

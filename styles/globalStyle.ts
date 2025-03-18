@@ -70,7 +70,7 @@ const globalStyles = StyleSheet.create({
     resizeMode: "contain",  
   },
   input: {
-    height: 50,
+    height: 60,
     width: width > 500 ? "50%" : "100%", 
     padding: 18,
     marginBottom: 15,

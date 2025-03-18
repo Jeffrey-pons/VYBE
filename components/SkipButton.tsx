@@ -16,7 +16,7 @@ const SkipButton: React.FC<SkipButtonProps> = ({ onPress }) => {
 const styles = StyleSheet.create({
   skipButton: {
     position: "absolute",
-    top: 25,
+    top: 60,
     right: 10,
     padding: 10,
     backgroundColor: "transparent",

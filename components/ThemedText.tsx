@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
     fontFamily: Theme.typography.fontFamily,
     color: Theme.colors.text,
     fontSize: Theme.typography.kilo.fontSize,
-    marginTop: 14, // Exception
   },
   profileInitials: {
     fontSize: Theme.typography.megaBold.fontSize,

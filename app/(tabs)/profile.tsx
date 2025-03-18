@@ -18,24 +18,10 @@ const ProfileScreen: React.FC = () => {
   const [isPushEnabled, setIsPushEnabled] = useState<boolean>(true);
   const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(true);
   const [isLastTicketsEnabled, setIsLastTicketsEnabled] = useState<boolean>(true);
-  const {
-    userData,
-    name,
-    setName,
-    lastname,
-    setLastname,
-    email,
-    setEmail,
-    phoneNumber,
-    setPhoneNumber,
-    password,
-    setPassword,
-    isModalVisible,
-    setIsModalVisible,
-    isModalVisibleTwo,
-    setIsModalVisibleTwo,
-    handleUpdateUserInfo,
-    handleDeleteAccount,
+  const { 
+    userData, name, setName, lastname, setLastname, email, setEmail, phoneNumber, setPhoneNumber, 
+    password, setPassword, isModalVisible, setIsModalVisible, isModalVisibleTwo, setIsModalVisibleTwo, 
+    handleUpdateUserInfo,handleDeleteAccount 
   } = useUserInfo();
 
 
@@ -67,7 +53,7 @@ const ProfileScreen: React.FC = () => {
           </View>
         </Collapsible>
 
-        <Modal visible={isModalVisibleTwo} transparent animationType="slide">
+        <Modal visible={isModalVisibleTwo} transparent animationType="slide" onRequestClose={() => setIsModalVisibleTwo(false)}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <ThemedText type="title" style={styles.textModal}>Modifier tes informations</ThemedText>
@@ -278,7 +264,7 @@ const ProfileScreen: React.FC = () => {
         <Button title="Supprimer mon compte" buttonStyle={globalStyles.buttonDeletedeStyle} titleStyle={globalStyles.titleDeletedStyle}   onPress={() => setIsModalVisible(true)} />
         </View>
       </View>
-      <Modal visible={isModalVisible} transparent animationType="slide">
+      <Modal visible={isModalVisible} transparent animationType="slide" onRequestClose={() => setIsModalVisibleTwo(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <ThemedText type="title" style={styles.textModal}>Confirmer la suppression</ThemedText>

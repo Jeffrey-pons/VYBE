@@ -443,6 +443,7 @@ const styles = StyleSheet.create({
   },
   underlinedCity: {
     fontFamily: "Fugaz-One",
+    fontSize: 26,
     borderBottomWidth: 1, 
     borderBottomColor: 'white', 
     paddingBottom: 0.5, 
