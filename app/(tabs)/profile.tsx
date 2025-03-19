@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Switch, StyleSheet, TextInput, Modal } from 'react-native';
+import { ScrollView, View, Switch, StyleSheet, TextInput, Modal, Pressable } from 'react-native';
 import { ThemedText } from '@/components/ThemedText'; 
 import { Button } from 'react-native-elements';
 import { Collapsible } from '@/components/Collapsible';
@@ -8,13 +8,14 @@ import Logo from '@/components/LogoHeader';
 import globalStyles from '@/styles/globalStyle';
 import Entypo from '@expo/vector-icons/Entypo';
 import Fontisto from '@expo/vector-icons/Fontisto';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { logoutUser } from '@/services/authService';
 import { useLocation } from '@/contexts/LocationContext';
 import { useUserInfo } from '@/hooks/useUserInfo';
 
 const ProfileScreen: React.FC = () => {
   const { city } = useLocation();
+  const router = useRouter();
   const [isPushEnabled, setIsPushEnabled] = useState<boolean>(true);
   const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(true);
   const [isLastTicketsEnabled, setIsLastTicketsEnabled] = useState<boolean>(true);
@@ -48,7 +49,12 @@ const ProfileScreen: React.FC = () => {
             <ThemedText type="text">Numéro : {userData?.phoneNumber}</ThemedText>
             <ThemedText type="text">Mot de passe : ********</ThemedText>
             <View style={styles.buttonContainer}>
-              <Button title="Modifier" buttonStyle={styles.buttonUpdatedProfileStyle} titleStyle={styles.titleUpdatedProfileStyle} onPress={() => setIsModalVisibleTwo(true)}></Button>
+              <Button title="Modifier" 
+                buttonStyle={styles.buttonUpdatedProfileStyle} 
+                titleStyle={styles.titleUpdatedProfileStyle}  
+                onPress={() => {
+                console.log("Bouton Modifier cliqué !");
+                setIsModalVisibleTwo(true); }}></Button>
             </View>
           </View>
         </Collapsible>
@@ -195,9 +201,10 @@ const ProfileScreen: React.FC = () => {
           <ThemedText type="text">Nous collectons certaines données personnelles pour améliorer votre expérience. 
             Vos informations ne seront jamais partagées sans votre consentement. 
           </ThemedText>
-            <Link href={'/privacy'} asChild>
+            <Pressable onPress={() => router.push('/privacy')}>
             <ThemedText type='link'>Lire la politique complète</ThemedText>
-            </Link>
+            </Pressable>
+            
          </View>
         </Collapsible>
 
@@ -207,9 +214,9 @@ const ProfileScreen: React.FC = () => {
             L'utilisation de notre application implique l'acceptation de nos conditions générales d'utilisation. 
             Nous nous engageons à garantir une expérience utilisateur fluide et sécurisée.
           </ThemedText>
-            <Link href={'/terms-of-service'} asChild>
+          <Pressable onPress={() => router.push('/terms-of-service')}>
             <ThemedText type='link'>Lire la politique complète</ThemedText>
-            </Link>
+            </Pressable>
          </View>
         </Collapsible>
 
@@ -437,6 +444,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
     backgroundColor: 'white',

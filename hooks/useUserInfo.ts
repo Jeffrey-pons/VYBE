@@ -51,6 +51,7 @@ export const useUserInfo = () => {
 
       // Mise à jour des informations de l'utilisateur dans la base de données
       await updateUserInfo(userId, { name, lastname, email, phoneNumber });
+      setUserData((prevData) => ({...prevData, name, lastname, email, phoneNumber }));
       alert("Informations mises à jour avec succès.");
       setIsModalVisibleTwo(false);  // Fermer la modal après la mise à jour
     } catch (error: unknown) {

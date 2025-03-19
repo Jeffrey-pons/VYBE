@@ -101,7 +101,7 @@ const handleCitySubmit = () => {
      <ThemedText style={styles.titleLocal}>
       Trouve ton prochain évènements à{' '}
       <TouchableOpacity onPress={toggleInput}>
-          <Text style={styles.underlinedCity}>{city || "Choisir une ville"}</Text>
+          <Text style={styles.underlinedCity}>{city}</Text>
         </TouchableOpacity>
       <Image
         style={styles.iconSize}
@@ -440,6 +440,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     textAlign: "center",
     position: 'relative',
+    // lineHeight: 54,
   },
   underlinedCity: {
     fontFamily: "Fugaz-One",

@@ -10,7 +10,7 @@ export function Collapsible({ children, title }: PropsWithChildren & { title: st
   const theme = DarkTheme
 
   return (
-    <ThemedText>
+    <View>
       <TouchableOpacity
         style={styles.heading}
         onPress={() => setIsOpen((value) => !value)}
@@ -26,8 +26,8 @@ export function Collapsible({ children, title }: PropsWithChildren & { title: st
         <ThemedText type="sectionProfile" style={styles.title}>{title}</ThemedText>
       </TouchableOpacity>
       <View style={styles.separator} />
-      {isOpen && <ThemedText style={styles.content}>{children}</ThemedText>}
-    </ThemedText>
+      {isOpen && <View style={styles.content}>{children}</View>}
+    </View>
   );
 }
 
