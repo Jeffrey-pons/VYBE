@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { auth } from '@/config/firebaseConfig';
 import { updateCurrentUser } from 'firebase/auth';
-import { getUserInfo, updateUserInfo, deleteUserAccount } from '@/services/authService';
+import { getUserInfo, updateUserInfo, deleteUserAccount, logoutUser } from '@/services/authService';
 
 interface UserInfo {
     name: string;
@@ -18,8 +18,8 @@ export const useUserInfo = () => {
   const [email, setEmail] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [isModalVisibleTwo, setIsModalVisibleTwo] = useState<boolean>(false);
+  const [isModalDeletedAccountVisible, setIsModalDeletedAccountVisible] = useState<boolean>(false);
+  const [isModalUpdatedAccountVisible, setIsModalUpdatedAccountVisible] = useState<boolean>(false);
 
   const fetchUserInfo = async (userId: string) => {
     try {
@@ -53,7 +53,7 @@ export const useUserInfo = () => {
       await updateUserInfo(userId, { name, lastname, email, phoneNumber });
       setUserData((prevData) => ({...prevData, name, lastname, email, phoneNumber }));
       alert("Informations mises à jour avec succès.");
-      setIsModalVisibleTwo(false);  // Fermer la modal après la mise à jour
+      setIsModalUpdatedAccountVisible(false);  // Fermer la modal après la mise à jour
     } catch (error: unknown) {
         if (error instanceof Error) {
           console.error("Erreur lors de la mise à jour des informations :", error.message);
@@ -121,10 +121,10 @@ export const useUserInfo = () => {
     setPhoneNumber,
     password,
     setPassword,
-    isModalVisible,
-    setIsModalVisible,
-    isModalVisibleTwo,
-    setIsModalVisibleTwo,
+    isModalDeletedAccountVisible,
+    setIsModalDeletedAccountVisible,
+    isModalUpdatedAccountVisible,
+    setIsModalUpdatedAccountVisible,
     handleUpdateUserInfo,
     handleDeleteAccount,
     fetchUserInfo,

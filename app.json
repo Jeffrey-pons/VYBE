@@ -6,8 +6,8 @@
     "orientation": "portrait",
     "icon": "./assets/images/logos/VYBE_logo_black_transparent.png",
     "splash": {
-      "image": "./assets/images/logos/VYBE_logo_black_transparent.png",  
-      "resizeMode": "contain", 
+      "image": "./assets/images/logos/VYBE_logo_black_transparent.png",
+      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "scheme": "Vybe",
@@ -20,7 +20,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logos/VYBE_logo_black_transparent.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.Vybe"
     },
     "web": {
       "bundler": "metro",

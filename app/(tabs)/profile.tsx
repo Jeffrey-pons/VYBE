@@ -12,6 +12,7 @@ import { useRouter } from 'expo-router';
 import { logoutUser } from '@/services/authService';
 import { useLocation } from '@/contexts/LocationContext';
 import { useUserInfo } from '@/hooks/useUserInfo';
+import { UserModal } from '@/components/modal/UserModal';
 
 const ProfileScreen: React.FC = () => {
   const { city } = useLocation();
@@ -19,9 +20,10 @@ const ProfileScreen: React.FC = () => {
   const [isPushEnabled, setIsPushEnabled] = useState<boolean>(true);
   const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(true);
   const [isLastTicketsEnabled, setIsLastTicketsEnabled] = useState<boolean>(true);
-  const { 
-    userData, name, setName, lastname, setLastname, email, setEmail, phoneNumber, setPhoneNumber, 
-    password, setPassword, isModalVisible, setIsModalVisible, isModalVisibleTwo, setIsModalVisibleTwo, 
+  const [isModalLogoutAccountVisible, setIsModalLogoutAccountVisible] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState('')
+  const { userData, name, setName, lastname, setLastname, email, setEmail, phoneNumber, setPhoneNumber, 
+          password, setPassword, isModalDeletedAccountVisible, setIsModalDeletedAccountVisible, isModalUpdatedAccountVisible, setIsModalUpdatedAccountVisible, 
     handleUpdateUserInfo,handleDeleteAccount 
   } = useUserInfo();
 
@@ -53,57 +55,46 @@ const ProfileScreen: React.FC = () => {
                 buttonStyle={styles.buttonUpdatedProfileStyle} 
                 titleStyle={styles.titleUpdatedProfileStyle}  
                 onPress={() => {
-                console.log("Bouton Modifier cliqué !");
-                setIsModalVisibleTwo(true); }}></Button>
+                setIsModalUpdatedAccountVisible(true); }}></Button>
             </View>
           </View>
         </Collapsible>
-
-        <Modal visible={isModalVisibleTwo} transparent animationType="slide" onRequestClose={() => setIsModalVisibleTwo(false)}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <ThemedText type="title" style={styles.textModal}>Modifier tes informations</ThemedText>
-              <TextInput
-                placeholder="Nom"
-                value={name}
-                onChangeText={setName}
-                style={styles.input}
-              />
-              <TextInput
-                placeholder="Prénom"
-                value={lastname}
-                onChangeText={setLastname}
-                style={styles.input}
-              />
-              <TextInput
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-                style={styles.input}
-              />
-              <TextInput
-                placeholder="Numéro de téléphone"
-                value={phoneNumber}
-                onChangeText={setPhoneNumber}
-                style={styles.input}
-              />
-              <View style={styles.modalButtons}>
-                <Button 
-                  title="Annuler" 
-                  buttonStyle={globalStyles.buttonDeletedeStyle} 
-                  titleStyle={globalStyles.titleDeletedStyle}
-                  onPress={() => setIsModalVisibleTwo(false)} 
-                />
-                <Button 
-                  title="Confirmer" 
-                  buttonStyle={globalStyles.buttonSecondStyle} 
-                  titleStyle={globalStyles.titleSecondStyle} 
-                  onPress={handleUpdateUserInfo} 
-                />
-              </View>
-            </View>
+        <UserModal
+          visible={isModalUpdatedAccountVisible}
+          onClose={() => setIsModalUpdatedAccountVisible(false)}
+          title="Modifier tes informations"
+          confirmText="Confirmer"
+          cancelText="Annuler"
+          onConfirm={handleUpdateUserInfo}
+          modalType="update"
+        >
+          <View>
+            <TextInput
+              placeholder="Nom"
+              value={name}
+              onChangeText={setName}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Prénom"
+              value={lastname}
+              onChangeText={setLastname}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Numéro de téléphone"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+              style={styles.input}
+            />
           </View>
-        </Modal>
+        </UserModal>
 
 
         <Collapsible title="Localisation">
@@ -267,41 +258,46 @@ const ProfileScreen: React.FC = () => {
 
 
         <View style={styles.containerButtonProfile}>
-        <Button title="Se déconnecter" buttonStyle={globalStyles.buttonStyle} titleStyle={globalStyles.TextButtonStyle} onPress={logoutUser}/>
-        <Button title="Supprimer mon compte" buttonStyle={globalStyles.buttonDeletedeStyle} titleStyle={globalStyles.titleDeletedStyle}   onPress={() => setIsModalVisible(true)} />
+        <Button title="Se déconnecter" buttonStyle={globalStyles.buttonStyle} titleStyle={globalStyles.TextButtonStyle} onPress={() => setIsModalLogoutAccountVisible(true)} />
+        <Button title="Supprimer mon compte" buttonStyle={globalStyles.buttonDeletedeStyle} titleStyle={globalStyles.titleDeletedStyle} onPress={() => setIsModalDeletedAccountVisible(true)} />
         </View>
       </View>
-      <Modal visible={isModalVisible} transparent animationType="slide" onRequestClose={() => setIsModalVisibleTwo(false)}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <ThemedText type="title" style={styles.textModal}>Confirmer la suppression</ThemedText>
-            <ThemedText type="text" style={styles.textModal}>
-              Pour supprimer votre compte, veuillez entrer votre mot de passe.
-            </ThemedText>
-            <TextInput
-              placeholder="Mot de passe"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-              style={styles.input}
-            />
-            <View style={styles.modalButtons}>
-              <Button 
-                title="Annuler" 
-                buttonStyle={globalStyles.buttonDeletedeStyle} 
-                titleStyle={globalStyles.titleDeletedStyle}
-                onPress={() => setIsModalVisible(false)} 
-              />
-              <Button 
-                title="Confirmer" 
-                buttonStyle={globalStyles.buttonSecondStyle} 
-                titleStyle={globalStyles.titleSecondStyle} 
-                onPress={handleDeleteAccount} 
-              />
-            </View>
-          </View>
+      <UserModal
+        visible={isModalLogoutAccountVisible}
+        onClose={() => setIsModalLogoutAccountVisible(false)}
+        title="Déconnexion"
+        confirmText="Déconnexion"
+        cancelText="Revenir en arrière"
+        onConfirm={logoutUser}
+        modalType="logout" 
+      >
+        <ThemedText type="text" style={{ color: 'white', textAlign: 'center' }}>
+          Tu es sur le point de te déconnecter, es-tu sûr de vouloir te déconnecter ?
+        </ThemedText>
+      </UserModal>
+      <UserModal
+        visible={isModalDeletedAccountVisible}
+        onClose={() => setIsModalDeletedAccountVisible(false)}
+        title="Confirmer la suppression"
+        confirmText="Confirmer"
+        cancelText="Annuler"
+        onConfirm={handleDeleteAccount}
+        modalType="delete"
+      >
+        <View>
+          <ThemedText type="text" style={{ color: 'white', marginBottom: 15, textAlign: 'center' }}>
+            Pour supprimer votre compte, veuillez entrer votre mot de passe.
+          </ThemedText>
+          <TextInput
+            placeholder="Mot de passe"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+            // onBlur={() => setInputValue('')}
+            style={styles.input}
+          />
         </View>
-      </Modal>
+      </UserModal>
     </ScrollView>
   );
 };
@@ -433,38 +429,17 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     gap: 12, 
   },
-  ////// modal mais style à revoir
-   // Modal styles
-   modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    width: '90%',
-    alignItems: 'center',
-  },
   input: {
     width: '100%',
     padding: 10,
+    color: 'white',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
     marginBottom: 20,
     marginTop: 20,
   },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: "space-evenly",
-    gap: 15,
-  },
-  textModal: {
-    color: "black",
-  }
+
 });
 
 export default ProfileScreen;
