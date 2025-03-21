@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Switch, StyleSheet, TextInput, Modal, Pressable } from 'react-native';
+import { ScrollView, View, Switch, StyleSheet, TextInput, Pressable } from 'react-native';
 import { ThemedText } from '@/components/ThemedText'; 
 import { Button } from 'react-native-elements';
 import { Collapsible } from '@/components/Collapsible';
@@ -62,13 +62,13 @@ const ProfileScreen: React.FC = () => {
         <UserModal
           visible={isModalUpdatedAccountVisible}
           onClose={() => setIsModalUpdatedAccountVisible(false)}
-          title="Modifier tes informations"
+          title="Modifie tes informations !"
           confirmText="Confirmer"
           cancelText="Annuler"
           onConfirm={handleUpdateUserInfo}
           modalType="update"
         >
-          <View>
+          <View style={styles.inputContainer}>
             <TextInput
               placeholder="Nom"
               value={name}
@@ -267,7 +267,7 @@ const ProfileScreen: React.FC = () => {
         onClose={() => setIsModalLogoutAccountVisible(false)}
         title="Déconnexion"
         confirmText="Déconnexion"
-        cancelText="Revenir en arrière"
+        cancelText="Annuler"
         onConfirm={logoutUser}
         modalType="logout" 
       >
@@ -278,7 +278,7 @@ const ProfileScreen: React.FC = () => {
       <UserModal
         visible={isModalDeletedAccountVisible}
         onClose={() => setIsModalDeletedAccountVisible(false)}
-        title="Confirmer la suppression"
+        title="Confirmer la suppression de votre compte"
         confirmText="Confirmer"
         cancelText="Annuler"
         onConfirm={handleDeleteAccount}
@@ -286,7 +286,7 @@ const ProfileScreen: React.FC = () => {
       >
         <View>
           <ThemedText type="text" style={{ color: 'white', marginBottom: 15, textAlign: 'center' }}>
-            Pour supprimer votre compte, veuillez entrer votre mot de passe.
+            Pour supprimer votre compte, veuillez confirmer votre mot de passe.
           </ThemedText>
           <TextInput
             placeholder="Mot de passe"
@@ -436,9 +436,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    marginBottom: 20,
-    marginTop: 20,
   },
+  inputContainer: {
+    display: 'flex',
+    gap: 20,
+  }
 
 });
 

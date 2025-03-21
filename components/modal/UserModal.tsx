@@ -4,8 +4,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { Button } from 'react-native-elements';
 import { Theme } from '@/constants/Theme';
 import globalStyles from '@/styles/globalStyle';
-import { registerIcon } from '@/utils/imagesUtils';
-import { BlurView } from '@react-native-community/blur';
+import { registerIcon, updateUserIcon, deleteUserIcon } from '../../utils/imagesUtils';
 
 interface UserModalProps {
   visible: boolean;
@@ -48,7 +47,18 @@ export const UserModal: React.FC<UserModalProps> = ({
     }
   };
 
-  const isLogoutModal = modalType === 'logout';
+  const getModalIcon = () => {
+    switch (modalType) {
+      case 'logout':
+        return registerIcon;
+      case 'delete':
+        return deleteUserIcon; 
+      case 'update':
+        return updateUserIcon; 
+      default:
+        return registerIcon;
+    }
+  };
 
   return (
     <Modal
@@ -58,31 +68,26 @@ export const UserModal: React.FC<UserModalProps> = ({
       onRequestClose={onClose}
     >
       <View style={styles.container}>
-      <BlurView
-  style={styles.blurContainer}
-  blurType="dark"
-  blurAmount={10}
-/>
+        {/* Effet de flou sur tout l'écran */}
+        <View style={styles.blurContainer}/>
         
         <TouchableWithoutFeedback onPress={handleBackdropPress}>
           <View style={styles.backdrop}>
             <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
               <View style={styles.modalContent}>
+                <View style={styles.imageContainer}>
+                    <Image 
+                      source={getModalIcon()} 
+                      style={styles.modalImage}
+                      resizeMode="contain"
+                    />
+                  </View>
                 {title && (
                   <ThemedText type="title" style={styles.modalTitle}>
                     {title}
                   </ThemedText>
                 )}
                 
-                {isLogoutModal && (
-                  <View style={styles.imageContainer}>
-                    <Image 
-                      source={registerIcon} 
-                      style={styles.logoutImage}
-                      resizeMode="contain"
-                    />
-                  </View>
-                )}
                 
                 <View style={styles.contentContainer}>
                   {children}
@@ -128,6 +133,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', 
   },
   backdrop: {
     flex: 1,
@@ -141,8 +147,7 @@ const styles = StyleSheet.create({
     borderColor: Theme.colors.text,
     borderRadius: 10,
     padding: 20,
-    width: '90%',
-    maxWidth: 400,
+    width: '95%'
   },
   modalTitle: {
     color: 'white',
@@ -153,9 +158,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 20,
   },
-  logoutImage: {
-    width: 80,
-    height: 80,
+  modalImage: {
+    width: 100,
+    height: 100,
   },
   contentContainer: {
     marginVertical: 10,
