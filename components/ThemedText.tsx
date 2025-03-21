@@ -2,7 +2,7 @@ import { Text, type TextProps, StyleSheet } from 'react-native';
 import { Theme } from '@/constants/Theme';
 
 export type ThemedTextProps = TextProps & {
-  type?: 'default' | 'title' | 'text' | 'sectionProfile' | 'authTitle' | 'authSubtitle' | 'subtitle' | 'link' | 'profileInitials';
+  type?: 'default' | 'title' | 'text' | 'sectionProfile' | 'authTitle' | 'authSubtitle' | 'subtitle' | 'link' | 'profileInitials' | 'profileName' | 'informationsProfile';
 };
 
 export function ThemedText({
@@ -24,8 +24,10 @@ const styles = StyleSheet.create({
     color: Theme.colors.text,
     fontSize: Theme.typography.kilo.fontSize,
   },
-  profileInitials: {
-    fontSize: Theme.typography.megaBold.fontSize,
+  profileName: {
+    fontSize: Theme.typography.mega.fontSize,
+    fontWeight: Theme.typography.giga.fontWeight,
+
   },
   sectionProfile: {
     fontSize: Theme.typography.kilo.fontSize,
@@ -34,9 +36,18 @@ const styles = StyleSheet.create({
     fontSize: Theme.typography.giga.fontSize,
     fontWeight: Theme.typography.giga.fontWeight,
   },
+  profileInitials: {
+    fontSize: Theme.typography.tera.fontSize,
+    fontWeight: Theme.typography.giga.fontWeight,
+  },
   text: {
     color: Theme.colors.text,
     fontSize: Theme.typography.deca.fontSize,
+  },
+  informationsProfile: {
+    color: Theme.colors.text,
+    fontSize: Theme.typography.deca.fontSize,
+    lineHeight: 40,
   },
   authTitle: {
     fontSize: Theme.typography.mega.fontSize,

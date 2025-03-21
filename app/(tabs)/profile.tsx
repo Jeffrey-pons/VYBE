@@ -32,22 +32,22 @@ const ProfileScreen: React.FC = () => {
       <View style={globalStyles.containerX}>
         <View style={styles.centeredContainer}>
           <View style={styles.avatarContainer}>
-            <ThemedText type="title">
+            <ThemedText type="profileInitials">
               {userData?.name?.charAt(0).toUpperCase()}{userData?.lastname?.charAt(0).toUpperCase()}
             </ThemedText>
           </View>
-          <ThemedText type="profileInitials">{userData?.name} {userData?.lastname}</ThemedText>
+          <ThemedText type="profileName">{userData?.name} {userData?.lastname}</ThemedText>
         </View>
 
         <Collapsible title="Coordonnées">
           <View style={styles.containercoord}>
             <View style={styles.subContainerCoordonees}>
-              <ThemedText type="text">Nom : {userData?.lastname}</ThemedText>
-              <ThemedText type="text">Prénom : {userData?.name}</ThemedText>
+              <ThemedText type="informationsProfile">Nom : {userData?.lastname}</ThemedText>
+              <ThemedText type="informationsProfile">Prénom : {userData?.name}</ThemedText>
             </View>
-            <ThemedText type="text">Email : {userData?.mail}</ThemedText>
-            <ThemedText type="text">Numéro : {userData?.phoneNumber}</ThemedText>
-            <ThemedText type="text">Mot de passe : ********</ThemedText>
+            <ThemedText type="informationsProfile">Email : {userData?.mail}</ThemedText>
+            <ThemedText type="informationsProfile">Numéro : {userData?.phoneNumber}</ThemedText>
+            <ThemedText type="informationsProfile">Mot de passe : ********</ThemedText>
             <View style={styles.buttonContainer}>
               <Button title="Modifier" 
                 buttonStyle={styles.buttonUpdatedProfileStyle} 
@@ -221,9 +221,9 @@ const ProfileScreen: React.FC = () => {
         </Collapsible>
 
         <Collapsible title="F.A.Q">
-        <View style={styles.faqBox}>
+        <View>
           <View style={styles.faqItem}>
-            <Collapsible title="Comment fonctionne l'application ?">
+            <Collapsible subtitle="Comment fonctionne l'application ?">
               <ThemedText type="text" style={styles.faqText}>
                 Notre application vous permet de découvrir et réserver des événements en fonction de vos préférences musicales et géographiques.
               </ThemedText>
@@ -231,7 +231,7 @@ const ProfileScreen: React.FC = () => {
           </View>
 
           <View style={styles.faqItem}>
-            <Collapsible title="Comment activer les notifications ?">
+            <Collapsible subtitle="Comment activer les notifications ?">
               <ThemedText type="text" style={styles.faqText}>
                 Vous pouvez activer ou désactiver les notifications dans la section "Notifications" de votre profil.
               </ThemedText>
@@ -239,7 +239,7 @@ const ProfileScreen: React.FC = () => {
           </View>
 
           <View style={styles.faqItem}>
-            <Collapsible title="Puis-je modifier mes informations personnelles ?">
+            <Collapsible subtitle="Puis-je modifier mes informations personnelles ?">
               <ThemedText type="text" style={styles.faqText}>
                 Oui, rendez-vous dans la section "Coordonnées" pour mettre à jour votre nom, email et numéro de téléphone.
               </ThemedText>
@@ -247,7 +247,7 @@ const ProfileScreen: React.FC = () => {
           </View>
 
           <View style={styles.faqItem}>
-            <Collapsible title="Comment supprimer mon compte ?">
+            <Collapsible subtitle="Comment supprimer mon compte ?">
               <ThemedText type="text" style={styles.faqText}>
                 Vous pouvez supprimer votre compte en cliquant sur le bouton "Supprimer mon compte" dans les paramètres du profil.
               </ThemedText>
@@ -255,7 +255,7 @@ const ProfileScreen: React.FC = () => {
           </View>
 
           <View style={styles.faqItem}>
-            <Collapsible title="L'application est-elle gratuite ?">
+            <Collapsible subtitle="L'application est-elle gratuite ?">
               <ThemedText type="text" style={styles.faqText}>
                 Oui, l'application est gratuite, mais certains événements peuvent nécessiter un billet payant.
               </ThemedText>
@@ -412,11 +412,6 @@ const styles = StyleSheet.create({
     margin: 'auto',
   },
   ///////////////
-  faqBox: {
-    width: '95%',
-    display: 'flex',
-    margin: 'auto',
-  },
   faqItem: {
     padding: 14,
     borderRadius: 8,
@@ -427,8 +422,8 @@ const styles = StyleSheet.create({
   
   faqText: {
     color: Theme.colors.violetShade1, 
-    fontSize: Theme.typography.deca.fontSize,
-    lineHeight: Theme.typography.deca.lineHeight,
+    fontSize: Theme.typography.base.fontSize,
+    padding: 14,
   },
   musicButtonsContainer: {
     flexDirection: "column", 
