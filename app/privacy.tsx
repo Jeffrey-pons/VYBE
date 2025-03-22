@@ -50,7 +50,7 @@ const PrivacyScreen = () => {
 
         <ThemedText type="text" style={styles.sectionTitle}>7. Contact</ThemedText>
         <ThemedText type="text">
-        Pour toute question concernant notre politique de confidentialité, contactez-nous à : <b>support@vybe.com</b>
+        Pour toute question concernant notre politique de confidentialité, contactez-nous à : support@vybe.com
         </ThemedText>
 
         <View style={styles.buttonContainer}>

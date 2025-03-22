@@ -49,7 +49,7 @@ const TermsOfServiceScreen = () => {
 
         <ThemedText type="text" style={styles.sectionTitle}>7. Contact</ThemedText>
         <ThemedText type="text">
-        Pour toute question relative aux CGU, contactez-nous à : <b>support@vybe.com</b></ThemedText>
+        Pour toute question relative aux CGU, contactez-nous à : support@vybe.com</ThemedText>
 
         <View style={styles.buttonContainer}>
           <Button title="Retour" buttonStyle={globalStyles.buttonStyle} titleStyle={globalStyles.TextButtonStyle} onPress={() => router.back()} />

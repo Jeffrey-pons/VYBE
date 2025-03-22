@@ -19,5 +19,7 @@ import iconExposition from '../assets/images/icons/icon_exposition.png';
 import iconHumor from '../assets/images/icons/icon_humor.png';
 import iconAtelier from '../assets/images/icons/icon_workshop.png';
 import iconDj from '../assets/images/icons/icon_dj.png';
+import updateUserIcon from '../assets/images/icons/icon_updateuser.png';
+import deleteUserIcon from '../assets/images/icons/icon_deleteuser.gif';
 
-export { loginIcon, vybeLogo, locationIcon, musicIcon, notificationIcon, iconHome, iconLoupe, iconTicket, iconUser, iconChoiceLocation, iconTonight, iconThisWeek, iconConcert, iconFestival, iconSpectacle, iconExposition, iconHumor, iconAtelier, iconDj, registerIcon, vybeLogoHeader };
+export { loginIcon, vybeLogo, locationIcon, musicIcon, notificationIcon, iconHome, iconLoupe, iconTicket, iconUser, iconChoiceLocation, iconTonight, iconThisWeek, iconConcert, iconFestival, iconSpectacle, iconExposition, iconHumor, iconAtelier, iconDj, registerIcon, vybeLogoHeader, updateUserIcon, deleteUserIcon };

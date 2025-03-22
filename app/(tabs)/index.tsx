@@ -101,7 +101,7 @@ const handleCitySubmit = () => {
      <ThemedText style={styles.titleLocal}>
       Trouve ton prochain évènements à{' '}
       <TouchableOpacity onPress={toggleInput}>
-          <Text style={styles.underlinedCity}>{city || "Choisir une ville"}</Text>
+          <Text style={styles.underlinedCity}>{city}</Text>
         </TouchableOpacity>
       <Image
         style={styles.iconSize}
@@ -134,7 +134,7 @@ const handleCitySubmit = () => {
 
         
           <View style={styles.categoriesContainer}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow} contentOffset={{ x: 0, y: 0 }} >
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} contentContainerStyle={styles.categoryRow} contentOffset={{ x: 0, y: 0 }} >
           <TouchableOpacity
           style={[
             styles.categoryCard,
@@ -415,8 +415,8 @@ const styles = StyleSheet.create({
     width: '100%', 
   },
   iconSize: {
-    width: 50,  
-    height: 50,  
+    width: 40,  
+    height: 40,  
   },
   whiteText: {
     color: 'white',
@@ -440,6 +440,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     textAlign: "center",
     position: 'relative',
+    // lineHeight: 54,
   },
   underlinedCity: {
     fontFamily: "Fugaz-One",
@@ -463,7 +464,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 2,
     color: "green",
-    width: '12%',
+    width: 100,
     padding: 10,
   },
   activeCategory: {

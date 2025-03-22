@@ -5,12 +5,12 @@ import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { DarkTheme } from '@react-navigation/native';
 
-export function Collapsible({ children, title }: PropsWithChildren & { title: string }) {
+export function Collapsible({ children, title, subtitle }: PropsWithChildren & { title?: string, subtitle?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const theme = DarkTheme
 
   return (
-    <ThemedText>
+    <View>
       <TouchableOpacity
         style={styles.heading}
         onPress={() => setIsOpen((value) => !value)}
@@ -20,14 +20,15 @@ export function Collapsible({ children, title }: PropsWithChildren & { title: st
           size={22}
           weight="medium"
           color={Theme.colors.text}
-          style={{ transform: [{ rotate: isOpen ? '90deg' : '0deg' }], marginTop: 14 }}
+          style={{ transform: [{ rotate: isOpen ? '90deg' : '0deg' }], marginTop: 30 }}
         />
 
         <ThemedText type="sectionProfile" style={styles.title}>{title}</ThemedText>
+        {subtitle && <ThemedText style={styles.subtitle}>{subtitle}</ThemedText>}
       </TouchableOpacity>
       <View style={styles.separator} />
-      {isOpen && <ThemedText style={styles.content}>{children}</ThemedText>}
-    </ThemedText>
+      {isOpen && <View style={styles.content}>{children}</View>}
+    </View>
   );
 }
 
@@ -39,10 +40,16 @@ const styles = StyleSheet.create({
   },
   content: {
     marginTop: 6,
-    padding: 18,
   },
   title: {
     flex: 1, 
+    marginTop: 25,
+  },
+  subtitle: {
+    // flex: 1, 
+    color: Theme.colors.text,
+    fontSize: Theme.typography.base.fontSize,
+    marginTop: 25,
   },
   separator: {
     height: 1, 

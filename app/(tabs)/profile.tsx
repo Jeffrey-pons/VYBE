@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Switch, StyleSheet, TextInput, Modal } from 'react-native';
+import { ScrollView, View, Switch, StyleSheet, TextInput, Pressable } from 'react-native';
 import { ThemedText } from '@/components/ThemedText'; 
 import { Button } from 'react-native-elements';
 import { Collapsible } from '@/components/Collapsible';
@@ -8,19 +8,22 @@ import Logo from '@/components/LogoHeader';
 import globalStyles from '@/styles/globalStyle';
 import Entypo from '@expo/vector-icons/Entypo';
 import Fontisto from '@expo/vector-icons/Fontisto';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { logoutUser } from '@/services/authService';
 import { useLocation } from '@/contexts/LocationContext';
 import { useUserInfo } from '@/hooks/useUserInfo';
+import { UserModal } from '@/components/modal/UserModal';
 
 const ProfileScreen: React.FC = () => {
   const { city } = useLocation();
+  const router = useRouter();
   const [isPushEnabled, setIsPushEnabled] = useState<boolean>(true);
   const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(true);
   const [isLastTicketsEnabled, setIsLastTicketsEnabled] = useState<boolean>(true);
-  const { 
-    userData, name, setName, lastname, setLastname, email, setEmail, phoneNumber, setPhoneNumber, 
-    password, setPassword, isModalVisible, setIsModalVisible, isModalVisibleTwo, setIsModalVisibleTwo, 
+  const [isModalLogoutAccountVisible, setIsModalLogoutAccountVisible] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState('')
+  const { userData, name, setName, lastname, setLastname, email, setEmail, phoneNumber, setPhoneNumber, 
+          password, setPassword, isModalDeletedAccountVisible, setIsModalDeletedAccountVisible, isModalUpdatedAccountVisible, setIsModalUpdatedAccountVisible, 
     handleUpdateUserInfo,handleDeleteAccount 
   } = useUserInfo();
 
@@ -31,73 +34,67 @@ const ProfileScreen: React.FC = () => {
       <View style={globalStyles.containerX}>
         <View style={styles.centeredContainer}>
           <View style={styles.avatarContainer}>
-            <ThemedText type="title">
+            <ThemedText type="profileInitials">
               {userData?.name?.charAt(0).toUpperCase()}{userData?.lastname?.charAt(0).toUpperCase()}
             </ThemedText>
           </View>
-          <ThemedText type="profileInitials">{userData?.name} {userData?.lastname}</ThemedText>
+          <ThemedText type="profileName">{userData?.name} {userData?.lastname}</ThemedText>
         </View>
 
         <Collapsible title="Coordonnées">
           <View style={styles.containercoord}>
             <View style={styles.subContainerCoordonees}>
-              <ThemedText type="text">Nom : {userData?.lastname}</ThemedText>
-              <ThemedText type="text">Prénom : {userData?.name}</ThemedText>
+              <ThemedText type="informationsProfile">Nom : {userData?.lastname}</ThemedText>
+              <ThemedText type="informationsProfile">Prénom : {userData?.name}</ThemedText>
             </View>
-            <ThemedText type="text">Email : {userData?.mail}</ThemedText>
-            <ThemedText type="text">Numéro : {userData?.phoneNumber}</ThemedText>
-            <ThemedText type="text">Mot de passe : ********</ThemedText>
+            <ThemedText type="informationsProfile">Email : {userData?.mail}</ThemedText>
+            <ThemedText type="informationsProfile">Numéro : {userData?.phoneNumber}</ThemedText>
+            <ThemedText type="informationsProfile">Mot de passe : ********</ThemedText>
             <View style={styles.buttonContainer}>
-              <Button title="Modifier" buttonStyle={styles.buttonUpdatedProfileStyle} titleStyle={styles.titleUpdatedProfileStyle} onPress={() => setIsModalVisibleTwo(true)}></Button>
+              <Button title="Modifier" 
+                buttonStyle={styles.buttonUpdatedProfileStyle} 
+                titleStyle={styles.titleUpdatedProfileStyle}  
+                onPress={() => {
+                setIsModalUpdatedAccountVisible(true); }}></Button>
             </View>
           </View>
         </Collapsible>
-
-        <Modal visible={isModalVisibleTwo} transparent animationType="slide" onRequestClose={() => setIsModalVisibleTwo(false)}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <ThemedText type="title" style={styles.textModal}>Modifier tes informations</ThemedText>
-              <TextInput
-                placeholder="Nom"
-                value={name}
-                onChangeText={setName}
-                style={styles.input}
-              />
-              <TextInput
-                placeholder="Prénom"
-                value={lastname}
-                onChangeText={setLastname}
-                style={styles.input}
-              />
-              <TextInput
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-                style={styles.input}
-              />
-              <TextInput
-                placeholder="Numéro de téléphone"
-                value={phoneNumber}
-                onChangeText={setPhoneNumber}
-                style={styles.input}
-              />
-              <View style={styles.modalButtons}>
-                <Button 
-                  title="Annuler" 
-                  buttonStyle={globalStyles.buttonDeletedeStyle} 
-                  titleStyle={globalStyles.titleDeletedStyle}
-                  onPress={() => setIsModalVisibleTwo(false)} 
-                />
-                <Button 
-                  title="Confirmer" 
-                  buttonStyle={globalStyles.buttonSecondStyle} 
-                  titleStyle={globalStyles.titleSecondStyle} 
-                  onPress={handleUpdateUserInfo} 
-                />
-              </View>
-            </View>
+        <UserModal
+          visible={isModalUpdatedAccountVisible}
+          onClose={() => setIsModalUpdatedAccountVisible(false)}
+          title="Modifie tes informations !"
+          confirmText="Confirmer"
+          cancelText="Annuler"
+          onConfirm={handleUpdateUserInfo}
+          modalType="update"
+        >
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Nom"
+              value={name}
+              onChangeText={setName}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Prénom"
+              value={lastname}
+              onChangeText={setLastname}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Numéro de téléphone"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+              style={styles.input}
+            />
           </View>
-        </Modal>
+        </UserModal>
 
 
         <Collapsible title="Localisation">
@@ -195,9 +192,10 @@ const ProfileScreen: React.FC = () => {
           <ThemedText type="text">Nous collectons certaines données personnelles pour améliorer votre expérience. 
             Vos informations ne seront jamais partagées sans votre consentement. 
           </ThemedText>
-            <Link href={'/privacy'} asChild>
+            <Pressable onPress={() => router.push('/privacy')}>
             <ThemedText type='link'>Lire la politique complète</ThemedText>
-            </Link>
+            </Pressable>
+            
          </View>
         </Collapsible>
 
@@ -207,16 +205,16 @@ const ProfileScreen: React.FC = () => {
             L'utilisation de notre application implique l'acceptation de nos conditions générales d'utilisation. 
             Nous nous engageons à garantir une expérience utilisateur fluide et sécurisée.
           </ThemedText>
-            <Link href={'/terms-of-service'} asChild>
+          <Pressable onPress={() => router.push('/terms-of-service')}>
             <ThemedText type='link'>Lire la politique complète</ThemedText>
-            </Link>
+            </Pressable>
          </View>
         </Collapsible>
 
         <Collapsible title="F.A.Q">
-        <View style={styles.faqBox}>
+        <View>
           <View style={styles.faqItem}>
-            <Collapsible title="Comment fonctionne l'application ?">
+            <Collapsible subtitle="Comment fonctionne l'application ?">
               <ThemedText type="text" style={styles.faqText}>
                 Notre application vous permet de découvrir et réserver des événements en fonction de vos préférences musicales et géographiques.
               </ThemedText>
@@ -224,7 +222,7 @@ const ProfileScreen: React.FC = () => {
           </View>
 
           <View style={styles.faqItem}>
-            <Collapsible title="Comment activer les notifications ?">
+            <Collapsible subtitle="Comment activer les notifications ?">
               <ThemedText type="text" style={styles.faqText}>
                 Vous pouvez activer ou désactiver les notifications dans la section "Notifications" de votre profil.
               </ThemedText>
@@ -232,7 +230,7 @@ const ProfileScreen: React.FC = () => {
           </View>
 
           <View style={styles.faqItem}>
-            <Collapsible title="Puis-je modifier mes informations personnelles ?">
+            <Collapsible subtitle="Puis-je modifier mes informations personnelles ?">
               <ThemedText type="text" style={styles.faqText}>
                 Oui, rendez-vous dans la section "Coordonnées" pour mettre à jour votre nom, email et numéro de téléphone.
               </ThemedText>
@@ -240,7 +238,7 @@ const ProfileScreen: React.FC = () => {
           </View>
 
           <View style={styles.faqItem}>
-            <Collapsible title="Comment supprimer mon compte ?">
+            <Collapsible subtitle="Comment supprimer mon compte ?">
               <ThemedText type="text" style={styles.faqText}>
                 Vous pouvez supprimer votre compte en cliquant sur le bouton "Supprimer mon compte" dans les paramètres du profil.
               </ThemedText>
@@ -248,7 +246,7 @@ const ProfileScreen: React.FC = () => {
           </View>
 
           <View style={styles.faqItem}>
-            <Collapsible title="L'application est-elle gratuite ?">
+            <Collapsible subtitle="L'application est-elle gratuite ?">
               <ThemedText type="text" style={styles.faqText}>
                 Oui, l'application est gratuite, mais certains événements peuvent nécessiter un billet payant.
               </ThemedText>
@@ -260,41 +258,46 @@ const ProfileScreen: React.FC = () => {
 
 
         <View style={styles.containerButtonProfile}>
-        <Button title="Se déconnecter" buttonStyle={globalStyles.buttonStyle} titleStyle={globalStyles.TextButtonStyle} onPress={logoutUser}/>
-        <Button title="Supprimer mon compte" buttonStyle={globalStyles.buttonDeletedeStyle} titleStyle={globalStyles.titleDeletedStyle}   onPress={() => setIsModalVisible(true)} />
+        <Button title="Se déconnecter" buttonStyle={globalStyles.buttonStyle} titleStyle={globalStyles.TextButtonStyle} onPress={() => setIsModalLogoutAccountVisible(true)} />
+        <Button title="Supprimer mon compte" buttonStyle={globalStyles.buttonDeletedeStyle} titleStyle={globalStyles.titleDeletedStyle} onPress={() => setIsModalDeletedAccountVisible(true)} />
         </View>
       </View>
-      <Modal visible={isModalVisible} transparent animationType="slide" onRequestClose={() => setIsModalVisibleTwo(false)}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <ThemedText type="title" style={styles.textModal}>Confirmer la suppression</ThemedText>
-            <ThemedText type="text" style={styles.textModal}>
-              Pour supprimer votre compte, veuillez entrer votre mot de passe.
-            </ThemedText>
-            <TextInput
-              placeholder="Mot de passe"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-              style={styles.input}
-            />
-            <View style={styles.modalButtons}>
-              <Button 
-                title="Annuler" 
-                buttonStyle={globalStyles.buttonDeletedeStyle} 
-                titleStyle={globalStyles.titleDeletedStyle}
-                onPress={() => setIsModalVisible(false)} 
-              />
-              <Button 
-                title="Confirmer" 
-                buttonStyle={globalStyles.buttonSecondStyle} 
-                titleStyle={globalStyles.titleSecondStyle} 
-                onPress={handleDeleteAccount} 
-              />
-            </View>
-          </View>
+      <UserModal
+        visible={isModalLogoutAccountVisible}
+        onClose={() => setIsModalLogoutAccountVisible(false)}
+        title="Déconnexion"
+        confirmText="Déconnexion"
+        cancelText="Annuler"
+        onConfirm={logoutUser}
+        modalType="logout" 
+      >
+        <ThemedText type="text" style={{ color: 'white', textAlign: 'center' }}>
+          Tu es sur le point de te déconnecter, es-tu sûr de vouloir te déconnecter ?
+        </ThemedText>
+      </UserModal>
+      <UserModal
+        visible={isModalDeletedAccountVisible}
+        onClose={() => setIsModalDeletedAccountVisible(false)}
+        title="Confirmer la suppression de votre compte"
+        confirmText="Confirmer"
+        cancelText="Annuler"
+        onConfirm={handleDeleteAccount}
+        modalType="delete"
+      >
+        <View>
+          <ThemedText type="text" style={{ color: 'white', marginBottom: 15, textAlign: 'center' }}>
+            Pour supprimer votre compte, veuillez confirmer votre mot de passe.
+          </ThemedText>
+          <TextInput
+            placeholder="Mot de passe"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+            // onBlur={() => setInputValue('')}
+            style={styles.input}
+          />
         </View>
-      </Modal>
+      </UserModal>
     </ScrollView>
   );
 };
@@ -405,11 +408,6 @@ const styles = StyleSheet.create({
     margin: 'auto',
   },
   ///////////////
-  faqBox: {
-    width: '95%',
-    display: 'flex',
-    margin: 'auto',
-  },
   faqItem: {
     padding: 14,
     borderRadius: 8,
@@ -420,8 +418,8 @@ const styles = StyleSheet.create({
   
   faqText: {
     color: Theme.colors.violetShade1, 
-    fontSize: Theme.typography.deca.fontSize,
-    lineHeight: Theme.typography.deca.lineHeight,
+    fontSize: Theme.typography.base.fontSize,
+    padding: 14,
   },
   musicButtonsContainer: {
     flexDirection: "column", 
@@ -431,37 +429,19 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     gap: 12, 
   },
-  ////// modal mais style à revoir
-   // Modal styles
-   modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    width: '90%',
-    alignItems: 'center',
-  },
   input: {
     width: '100%',
     padding: 10,
+    color: 'white',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    marginBottom: 20,
-    marginTop: 20,
   },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: "space-evenly",
-    gap: 15,
-  },
-  textModal: {
-    color: "black",
+  inputContainer: {
+    display: 'flex',
+    gap: 20,
   }
+
 });
 
 export default ProfileScreen;
