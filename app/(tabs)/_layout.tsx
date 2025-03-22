@@ -13,23 +13,25 @@ export default function TabLayout() {
         tabBarActiveTintColor: Theme.colors.text, 
         headerShown: false,
         tabBarBackground: TabBarBackground,
+        tabBarShowLabel: false,
         tabBarStyle: Platform.select({
           ios: {
             background: 'transparent',
             position: 'absolute',
+            paddingTop: 4,
           },
           default: {},
-        }),
+        })
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: '',
           tabBarIcon: ({ color, size }) => (
             <Image
               source={iconHome}
               style={{ width: size, height: size, tintColor: color }}
               alt="Icône pour revenir au menu principal"
+              
             />
           ),
         }}
@@ -37,7 +39,6 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: '',
           tabBarIcon: ({ color, size }) => (
             <Image
               source={iconLoupe}
@@ -50,7 +51,6 @@ export default function TabLayout() {
       <Tabs.Screen
         name="tickets"
         options={{
-          title: '',
           tabBarIcon: ({ color, size }) => (
             <Image
               source={iconTicket}
@@ -63,7 +63,6 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: '',
           tabBarIcon: ({ color, size }) => (
             <Image
               source={iconUser}
