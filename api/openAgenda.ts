@@ -1,4 +1,4 @@
-import { Event } from "@/interfaces/Event";
+import { Event } from "../interfaces/event";
 
 export const getEvent = async (): Promise<Event[]> => {
     return [];
@@ -37,9 +37,10 @@ export const getEventsOpenAgenda = async (urlOpenAgenda: string) => {
     }
 }
 
-export const getEventsOpenAgendaByCategory = async (params: { city?: string, category?: string }) => {
+export const getEventsByCategoryOpenAgenda = async (params: { city?: string, category?: string }) => {
     try {
         const urlOpenAgenda = generateOpenAgendaUrl(params);
+        console.log('urlOpenAgenda:', urlOpenAgenda);
         return getEventsOpenAgenda(urlOpenAgenda);
     } catch (error) {
         console.error(error);
@@ -47,7 +48,7 @@ export const getEventsOpenAgendaByCategory = async (params: { city?: string, cat
     }
 }
 
-export const getEventsOpenAgendaTonight = async (city: string) => {
+export const getEventsForTonightOpenAgenda = async (city: string) => {
     try {
         const now = new Date();
         const startOfEvening = new Date(now.setHours(18, 0, 0, 0)); // Ce soir à 18h00
@@ -64,7 +65,7 @@ export const getEventsOpenAgendaTonight = async (city: string) => {
     }
 };
 
-export const getEventsOpenAgendaThisWeek = async (city: string) => {
+export const getEventsThisWeekOpenAgenda = async (city: string) => {
     try {
         const today = new Date();
         const startOfWeek = new Date(today);
@@ -87,7 +88,7 @@ export const getEventsOpenAgendaThisWeek = async (city: string) => {
     }
   };
 
-  export const getFiveUpcomingEventsOpenAgenda = async (filters = {}) => {
+  export const getUpcomingEventsOpenAgenda = async (filters = {}) => {
     try {
         const urlOpenAgenda = generateOpenAgendaUrl(filters);  
         const response = await fetch(urlOpenAgenda);  

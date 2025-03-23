@@ -20,12 +20,10 @@ const App = () => {
     handleCityNext,
     toggleInput
   } = useLocationHandler();
-
-  const { events, loading, error } = useEvents();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [filteredEvents, setFilteredEvents] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>('');
+  const { events, loading, error } = useEvents(activeCategory);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
 // Gérer l'événement quand l'utilisateur appuie sur "Entrée"
 const handleCitySubmit = () => {
@@ -34,21 +32,6 @@ const handleCitySubmit = () => {
   handleCityNext(auth.currentUser, router);
 };
 
-// mauvaise gestion category (à revoir)
-const handleCategoryClick = (category: string) => {
-  setActiveCategory(category);
-
-  if (category === 'tonight') {
-    setFilteredEvents(events.tonight);
-  } else if (category === 'week') {
-    setFilteredEvents(events.thisWeek);
-  } else {
-    const filteredByCategory = events.byCategory.filter((event) => {
-      return event.category === category;
-    });
-    setFilteredEvents(filteredByCategory);
-  }
-};
 
   const handleEventClick = (event: Event) => {
     setSelectedEvent(event);  
@@ -63,16 +46,10 @@ const handleCategoryClick = (category: string) => {
   const handleCityDetected = (detectedCity: string) => {
     setCity(detectedCity);
   };
-
-  // const filteredEvents = events.byCategory.filter((event) => {
-  //   return event.category === activeCategory;
-  // });
-  useEffect(() => {
-    console.log('evennnnt bw a:', events); // Vérifiez la structure des données des événements
-  }, [events]);
   
   return (
     <ScrollView>
+      <View style={styles.container}>
     <Logo></Logo>
      <ThemedText style={styles.titleLocal}>
       Trouve ton prochain évènements à{' '}
@@ -117,9 +94,7 @@ const handleCategoryClick = (category: string) => {
             activeCategory === 'tonight' && styles.activeCategory,
           ]}
           onPress={() => {
-            handleCategoryClick('tonight');
-            console.log(events.byCategory)
-            console.log('event tonight click')
+            setActiveCategory('tonight');
           }}
         >
           <Image
@@ -136,9 +111,7 @@ const handleCategoryClick = (category: string) => {
                 activeCategory === 'week' && styles.activeCategory,
               ]}
               onPress={() => {
-                handleCategoryClick('week');
-                console.log(events.byCategory)
-            console.log('event week click')
+              setActiveCategory('week');
               }}
             >
           <Image
@@ -155,7 +128,7 @@ const handleCategoryClick = (category: string) => {
                 activeCategory === 'concert' && styles.activeCategory,
               ]}
               onPress={() => {
-                handleCategoryClick('concert');
+              setActiveCategory('concert');
               }}
             >
             <Image
@@ -172,10 +145,7 @@ const handleCategoryClick = (category: string) => {
                 activeCategory === 'festival' && styles.activeCategory,
               ]}
               onPress={() => {
-                handleCategoryClick('festival');
                 setActiveCategory('festival');
-                console.log(events.byCategory)
-            console.log('event festival click')
               }}
             >
             <Image
@@ -191,7 +161,7 @@ const handleCategoryClick = (category: string) => {
                 activeCategory === 'spectacle' && styles.activeCategory,
               ]}
               onPress={() => {
-                handleCategoryClick('spectacle');
+              setActiveCategory('spectacle');
               }}
             >
             <Image
@@ -207,7 +177,7 @@ const handleCategoryClick = (category: string) => {
                 activeCategory === 'exposition' && styles.activeCategory,
               ]}
               onPress={() => {
-                handleCategoryClick('exposition');
+              setActiveCategory('exposition');
               }}
             >
             <Image
@@ -223,7 +193,7 @@ const handleCategoryClick = (category: string) => {
                 activeCategory === 'humour' && styles.activeCategory,
               ]}
               onPress={() => {
-                handleCategoryClick('humour');
+              setActiveCategory('humour');
               }}
             >
             <Image
@@ -239,7 +209,7 @@ const handleCategoryClick = (category: string) => {
                 activeCategory === 'atelier' && styles.activeCategory,
               ]}
               onPress={() => {
-                handleCategoryClick('atelier');
+              setActiveCategory('atelier');
               }}
             >
             <Image
@@ -255,7 +225,7 @@ const handleCategoryClick = (category: string) => {
                 activeCategory === 'soiree' && styles.activeCategory,
               ]}
               onPress={() => {
-                handleCategoryClick('soiree');
+              setActiveCategory('soiree');
               }}
             >
             <Image
@@ -271,7 +241,7 @@ const handleCategoryClick = (category: string) => {
                 activeCategory === 'techno' && styles.activeCategory,
               ]}
               onPress={() => {
-                handleCategoryClick('techno');
+              setActiveCategory('techno');
               }}
             >
             <Image
@@ -284,8 +254,8 @@ const handleCategoryClick = (category: string) => {
         </ScrollView>
       </View>
       <View style={styles.eventsContainer}>
-        {filteredEvents.length  > 0 ? (
-          filteredEvents.map((event, index) => (
+        {events && events.length  > 0 ? (
+          events.map((event, index) => (
             <View style={styles.eventCard} key={index}>
               <Image 
                 source={{ uri: `${event.image?.base || ''}${event.image?.filename}` }}
@@ -318,8 +288,8 @@ const handleCategoryClick = (category: string) => {
 
       {selectedEvent && (
         <Modal visible={modalVisible} transparent animationType="none">
-          <View style={globalStyles.modalOverlay}>
-            <View style={globalStyles.modalContainer}>
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContainer}>
               {selectedEvent.image && (
                  <Image 
                  source={{ uri: `${selectedEvent.image?.base || ''}${selectedEvent.image?.filename}` }}
@@ -327,8 +297,8 @@ const handleCategoryClick = (category: string) => {
                  alt="Image de l'évènement"
                />
               )}
-                <Text style={globalStyles.modalTitle}>{selectedEvent.title?.fr}</Text>
-              <Text style={globalStyles.modalDate}>
+                <Text style={styles.modalTitle}>{selectedEvent.title?.fr}</Text>
+              <Text style={styles.modalDate}>
                 {selectedEvent.dateRange?.fr ||
                   (selectedEvent.firstTiming?.begin ? new Date(selectedEvent.firstTiming.begin).toLocaleString('fr-FR', {
                     weekday: 'long',
@@ -339,20 +309,21 @@ const handleCategoryClick = (category: string) => {
                     minute: '2-digit',
                   }) : 'Date non disponible')}
               </Text>
-              <Text style={globalStyles.modalDescription}>
+              <Text style={styles.modalDescription}>
                 {selectedEvent.description?.fr || 'Aucune description disponible'}
               </Text>
-              <Text style={globalStyles.modalEventPrice}>
+              <Text style={styles.modalEventPrice}>
                   {selectedEvent.price ? `${selectedEvent.price} €` : 'Prix non disponible'}
                 </Text>
-              <TouchableOpacity style={globalStyles.closeModalButton} onPress={closeModal}>
-                <Text style={globalStyles.closeModalButtonText}>Fermer</Text>
+              <TouchableOpacity style={styles.closeModalButton} onPress={closeModal}>
+                <Text style={styles.closeModalButtonText}>Fermer</Text>
               </TouchableOpacity>
             </View>
           </View>
         </Modal>
       )}
       
+      </View>
     </ScrollView>
     
   );
@@ -391,21 +362,21 @@ const styles = StyleSheet.create({
     width: 40,  
     height: 40,  
   },
-  whiteText: {
-    color: 'white',
-  },
+  // whiteText: {
+  //   color: 'white',
+  // },
   categoriesContainer: {
     marginVertical: 30,
     width: '100%',
     alignItems: 'center',
     flexDirection: "row",
   },
-  categoriesTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    textAlign: 'center',
-  },
+  // categoriesTitle: {
+  //   fontSize: 20,
+  //   fontWeight: 'bold',
+  //   marginBottom: 15,
+  //   textAlign: 'center',
+  // },
   titleLocal: {
     color: "#fff",
     fontWeight: "bold",
@@ -480,13 +451,13 @@ const styles = StyleSheet.create({
     marginBottom:20,
     fontFamily: "FunnelSans-Regular",
   },
-  eventDescription: {
-    fontSize: 14,
-    color: "lightgray",
-    marginHorizontal: 10,
-    marginBottom: 10,
-    fontFamily: "FunnelSans-Regular",
-  },
+  // eventDescription: {
+  //   fontSize: 14,
+  //   color: "lightgray",
+  //   marginHorizontal: 10,
+  //   marginBottom: 10,
+  //   fontFamily: "FunnelSans-Regular",
+  // },
   detailsButton: {
     backgroundColor: "white",
     padding: 10,
@@ -504,6 +475,55 @@ const styles = StyleSheet.create({
     color: "white",
     marginTop: 20,
     fontSize: 18,
+    fontFamily: "FunnelSans-Regular",
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+  },
+  modalContainer: {
+    backgroundColor: 'black',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: 'white',
+    marginTop: 20,
+    fontFamily: "FunnelSans-Regular",
+  },
+  modalDate: {
+    fontSize: 16,
+    color: '#ffdd59',
+    marginVertical: 10,
+    fontFamily: "FunnelSans-Regular",
+  },
+  modalEventPrice: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: 20,
+    fontFamily: "FunnelSans-Regular",
+  },
+  modalDescription: {
+    fontSize: 16,
+    color: 'gray',
+    marginVertical: 10,
+    fontFamily: "FunnelSans-Regular",
+
+  },
+  closeModalButton: {
+    backgroundColor: '#ff4d4d',
+    padding: 10,
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  closeModalButtonText: {
+    color: 'white',
     fontFamily: "FunnelSans-Regular",
   },
 });
