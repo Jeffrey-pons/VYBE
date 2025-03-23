@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal, Button, TextInput } from 'react-native';
-// import LocationComponent from '@/components/Location'; 
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
-// import { fetchEventsByCategory, fetchEventsTonight, fetchEventsThisWeek } from '@/services/openAgenda.api';
 import { Event } from '@/interfaces/Event';
 import Logo from '@/components/LogoHeader';
 import { auth } from '@/config/firebaseConfig';
@@ -10,11 +8,9 @@ import { router } from 'expo-router';
 import globalStyles from '@/styles/globalStyle';
 import { useLocationHandler } from '@/hooks/useLocationHandler';
 import { iconChoiceLocation, iconTonight, iconThisWeek, iconConcert, iconFestival, iconSpectacle, iconExposition, iconHumor, iconAtelier, iconDj } from '@/utils/imagesUtils';
-
-// A améliorer en snd partie !!!!!!!!
+import { useEvents } from '@/hooks/useEvent';
 
 const App = () => {
-  // const { city } = useLocation();
   const { 
     city, 
     manualCity, 
@@ -22,14 +18,14 @@ const App = () => {
     handleManualCityChange, 
     handleUseLocation, 
     handleCityNext,
-    toggleInput 
+    toggleInput
   } = useLocationHandler();
-  // const [city, setCity] = useState<string | null>(null);
-  const [events, setEvents] = useState<Event[]>([]);
+
+  const { events, loading, error } = useEvents();
   const [modalVisible, setModalVisible] = useState(false);
+  const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
-// A améliorer en snd partie
+  const [activeCategory, setActiveCategory] = useState<string | null>('');
 
 // Gérer l'événement quand l'utilisateur appuie sur "Entrée"
 const handleCitySubmit = () => {
@@ -38,47 +34,21 @@ const handleCitySubmit = () => {
   handleCityNext(auth.currentUser, router);
 };
 
-  useEffect(() => {
-    if (city && events.length === 0) {
-      fetchEvents4Tonight(city);
-      fetchEvents4Weeks(city);
-    }
-  }, [city, events.length]);
+// mauvaise gestion category (à revoir)
+const handleCategoryClick = (category: string) => {
+  setActiveCategory(category);
 
-  const fetchEvents4Tonight = async (city: string) => {
-    try {
-      // const eventsData = await fetchEventsTonight(city);  
-      // setEvents(eventsData);
-    } catch (error) {
-      console.error('Erreur lors de la récupération des événements:', error);
-    }
-  };
-
-  const fetchEvents4Weeks = async (city: string) => {
-    try {
-      // const eventsData = await fetchEventsThisWeek(city);  
-      // setEvents(eventsData); 
-    } catch (error) {
-      console.error('Erreur lors de la récupération des événements:', error);
-    }
-  };
-
-  const handleCategoryClick = async (city: string, category: string) => {
-    if (!city || !category) {
-      console.error("Ville ou catégorie manquante");
-      return;
-    }
-    setActiveCategory(category);
-    try {
-      // const eventsDataCategory = await fetchEventsByCategory({
-      //   city,
-      //   category
-      // });
-      // setEvents(eventsDataCategory);
-    } catch (error){
-      console.error('Erreur lors de la récupération des événements:', error);
-    } 
-  };
+  if (category === 'tonight') {
+    setFilteredEvents(events.tonight);
+  } else if (category === 'week') {
+    setFilteredEvents(events.thisWeek);
+  } else {
+    const filteredByCategory = events.byCategory.filter((event) => {
+      return event.category === category;
+    });
+    setFilteredEvents(filteredByCategory);
+  }
+};
 
   const handleEventClick = (event: Event) => {
     setSelectedEvent(event);  
@@ -93,7 +63,13 @@ const handleCitySubmit = () => {
   const handleCityDetected = (detectedCity: string) => {
     setCity(detectedCity);
   };
- 
+
+  // const filteredEvents = events.byCategory.filter((event) => {
+  //   return event.category === activeCategory;
+  // });
+  useEffect(() => {
+    console.log('evennnnt bw a:', events); // Vérifiez la structure des données des événements
+  }, [events]);
   
   return (
     <ScrollView>
@@ -141,8 +117,9 @@ const handleCitySubmit = () => {
             activeCategory === 'tonight' && styles.activeCategory,
           ]}
           onPress={() => {
-            city && fetchEvents4Tonight(city);
-            setActiveCategory('tonight');
+            handleCategoryClick('tonight');
+            console.log(events.byCategory)
+            console.log('event tonight click')
           }}
         >
           <Image
@@ -159,8 +136,9 @@ const handleCitySubmit = () => {
                 activeCategory === 'week' && styles.activeCategory,
               ]}
               onPress={() => {
-                city && fetchEvents4Weeks(city);
-                setActiveCategory('week');
+                handleCategoryClick('week');
+                console.log(events.byCategory)
+            console.log('event week click')
               }}
             >
           <Image
@@ -177,8 +155,7 @@ const handleCitySubmit = () => {
                 activeCategory === 'concert' && styles.activeCategory,
               ]}
               onPress={() => {
-                city && handleCategoryClick(city, 'concert');
-                setActiveCategory('concert');
+                handleCategoryClick('concert');
               }}
             >
             <Image
@@ -195,8 +172,10 @@ const handleCitySubmit = () => {
                 activeCategory === 'festival' && styles.activeCategory,
               ]}
               onPress={() => {
-                city && handleCategoryClick(city, 'festival');
+                handleCategoryClick('festival');
                 setActiveCategory('festival');
+                console.log(events.byCategory)
+            console.log('event festival click')
               }}
             >
             <Image
@@ -212,8 +191,7 @@ const handleCitySubmit = () => {
                 activeCategory === 'spectacle' && styles.activeCategory,
               ]}
               onPress={() => {
-                city && handleCategoryClick(city, 'spectacle');
-                setActiveCategory('spectacle');
+                handleCategoryClick('spectacle');
               }}
             >
             <Image
@@ -229,8 +207,7 @@ const handleCitySubmit = () => {
                 activeCategory === 'exposition' && styles.activeCategory,
               ]}
               onPress={() => {
-                city && handleCategoryClick(city, 'exposition');
-                setActiveCategory('exposition');
+                handleCategoryClick('exposition');
               }}
             >
             <Image
@@ -246,8 +223,7 @@ const handleCitySubmit = () => {
                 activeCategory === 'humour' && styles.activeCategory,
               ]}
               onPress={() => {
-                city && handleCategoryClick(city, 'humour');
-                setActiveCategory('humour');
+                handleCategoryClick('humour');
               }}
             >
             <Image
@@ -263,8 +239,7 @@ const handleCitySubmit = () => {
                 activeCategory === 'atelier' && styles.activeCategory,
               ]}
               onPress={() => {
-                city && handleCategoryClick(city, 'atelier');
-                setActiveCategory('atelier');
+                handleCategoryClick('atelier');
               }}
             >
             <Image
@@ -280,8 +255,7 @@ const handleCitySubmit = () => {
                 activeCategory === 'soiree' && styles.activeCategory,
               ]}
               onPress={() => {
-                city && handleCategoryClick(city, 'soiree');
-                setActiveCategory('soiree');
+                handleCategoryClick('soiree');
               }}
             >
             <Image
@@ -297,8 +271,7 @@ const handleCitySubmit = () => {
                 activeCategory === 'techno' && styles.activeCategory,
               ]}
               onPress={() => {
-                city && handleCategoryClick(city, 'techno');
-                setActiveCategory('techno');
+                handleCategoryClick('techno');
               }}
             >
             <Image
@@ -311,8 +284,8 @@ const handleCitySubmit = () => {
         </ScrollView>
       </View>
       <View style={styles.eventsContainer}>
-        {events.length > 0 ? (
-          events.map((event, index) => (
+        {filteredEvents.length  > 0 ? (
+          filteredEvents.map((event, index) => (
             <View style={styles.eventCard} key={index}>
               <Image 
                 source={{ uri: `${event.image?.base || ''}${event.image?.filename}` }}
