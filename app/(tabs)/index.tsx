@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { Event } from '@/interfaces/Event';
@@ -20,6 +20,7 @@ const App = () => {
     handleCityNext,
     toggleInput
   } = useLocationHandler();
+  const textInputRef = useRef(null);
   const [activeCategory, setActiveCategory] = useState<string | null>('');
   const { events, loading, error } = useEvents(activeCategory);
   const [modalVisible, setModalVisible] = useState(false);
@@ -52,25 +53,29 @@ const handleCitySubmit = () => {
       <View style={styles.container}>
     <Logo></Logo>
      <ThemedText style={styles.titleLocal}>
-      Trouve ton prochain évènements à{' '}
+      Découvre ton prochain évènements à{' '}
+      {/* <View style={styles.cityContainer}> */}
       <TouchableOpacity onPress={toggleInput}>
           <Text style={styles.underlinedCity}>{city}</Text>
         </TouchableOpacity>
-      <Image
+        {/* </View> */}
+    </ThemedText>
+    <Image
         style={styles.iconSize}
         source={iconChoiceLocation}
         alt="Icône de choix de localisation"
       />
-    </ThemedText>
     {showInput && (
           <>
             <TextInput
+              ref={textInputRef}
                style={styles.textInput}
               value={manualCity || ''}
               onChangeText={handleManualCityChange}
               placeholder="Entrez votre ville"
               onSubmitEditing={handleCitySubmit} 
               returnKeyType="done" 
+              autoFocus={true} 
             />
           </>
         )}
@@ -98,7 +103,7 @@ const handleCitySubmit = () => {
           }}
         >
           <Image
-            style={styles.iconSize}
+            style={styles.iconSizeCategory}
             source={iconTonight}
             alt="Icône de la catégorie Ce soir"
           />
@@ -115,7 +120,7 @@ const handleCitySubmit = () => {
               }}
             >
           <Image
-            style={styles.iconSize}
+            style={styles.iconSizeCategory}
             source={iconThisWeek}
             alt="Icône de la catégorie Cette semaine"
           />
@@ -132,7 +137,7 @@ const handleCitySubmit = () => {
               }}
             >
             <Image
-            style={styles.iconSize}
+            style={styles.iconSizeCategory}
             source={iconConcert}
             alt="Icône de la catégorie Concert"
             />
@@ -149,7 +154,7 @@ const handleCitySubmit = () => {
               }}
             >
             <Image
-            style={styles.iconSize}
+            style={styles.iconSizeCategory}
             source={iconFestival}
             alt="Icône de la catégorie Festival"
             />
@@ -165,7 +170,7 @@ const handleCitySubmit = () => {
               }}
             >
             <Image
-              style={styles.iconSize}
+              style={styles.iconSizeCategory}
               source={iconSpectacle}
               alt="Icône de la catégorie Spectacle"
             />
@@ -181,7 +186,7 @@ const handleCitySubmit = () => {
               }}
             >
             <Image
-              style={styles.iconSize}
+              style={styles.iconSizeCategory}
               source={iconExposition}
               alt="Icône de la catégorie Exposition"
             />
@@ -197,7 +202,7 @@ const handleCitySubmit = () => {
               }}
             >
             <Image
-              style={styles.iconSize}
+              style={styles.iconSizeCategory}
               source={iconHumor}
               alt="Icône de la catégorie Humour"
             />
@@ -213,7 +218,7 @@ const handleCitySubmit = () => {
               }}
             >
             <Image
-              style={styles.iconSize}
+              style={styles.iconSizeCategory}
               source={iconAtelier}
               alt="Icône de la catégorie Atelier"
             />
@@ -229,7 +234,7 @@ const handleCitySubmit = () => {
               }}
             >
             <Image
-            style={styles.iconSize}
+            style={styles.iconSizeCategory}
             source={iconFestival}
             alt="Icône de la catégorie Soirée"
             />
@@ -245,7 +250,7 @@ const handleCitySubmit = () => {
               }}
             >
             <Image
-              style={styles.iconSize}
+              style={styles.iconSizeCategory}
               source={iconDj}
               alt="Icône de la catégorie Techno"
             />
@@ -333,9 +338,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    fontFamily: "Fugaz-One",
   },
   textInput: {
     position: 'absolute', 
@@ -357,16 +359,22 @@ const styles = StyleSheet.create({
     opacity: 0, 
     height: 0, 
     width: '100%', 
+      marginTop: 8,
+  
   },
   iconSize: {
-    width: 40,  
-    height: 40,  
+    width: 30,  
+    height: 30,  
+    position: 'absolute',
+    top: 155,
+    right: 0,
   },
-  // whiteText: {
-  //   color: 'white',
-  // },
+  iconSizeCategory: {
+    width: 50,  
+    height: 50,  
+  },
   categoriesContainer: {
-    marginVertical: 30,
+    marginVertical: 10,
     width: '100%',
     alignItems: 'center',
     flexDirection: "row",
@@ -381,17 +389,15 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontFamily: 'FunnelSans-Regular',
-    fontSize: 28,
+    fontSize: 31,
     textAlign: "center",
-    position: 'relative',
-    // lineHeight: 54,
   },
   underlinedCity: {
     fontFamily: "Fugaz-One",
-    fontSize: 26,
-    borderBottomWidth: 1, 
+    fontSize: 30,
+    borderBottomWidth: 0.4, 
     borderBottomColor: 'white', 
-    paddingBottom: 0.5, 
+    paddingBottom: 0, 
     color: 'white', 
     fontWeight: 'bold', 
   },

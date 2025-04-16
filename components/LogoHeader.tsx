@@ -22,9 +22,9 @@ const Logo = () => {
 
 const styles = StyleSheet.create({
   logo: {
-    width: 250, 
-    height: 150,
-    marginTop: 50,
+    width: 150, 
+    height: 100,
+    marginTop: 20,
   },
 });
 
