@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal, TextInput, KeyboardAvoidingView, Platform  } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
-import { Event } from '@/interfaces/Event';
+import { Event } from '@/interfaces/event';
 import Logo from '@/components/LogoHeader';
 import { auth } from '@/config/firebaseConfig';
 import { router } from 'expo-router';
-import globalStyles from '@/styles/globalStyle';
 import { useLocationHandler } from '@/hooks/useLocationHandler';
-import { iconChoiceLocation, iconTonight, iconThisWeek, iconConcert, iconFestival, iconSpectacle, iconExposition, iconHumor, iconAtelier, iconDj } from '@/utils/imagesUtils';
+import { iconChoiceLocation } from '@/utils/imagesUtils';
 import { useEvents } from '@/hooks/useEvent';
+import { EventCard } from '@/components/events/EventCard';
+import CategoryMenu from '@/components/CategoryMenu';
+import globalStyles from '@/styles/globalStyle';
 
 const App = () => {
   const { 
@@ -16,7 +18,6 @@ const App = () => {
     manualCity, 
     showInput, 
     handleManualCityChange, 
-    handleUseLocation, 
     handleCityNext,
     toggleInput
   } = useLocationHandler();
@@ -26,38 +27,49 @@ const App = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-// Gérer l'événement quand l'utilisateur appuie sur "Entrée"
+  // Changer la ville depuis l'index.tsx
 const handleCitySubmit = () => {
-  // Enregistrer la ville dans le contexte et en base de données
   handleManualCityChange(manualCity || '');
   handleCityNext(auth.currentUser, router);
+  toggleInput();
 };
 
-
-  const handleEventClick = (event: Event) => {
+  // Aggrandir la modale d'un évènement
+const handleEventClick = (event: Event) => {
     setSelectedEvent(event);  
     setModalVisible(true);     
   };
 
+  // Fermer la modale d'un évènement
   const closeModal = () => {
     setModalVisible(false);   
     setSelectedEvent(null);  
   };
 
-  const handleCityDetected = (detectedCity: string) => {
-    setCity(detectedCity);
-  };
-  
   return (
-    <ScrollView>
-      <View style={styles.container}>
+  <ScrollView>
+      <View style={globalStyles.scrollContainer}>
     <Logo></Logo>
      <ThemedText style={styles.titleLocal}>
       Découvre ton prochain évènements à{' '}
       {/* <View style={styles.cityContainer}> */}
-      <TouchableOpacity onPress={toggleInput}>
-          <Text style={styles.underlinedCity}>{city}</Text>
-        </TouchableOpacity>
+      {showInput ? (
+  <TextInput
+    ref={textInputRef}
+    style={styles.inlineInput}
+    value={manualCity || ''}
+    onChangeText={handleManualCityChange}
+    placeholder="Ville"
+    onSubmitEditing={handleCitySubmit}
+    returnKeyType="done"
+    autoFocus
+    placeholderTextColor="#ccc"
+  />
+) : (
+  <TouchableOpacity onPress={toggleInput}>
+    <Text style={styles.underlinedCity}>{city}</Text>
+  </TouchableOpacity>
+)}
         {/* </View> */}
     </ThemedText>
     <Image
@@ -65,229 +77,18 @@ const handleCitySubmit = () => {
         source={iconChoiceLocation}
         alt="Icône de choix de localisation"
       />
-    {showInput && (
-          <>
-            <TextInput
-              ref={textInputRef}
-               style={styles.textInput}
-              value={manualCity || ''}
-              onChangeText={handleManualCityChange}
-              placeholder="Entrez votre ville"
-              onSubmitEditing={handleCitySubmit} 
-              returnKeyType="done" 
-              autoFocus={true} 
-            />
-          </>
-        )}
-     {!showInput && (
-        <TextInput
-          style={styles.textInputInvisible}
-          value={manualCity || ''}
-          onChangeText={handleManualCityChange}
-          placeholder="Entrez votre ville"
-          onSubmitEditing={handleCitySubmit}
-          returnKeyType="done"
-        />
-      )}
-
-        
-          <View style={styles.categoriesContainer}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} contentContainerStyle={styles.categoryRow} contentOffset={{ x: 0, y: 0 }} >
-          <TouchableOpacity
-          style={[
-            styles.categoryCard,
-            activeCategory === 'tonight' && styles.activeCategory,
-          ]}
-          onPress={() => {
-            setActiveCategory('tonight');
-          }}
-        >
-          <Image
-            style={styles.iconSizeCategory}
-            source={iconTonight}
-            alt="Icône de la catégorie Ce soir"
-          />
-            <Text style={styles.categoryText}>Ce soir</Text>
-          </TouchableOpacity>
-
-             <TouchableOpacity
-              style={[
-                styles.categoryCard,
-                activeCategory === 'week' && styles.activeCategory,
-              ]}
-              onPress={() => {
-              setActiveCategory('week');
-              }}
-            >
-          <Image
-            style={styles.iconSizeCategory}
-            source={iconThisWeek}
-            alt="Icône de la catégorie Cette semaine"
-          />
-            <Text style={styles.categoryText}>Cette semaine</Text>
-          </TouchableOpacity>
-          
-            <TouchableOpacity
-              style={[
-                styles.categoryCard,
-                activeCategory === 'concert' && styles.activeCategory,
-              ]}
-              onPress={() => {
-              setActiveCategory('concert');
-              }}
-            >
-            <Image
-            style={styles.iconSizeCategory}
-            source={iconConcert}
-            alt="Icône de la catégorie Concert"
-            />
-            <Text style={styles.categoryText}>Concerts</Text>
-          </TouchableOpacity>
-          
-            <TouchableOpacity
-              style={[
-                styles.categoryCard,
-                activeCategory === 'festival' && styles.activeCategory,
-              ]}
-              onPress={() => {
-                setActiveCategory('festival');
-              }}
-            >
-            <Image
-            style={styles.iconSizeCategory}
-            source={iconFestival}
-            alt="Icône de la catégorie Festival"
-            />
-            <Text style={styles.categoryText}>Festivals</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-              style={[
-                styles.categoryCard,
-                activeCategory === 'spectacle' && styles.activeCategory,
-              ]}
-              onPress={() => {
-              setActiveCategory('spectacle');
-              }}
-            >
-            <Image
-              style={styles.iconSizeCategory}
-              source={iconSpectacle}
-              alt="Icône de la catégorie Spectacle"
-            />
-            <Text style={styles.categoryText}>Spectacles</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-              style={[
-                styles.categoryCard,
-                activeCategory === 'exposition' && styles.activeCategory,
-              ]}
-              onPress={() => {
-              setActiveCategory('exposition');
-              }}
-            >
-            <Image
-              style={styles.iconSizeCategory}
-              source={iconExposition}
-              alt="Icône de la catégorie Exposition"
-            />
-            <Text style={styles.categoryText}>Expositions</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-              style={[
-                styles.categoryCard,
-                activeCategory === 'humour' && styles.activeCategory,
-              ]}
-              onPress={() => {
-              setActiveCategory('humour');
-              }}
-            >
-            <Image
-              style={styles.iconSizeCategory}
-              source={iconHumor}
-              alt="Icône de la catégorie Humour"
-            />
-            <Text style={styles.categoryText}>Humours</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-              style={[
-                styles.categoryCard,
-                activeCategory === 'atelier' && styles.activeCategory,
-              ]}
-              onPress={() => {
-              setActiveCategory('atelier');
-              }}
-            >
-            <Image
-              style={styles.iconSizeCategory}
-              source={iconAtelier}
-              alt="Icône de la catégorie Atelier"
-            />
-            <Text style={styles.categoryText}>Ateliers</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-              style={[
-                styles.categoryCard,
-                activeCategory === 'soiree' && styles.activeCategory,
-              ]}
-              onPress={() => {
-              setActiveCategory('soiree');
-              }}
-            >
-            <Image
-            style={styles.iconSizeCategory}
-            source={iconFestival}
-            alt="Icône de la catégorie Soirée"
-            />
-            <Text style={styles.categoryText}>Soirées</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-              style={[
-                styles.categoryCard,
-                activeCategory === 'techno' && styles.activeCategory,
-              ]}
-              onPress={() => {
-              setActiveCategory('techno');
-              }}
-            >
-            <Image
-              style={styles.iconSizeCategory}
-              source={iconDj}
-              alt="Icône de la catégorie Techno"
-            />
-            <Text style={styles.categoryText}>DJ</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
+    <CategoryMenu activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
       <View style={styles.eventsContainer}>
         {events && events.length  > 0 ? (
           events.map((event, index) => (
-            <View style={styles.eventCard} key={index}>
-              <Image 
-                source={{ uri: `${event.image?.base || ''}${event.image?.filename}` }}
-                style={styles.eventImage}
-                alt="Preview de l'évènement"
-              />
-              
-              <Text style={styles.eventTitle}>{event.title?.fr || 'Titre indisponible'}</Text>
-              <Text style={styles.eventDate}>
-              {event.dateRange?.fr || 
-                (event.firstTiming?.begin ? new Date(event.firstTiming.begin).toLocaleString('fr-FR', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                }) : 'Date non disponible')
-              }
-            </Text>
-              <TouchableOpacity style={styles.detailsButton} onPress={() => handleEventClick(event)}>
-                <Text style={styles.detailsButtonText}>Voir plus</Text>
-              </TouchableOpacity>
-            </View>
+            <EventCard
+            key={index}
+            event={event}
+            onPressDetails={() => handleEventClick(event)} 
+          />
           ))
         ) : (
-          <Text style={styles.noEventsText}>Aucun événement trouvé</Text>
+          <ThemedText type='text'>Aucun événement trouvé</ThemedText>
         )}
       </View>
 
@@ -329,38 +130,21 @@ const handleCitySubmit = () => {
       )}
       
       </View>
-    </ScrollView>
+      </ScrollView>
     
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  textInput: {
-    position: 'absolute', 
-    top: 0, 
-    left: 0, 
-    fontSize: 18,
-    borderBottomWidth: 1,
-    
-    borderBottomColor: 'black',
-    width: '100%', 
-    height: '100%', 
-    opacity: 1, 
-  },
-  textInputInvisible: {
-    position: 'absolute', 
-    top: 0,
-    left: 0,
-    fontSize: 18,
-    opacity: 0, 
-    height: 0, 
-    width: '100%', 
-      marginTop: 8,
-  
+  inlineInput: {
+    fontFamily: "Fugaz-One",
+    fontSize: 30,
+    borderBottomWidth: 0.4,
+    borderBottomColor: 'white',
+    color: 'white',
+    fontWeight: 'bold',
+    paddingBottom: 0,
+    minWidth: 80,
   },
   iconSize: {
     width: 30,  
@@ -369,22 +153,6 @@ const styles = StyleSheet.create({
     top: 155,
     right: 0,
   },
-  iconSizeCategory: {
-    width: 50,  
-    height: 50,  
-  },
-  categoriesContainer: {
-    marginVertical: 10,
-    width: '100%',
-    alignItems: 'center',
-    flexDirection: "row",
-  },
-  // categoriesTitle: {
-  //   fontSize: 20,
-  //   fontWeight: 'bold',
-  //   marginBottom: 15,
-  //   textAlign: 'center',
-  // },
   titleLocal: {
     color: "#fff",
     fontWeight: "bold",
@@ -401,88 +169,13 @@ const styles = StyleSheet.create({
     color: 'white', 
     fontWeight: 'bold', 
   },
-  categoryRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingHorizontal: 0,
-  },
-  categoryCard: {
-    alignItems: 'center',
-    justifyContent: "center",
-    borderColor: 'transparent',
-    borderRadius: 8,
-    borderWidth: 2,
-    color: "green",
-    width: 100,
-    padding: 10,
-  },
-  activeCategory: {
-    borderColor: 'yellow', 
-  },
-  categoryText: {
-    fontSize: 17,
-    marginTop: 10,
-    textAlign: 'center',
-    color: 'white',
-    fontFamily: "FunnelSans-Regular",
-  },
   eventsContainer: {
     paddingHorizontal: 10,
     paddingBottom: 20,
+  
   },
-  eventCard: {
-    backgroundColor: "#1e1e1e",
-    borderRadius: 10,
-    overflow: "hidden",
-    marginBottom: 20,
-    elevation: 5,
-  },
-  eventImage: {
-    width: "100%",
-    height: 300,
-    resizeMode: "cover",
-  },
-  eventTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "white",
-    margin: 10,
-    fontFamily: "FunnelSans-Regular",
-  },
-  eventDate: {
-    fontSize: 14,
-    color: "#ffdd59",
-    marginHorizontal: 10,
-    marginBottom:20,
-    fontFamily: "FunnelSans-Regular",
-  },
-  // eventDescription: {
-  //   fontSize: 14,
-  //   color: "lightgray",
-  //   marginHorizontal: 10,
-  //   marginBottom: 10,
-  //   fontFamily: "FunnelSans-Regular",
-  // },
-  detailsButton: {
-    backgroundColor: "white",
-    padding: 10,
-    alignItems: "center",
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-  detailsButtonText: {
-    color: "black",
-    fontWeight: "bold",
-    fontFamily: "FunnelSans-Regular",
-  },
-  noEventsText: {
-    textAlign: "center",
-    color: "white",
-    marginTop: 20,
-    fontSize: 18,
-    fontFamily: "FunnelSans-Regular",
-  },
+
+  /// modale
   modalOverlay: {
     flex: 1,
     justifyContent: "center",
@@ -531,6 +224,11 @@ const styles = StyleSheet.create({
   closeModalButtonText: {
     color: 'white',
     fontFamily: "FunnelSans-Regular",
+  },
+  eventImage: {
+    width: "100%",
+    height: 300,
+    resizeMode: "cover",
   },
 });
 
