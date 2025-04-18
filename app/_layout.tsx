@@ -22,7 +22,7 @@ export default function RootLayout() {
         <LoadingProvider>
           <AuthProvider>
             <View style={{ flex: 1 }}>
-              <Stack screenOptions={{ headerShown: false }}>
+              <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
                 <Stack.Screen name="(tabs)"/>
                 <Stack.Screen name="login"/>
                 <Stack.Screen name="register"/>
