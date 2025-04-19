@@ -1,7 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal, TextInput, KeyboardAvoidingView, Platform  } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
-import { Event } from '@/interfaces/event';
 import Logo from '@/components/LogoHeader';
 import { auth } from '@/config/firebaseConfig';
 import { router } from 'expo-router';
@@ -24,47 +23,42 @@ const App = () => {
   const textInputRef = useRef(null);
   const [activeCategory, setActiveCategory] = useState<string | null>('');
   const { events, loading, error } = useEvents(activeCategory);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-  // Changer la ville depuis l'index.tsx
+  // Changer la ville depuis l'input
 const handleCitySubmit = () => {
   handleManualCityChange(manualCity || '');
   handleCityNext(auth.currentUser, router);
   toggleInput();
 };
 
-  // Aggrandir la modale d'un évènement
-const handleEventClick = (event: Event) => {
-    setSelectedEvent(event);  
-    setModalVisible(true);     
-  };
+useEffect(() => {
+  console.log("🟡 Nouvelle catégorie sélectionnée :", activeCategory);
+}, [activeCategory]);
 
-  // Fermer la modale d'un évènement
-  const closeModal = () => {
-    setModalVisible(false);   
-    setSelectedEvent(null);  
-  };
 
   return (
   <ScrollView>
       <View style={globalStyles.scrollContainer}>
     <Logo></Logo>
      <ThemedText style={styles.titleLocal}>
+      {/* changer la logique ici et faire en sorte que le choix de la ville
+      soit sous forme de liste, pareil pour la page localisation a 
+      linscription */}
+  
       Découvre ton prochain évènements à{' '}
       {/* <View style={styles.cityContainer}> */}
       {showInput ? (
   <TextInput
-    ref={textInputRef}
-    style={styles.inlineInput}
-    value={manualCity || ''}
-    onChangeText={handleManualCityChange}
-    placeholder="Ville"
-    onSubmitEditing={handleCitySubmit}
-    returnKeyType="done"
-    autoFocus
-    placeholderTextColor="#ccc"
-  />
+      ref={textInputRef}
+      style={styles.inlineInput}
+      value={manualCity || ''}
+      onChangeText={handleManualCityChange}
+      placeholder="Ville"
+      onSubmitEditing={handleCitySubmit}
+      returnKeyType="done"
+      autoFocus
+      placeholderTextColor="#ccc"
+    />
 ) : (
   <TouchableOpacity onPress={toggleInput}>
     <Text style={styles.underlinedCity}>{city}</Text>
@@ -72,6 +66,9 @@ const handleEventClick = (event: Event) => {
 )}
         {/* </View> */}
     </ThemedText>
+        {/* changer la logique et faire en sorte que quand on clique sur licon
+        ca re affiche la page localisation et on peut re utiliser le bouton geolocalisation et après terminer
+        ca nous ramene sur lindex */}
     <Image
         style={styles.iconSize}
         source={iconChoiceLocation}
@@ -79,60 +76,44 @@ const handleEventClick = (event: Event) => {
       />
     <CategoryMenu activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
       <View style={styles.eventsContainer}>
-        {events && events.length  > 0 ? (
-          events.map((event, index) => (
-            <EventCard
-            key={index}
+      {events && events.length > 0 ? (
+  <>
+    {/* Afficher levenement le + en vedette */}
+    <View style={styles.featuredEventContainer}>
+      <EventCard
+        event={events[0]}
+        onPressDetails={() => router.push(`/event/${events[0].uid}`)}
+      />
+    </View>
+        {/* voir pour distingue laffichage par categorie de la phrase */}
+    <ThemedText type='text'>Les prochains {activeCategory} à {city}</ThemedText> 
+    {/* Scroll horizontal des autres événements */}
+        {/* Afficher les evenements filtres du plus recent au plus loin */}
+    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
+      {events.slice(1, 11).map((event, index) => (
+        <View key={index} style={styles.miniEventCard}>
+          <EventCard
             event={event}
-            onPressDetails={() => handleEventClick(event)} 
+            onPressDetails={() => router.push(`/event/${event.uid}`)}
           />
-          ))
-        ) : (
-          <ThemedText type='text'>Aucun événement trouvé</ThemedText>
-        )}
+        </View>
+      ))}
+    </ScrollView>
+  </>
+) : (
+  <ThemedText type='text'>Aucun événement trouvé</ThemedText>
+)}
       </View>
-
-      {selectedEvent && (
-        <Modal visible={modalVisible} transparent animationType="none">
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContainer}>
-              {selectedEvent.image && (
-                 <Image 
-                 source={{ uri: `${selectedEvent.image?.base || ''}${selectedEvent.image?.filename}` }}
-                 style={styles.eventImage}
-                 alt="Image de l'évènement"
-               />
-              )}
-                <Text style={styles.modalTitle}>{selectedEvent.title?.fr}</Text>
-              <Text style={styles.modalDate}>
-                {selectedEvent.dateRange?.fr ||
-                  (selectedEvent.firstTiming?.begin ? new Date(selectedEvent.firstTiming.begin).toLocaleString('fr-FR', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  }) : 'Date non disponible')}
-              </Text>
-              <Text style={styles.modalDescription}>
-                {selectedEvent.description?.fr || 'Aucune description disponible'}
-              </Text>
-              <Text style={styles.modalEventPrice}>
-                  {selectedEvent.price ? `${selectedEvent.price} €` : 'Prix non disponible'}
-                </Text>
-              <TouchableOpacity style={styles.closeModalButton} onPress={closeModal}>
-                <Text style={styles.closeModalButtonText}>Fermer</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-      )}
-      
       </View>
       </ScrollView>
     
   );
+      {/* BLOC TROUVE LES EVENEMENTS QUE TU AIMES CONNECTE TA MUSIQUE  */}
+      {/* BLOC LES DERNIERS LIEUX COOL PRES DE CHEZ TOI (API LIEU CATEGORIE DANS LA VILLE ) puis une fois rempli, afficher un bloc devenement propose en fonction des gouts musicaux
+        PUIS EVENEMENT PAR 10 / 20 */}
+      {/* BLOC juste pour 'nom de la personne'''' */}
+
+
 };
 
 const styles = StyleSheet.create({
@@ -172,63 +153,18 @@ const styles = StyleSheet.create({
   eventsContainer: {
     paddingHorizontal: 10,
     paddingBottom: 20,
-  
   },
-
-  /// modale
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-  },
-  modalContainer: {
-    backgroundColor: 'black',
-    padding: 20,
-    borderRadius: 10,
-    width: '80%',
-  },
-  modalTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: 'white',
-    marginTop: 20,
-    fontFamily: "FunnelSans-Regular",
-  },
-  modalDate: {
-    fontSize: 16,
-    color: '#ffdd59',
-    marginVertical: 10,
-    fontFamily: "FunnelSans-Regular",
-  },
-  modalEventPrice: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'white',
+  featuredEventContainer: {
     marginBottom: 20,
-    fontFamily: "FunnelSans-Regular",
   },
-  modalDescription: {
-    fontSize: 16,
-    color: 'gray',
-    marginVertical: 10,
-    fontFamily: "FunnelSans-Regular",
-
+  
+  horizontalScroll: {
+    paddingLeft: 10,
   },
-  closeModalButton: {
-    backgroundColor: '#ff4d4d',
-    padding: 10,
-    alignItems: 'center',
-    borderRadius: 5,
-  },
-  closeModalButtonText: {
-    color: 'white',
-    fontFamily: "FunnelSans-Regular",
-  },
-  eventImage: {
-    width: "100%",
-    height: 300,
-    resizeMode: "cover",
+  
+  miniEventCard: {
+    width: 250,
+    marginRight: 10,
   },
 });
 

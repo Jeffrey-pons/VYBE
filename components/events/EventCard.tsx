@@ -29,6 +29,7 @@ export const EventCard = ({ event, onPressDetails }: Props) => {
       />
       <Text style={styles.eventTitle}>{event.title.fr || "Titre de l'évènement indisponible"}</Text>
       <Text style={styles.eventDate}>{startDate}</Text>
+      <Text style={styles.eventLocation}>{event.location?.name}</Text>
 
       <TouchableOpacity onPress={onPressDetails} style={styles.detailButton}>
         <Text style={styles.detailButtonText}>Voir plus</Text>
@@ -39,8 +40,11 @@ export const EventCard = ({ event, onPressDetails }: Props) => {
 
 const styles = StyleSheet.create({
     eventCard: {
-        backgroundColor: "#1e1e1e",
+        backgroundColor: "black",
         borderRadius: 10,
+        borderColor: 'white',
+        padding: 10,
+        borderWidth: 1,
         overflow: "hidden",
         marginBottom: 20,
         elevation: 5,
@@ -48,6 +52,7 @@ const styles = StyleSheet.create({
       eventImage: {
         width: "100%",
         height: 300,
+        borderRadius: 10,
         resizeMode: "cover",
       },
       
@@ -62,15 +67,23 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#ffdd59",
     marginHorizontal: 10,
-    marginBottom:20,
+    fontFamily: "FunnelSans-Regular",
+  },
+  eventLocation: {
+    fontSize: 14,
+    color: "grey",
+    marginHorizontal: 10,
+    marginBottom:10,
     fontFamily: "FunnelSans-Regular",
   },
   detailButton: {
     backgroundColor: "white",
     padding: 10,
+    borderRadius: 100,
+    width: "35%",
+    alignSelf: "center",
     alignItems: "center",
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    marginBottom:10,
   },
   detailButtonText: {
     color: "black",

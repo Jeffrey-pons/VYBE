@@ -1,10 +1,11 @@
 import { useLocation } from '@/contexts/LocationContext';
 import { useState, useEffect } from 'react';
+import { Event } from '@/interfaces/event';
 import { fetchEventsForTonightByOpenAgenda, fetchEventsForThisWeekByOpenAgenda, fetchEventsByCategoryByOpenAgenda, getFiveUpcomingEventsByOpenAgenda } from '../services/eventService';
 
 export const useEvents = (category: string) => {
     const { city } = useLocation();
-    const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
