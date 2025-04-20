@@ -2,18 +2,25 @@ import { useState } from 'react';
 import { useLocation } from '@/contexts/LocationContext';
 import { getLocation } from '@/services/locationService';
 import { updateUserOnboardingProgress } from '@/services/authService';
+import { cities } from '@/utils/citiesUtils';
 
 export const useLocationHandler = () => {
   const { city, updateLocation } = useLocation();
-  const [manualCity, setManualCity] = useState<string | null>(null);
-  const [showInput, setShowInput] = useState(false);
+  const [showCitySelector, setShowCitySelector] = useState(false);
+  let lastLocationRequest = 0;
 
-  const handleManualCityChange = (text: string) => {
-    setManualCity(text);
-    updateLocation(text); 
+  const handleCitySelect = (selectedCity: string) => {
+    updateLocation(selectedCity);
   };
 
   const handleUseLocation = async () => {
+    //cooldown 
+    const now = Date.now();
+    if (now - lastLocationRequest < 5000) { // 5s de délai
+      alert("Veuillez patienter quelques secondes avant de réessayer.");
+      return;
+    }
+    lastLocationRequest = now;
     try {
       await getLocation({
         onCityDetected: (detectedCity) => {
@@ -26,11 +33,11 @@ export const useLocationHandler = () => {
     }
   };
 
-  const toggleInput = () => {
-    setShowInput(prevState => !prevState);
+  const toggleCitySelector = () => {
+    setShowCitySelector(prevState => !prevState);
   };
 
-  const handleCityNext = async (user: { uid: string } | null, router: any) => {
+  const handleCityNext = async (user: { uid: string } | null) => {
     if (!city) {
       alert("Vous devez entrer une ville ou utiliser la géolocalisation avant de continuer.");
       return;
@@ -48,11 +55,11 @@ export const useLocationHandler = () => {
 
   return {
     city,
-    manualCity,
-    showInput,
-    handleManualCityChange,
+    cities,
+    showCitySelector,
+    handleCitySelect,
     handleUseLocation,
     handleCityNext,
-    toggleInput,
+    toggleCitySelector
   };
 };

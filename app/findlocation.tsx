@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-elements';
 import ProgressBar from '@/components/ProgressBar';
 import globalStyles from '@/styles/globalStyle'; 
@@ -8,16 +8,17 @@ import { locationIcon } from '@/utils/imagesUtils';
 import { auth } from "@/config/firebaseConfig";
 import { router } from "expo-router";
 import { useLocationHandler } from '@/hooks/useLocationHandler';
+import RNPickerSelect from 'react-native-picker-select';
 
 const LocationScreen = () => {
   const { 
     city, 
-    manualCity, 
-    showInput, 
-    handleManualCityChange, 
+    cities,
+    showCitySelector, 
+    handleCitySelect, 
     handleUseLocation, 
     handleCityNext, 
-    toggleInput 
+    toggleCitySelector 
   } = useLocationHandler();
 
 
@@ -39,23 +40,22 @@ const LocationScreen = () => {
           titleStyle={globalStyles.titleStyle}
           onPress={handleUseLocation}
         />
-        <TouchableOpacity onPress={toggleInput}>
-          <Text style={styles.cityText}>Choisir ma position</Text>
+         <TouchableOpacity onPress={toggleCitySelector}>
+          <Text style={styles.cityText}>Choisir ma ville</Text>
         </TouchableOpacity>
 
-        {showInput && (
-          <>
-            <TextInput
-              style={styles.input}
-              value={manualCity || ''}
-              onChangeText={handleManualCityChange}
-              placeholder="Entrez votre ville"
+        {showCitySelector && (
+          <View style={styles.pickerContainer}>
+            <RNPickerSelect
+              onValueChange={(value) => handleCitySelect(value)}
+              items={cities}
+              style={{
+                inputIOS: styles.pickerStyle,
+                inputAndroid: styles.pickerStyle,
+              }}
+              placeholder={{ label: 'Sélectionner une ville', value: null }}
             />
-            <Button
-              title="Valider"
-              onPress={() => handleManualCityChange(manualCity || '')}
-            />
-          </>
+          </View>
         )}
         <View>
         {/* {city && */}

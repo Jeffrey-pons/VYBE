@@ -5,9 +5,9 @@ import { useEvents } from '@/hooks/useEvent';
 import globalStyles from '@/styles/globalStyle';
 
 const EventDetailPage = () => {
-  const { id } = useLocalSearchParams();
+  const { id, category } = useLocalSearchParams();
   const router = useRouter();
-  const { events, loading, error } = useEvents();
+  const { events, loading, error } = useEvents(category || 'upcoming');
 
   const selectedEvent = events.find(event => String(event.uid) === id);
 
