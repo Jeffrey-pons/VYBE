@@ -10,6 +10,8 @@ import { EventCard } from '@/components/events/EventCard';
 import CategoryMenu from '@/components/CategoryMenu';
 import globalStyles from '@/styles/globalStyle';
 import { getIntroPhrase } from '@/utils/categoryUtils';
+import { musicConnectImg } from '@/utils/imagesUtils';
+import { SpotCard } from '@/components/events/SpotCard';
 
 const App = () => {
   const { 
@@ -79,11 +81,12 @@ const App = () => {
 
     {/* Scroll horizontal des autres événements */}
         {/* Afficher les evenements filtres du plus recent au plus loin */}
-    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
+    <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} style={styles.horizontalScroll}>
       {events.slice(1, 11).map((event, index) => (
         <View key={index} style={styles.miniEventCard}>
           <EventCard
             event={event}
+            variant="horizontal"
             onPressDetails={() => router.push(`/event/${event.uid}?category=${activeCategory}`)}
           />
         </View>
@@ -94,14 +97,41 @@ const App = () => {
   <ThemedText type='text'>Aucun événement trouvé</ThemedText>
 )}
       </View>
+      <View style={styles.musicConnectCard}>
+  <View style={styles.musicConnectContent}>
+    <Text style={styles.musicConnectText}>
+      Connecte ta musique pour découvrir les évènements qui te correspondent 🎵
+    </Text>
+    <TouchableOpacity 
+      style={styles.musicConnectButton} 
+      // onPress={() => router.push('/musicscreen')}
+    >
+      <Text style={styles.musicConnectButtonText}>Démarrer</Text>
+    </TouchableOpacity>
+  </View>
+  <Image 
+    source={musicConnectImg} 
+    style={styles.musicImage}
+    resizeMode="contain"
+  />
+</View>
+<View>
+  {/*  (API LIEU CATEGORIE DANS LA VILLE ) puis une fois rempli, afficher un bloc devenement propose en fonction des gouts musicaux*/}
+  <ThemedText type='text'>Les derniers lieux cools près de chez toi</ThemedText>
+  <ScrollView horizontal showsHorizontalScrollIndicator={true} style={styles.horizontalScroll}>
+    <SpotCard title="Élysée Montmartre" uid="elysee" image={require('@/assets/elysee.webp')} />
+    <SpotCard title="Zénith Paris - La Villette" uid="zenith" image={require('@/assets/zenith.webp')} />
+  </ScrollView>
+</View>
       </View>
       </ScrollView>
     
   );
-      {/* BLOC TROUVE LES EVENEMENTS QUE TU AIMES CONNECTE TA MUSIQUE  */}
-      {/* BLOC LES DERNIERS LIEUX COOL PRES DE CHEZ TOI (API LIEU CATEGORIE DANS LA VILLE ) puis une fois rempli, afficher un bloc devenement propose en fonction des gouts musicaux
-        PUIS EVENEMENT PAR 10 / 20 */}
+      
+         {/* PUIS EVENEMENT PAR 10 / 20 */}
       {/* BLOC juste pour 'nom de la personne'''' */}
+      {/* FAIRE DAUTRES STYLES EVENT CARD' */}
+
 };
 
 const styles = StyleSheet.create({
@@ -151,7 +181,6 @@ const styles = StyleSheet.create({
   inlineIcon: {
     width: 25,
     height: 25,
-    // marginTop: 3,
   },
   titleLocal: {
     color: "#fff",
@@ -180,8 +209,52 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   miniEventCard: {
-    width: 250,
+    // width: 300,
     marginRight: 10,
+    padding: 15,
+  },
+
+  musicConnectCard: {
+    backgroundColor: '#f5f0e6',
+    borderRadius: 12,
+    padding: 20,
+    // marginVertical: 30,
+    marginHorizontal: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  musicConnectContent: {
+    flex: 1,
+    marginRight: 10,
+  },
+  musicConnectText: {
+    fontSize: 18,
+    color: '#333',
+    fontFamily: 'FunnelSans-Regular',
+    marginBottom: 10,
+  },
+  musicConnectButton: {
+    backgroundColor: '#000',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    alignSelf: 'flex-start',
+  },
+  musicConnectButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  musicImage: {
+    width: 80,
+    height: 80,
   },
 });
 

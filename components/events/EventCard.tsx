@@ -4,9 +4,10 @@ import { Event } from '@/interfaces/event';
 type Props = {
   event: Event;
   onPressDetails: () => void;
+  variant?: 'featured' | 'horizontal' | 'grid'; 
 };
 
-export const EventCard = ({ event, onPressDetails }: Props) => {
+export const EventCard = ({ event, onPressDetails, variant = 'featured' }: Props) => {
   const startDate = event.dateRange?.fr || (
     event.firstTiming?.begin
       ? new Date(event.firstTiming.begin).toLocaleString('fr-FR', {
@@ -21,10 +22,10 @@ export const EventCard = ({ event, onPressDetails }: Props) => {
   );
 
   return (
-    <View style={styles.eventCard}>
+    <View style={[styles.eventCard, variant === 'horizontal' && styles.horizontalCard]}>
       <Image
         source={{ uri: `${event.image?.base || ''}${event.image?.filename}` }}
-        style={styles.eventImage}
+        style={[styles.eventImage, variant === 'horizontal' && styles.horizontalImage]}
         alt="Preview de l'événement"
       />
       <Text style={styles.eventTitle}>{event.title.fr || "Titre de l'évènement indisponible"}</Text>
@@ -54,6 +55,20 @@ const styles = StyleSheet.create({
         height: 300,
         borderRadius: 10,
         resizeMode: "cover",
+      },
+      horizontalCard: {
+        padding: 5,
+        marginBottom: 10,
+        width: 250,
+        borderWidth: 0.5,
+        borderColor: '#999',
+      },
+      horizontalImage: {
+        height: 200,
+        width: 250,
+        alignSelf: "center",
+        textAlign: "center",
+  
       },
       
   eventTitle: {
