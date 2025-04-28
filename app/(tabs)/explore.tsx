@@ -1,44 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, Modal, Image, ScrollView } from 'react-native';
 import iconLoupe from '../../assets/images/icons/icon_loupe.png';
 import { cities } from '@/utils/citiesUtils';
 import iconCalendar from '../../assets/images/icons/icon_calender.png';
 import iconChoiceLocation from '../../assets/images/icons/icon_choice_location.png';
 import globalStyles from '@/styles/globalStyle';
-import { ThemedText } from '@/components/ThemedText';
 import { Theme } from '@/constants/Theme';
-import { Event } from '@/interfaces/Event';
-
-// A améliorer en snd partie !!!!!!!!
+import { useFilteredEvents } from '@/hooks/useFilteredEvents';
+import EventList from '@/components/events/EventListFilterCard';
 
 const FilterScreen: React.FC = () => {
-  // const [search, setSearch] = useState('');
+  const [search, setSearch] = useState('');
   const [date, setDate] = useState('');
   const [city, setCity] = useState('');
   const [keyword, setKeyword] = useState('');
-  const [events, setEvents] = useState<Event[]>([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showCityInput, setShowCityInput] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null); 
-  const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    const fetchFilteredEvents = async () => {
-      const filters = {
-        city,
-        timings: date ? { gte: `${date}T00:00:00Z`, lte: `${date}T23:59:59Z` } : undefined,
-        keyword: keyword,
-      };
-      try {
-        // const upcomingEvents = await fetchFiveUpcomingEvents(filters);
-        // setEvents(upcomingEvents);
-      } catch (error) {
-        console.error("Erreur lors du chargement des événements:", error);
-      }
-    };
-
-    fetchFilteredEvents();
-  }, [date, city, keyword]); 
+  const { events, loading, error } = useFilteredEvents({ city, date, keyword });
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedDate = e.target.value; 
@@ -59,26 +38,17 @@ const FilterScreen: React.FC = () => {
   };
 
   const filteredEvents = events.filter((event) => {
-    // const matchesSearch = !search || (event.title.fr && event.title.fr.toLowerCase().includes(search.toLowerCase()));
+    const matchesSearch = !search || (event.title.fr && event.title.fr.toLowerCase().includes(search.toLowerCase()));
     const matchesDate = !date || event.dateRange?.fr?.includes(date);
     const matchesCity = !city || (event.location?.city && event.location.city.toLowerCase() === city.toLowerCase());
     
     const matchesKeyword = !keyword || (
       event.keywords && Array.isArray(event.keywords.fr) && event.keywords.fr.some((k) => k.toLowerCase().includes(keyword.toLowerCase()))
     );
-    // return matchesSearch && matchesDate && matchesCity && matchesKeyword;
+    console.log('Event:', event.title.fr, 'id:',event.uid, 'Matches search:', matchesSearch, 'Matches date:', matchesDate, 'Matches city:', matchesCity, 'Matches keyword:', matchesKeyword);
+    return matchesSearch && matchesDate && matchesCity && matchesKeyword;
     
   });  
-
-  const handleEventClick = (event: Event) => {
-    setSelectedEvent(event);
-    setModalVisible(true);
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
-    setSelectedEvent(null);
-  };
 
   return (
     <ScrollView>
@@ -160,65 +130,7 @@ const FilterScreen: React.FC = () => {
             </TouchableOpacity>
           </View>
         </Modal>
-
-        {/* EVENTS */}
-        <FlatList
-          data={filteredEvents}
-          keyExtractor={(item, index) => String(index)}
-          ListEmptyComponent={<ThemedText type="text">Aucun événement trouvé</ThemedText>}
-          renderItem={({ item }) => (
-            <View style={styles.eventCard}>
-              {item.image && item.image.base && item.image.filename ? (
-              <Image source={{ uri: `${item.image.base}${item.image.filename}` }} style={styles.eventImage} alt="Preview de l'évènements"/>
-            ) : (
-              <View /> 
-            )}
-              <View>
-                <Text style={styles.eventTitle}>{item.title.fr || "Titre non disponible"}</Text>
-                <Text style={styles.eventTextDate}>
-                  {item.location?.city || "Ville inconnue"} - {item.dateRange?.fr || "Date non disponible"}
-                </Text>
-                {item.location?.latitude && item.location?.longitude && (
-                  <Text style={styles.eventText}>
-                    Adresse: {item.location.name} | {item.location.address} 
-                  </Text>
-                )}
-                <Text style={styles.eventText}>Prix: {item.price || "Non spécifié"}</Text>
-                <TouchableOpacity onPress={() => handleEventClick(item)}>
-                  <Text style={styles.eventText}>Voir plus</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        />
-        {selectedEvent && (
-          <Modal visible={modalVisible} transparent animationType="none">
-            <View >
-              <View >
-                {selectedEvent.image && (
-                  <Image 
-                    source={{ uri: `${selectedEvent.image?.base || ''}${selectedEvent.image?.filename}` }}
-                    style={styles.eventImageDetail}
-                    alt="Image de l'évènement"
-                  />
-                )}
-                <Text>{selectedEvent.title?.fr || 'Titre non disponible'}</Text>
-                <Text>
-                  {selectedEvent.dateRange?.fr || 'Date non disponible'}
-                </Text>
-                <Text >
-                  {selectedEvent.description?.fr || 'Aucune description disponible'}
-                </Text>
-                <Text >
-                  {selectedEvent.price ? `${selectedEvent.price} €` : 'Prix non disponible'}
-                </Text>
-                <TouchableOpacity onPress={closeModal}>
-                  <Text >Fermer</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-        )}
+        <EventList events={filteredEvents} />
       </View>
     </ScrollView>
   );

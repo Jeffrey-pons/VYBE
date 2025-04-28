@@ -42,15 +42,17 @@ export const fetchEventsByCategoryByOpenAgenda = async (city: string, category: 
     }
 };
 
-export const getFiveUpcomingEventsByOpenAgenda = async (city: string) => {
-    if (!city) {
-        throw new Error("La ville n'est pas définie. Impossible de récupérer les événements.");
-    }
+export const getFiveUpcomingEventsByOpenAgenda = async (filters: { 
+    city: string, 
+    timings?: { gte: string, lte: string }, 
+    keyword?: string 
+  }) => {
     try {
-        const openAgendaEventsUpComing = await getUpcomingEventsOpenAgenda({ city });
+        const openAgendaEventsUpComing = await getUpcomingEventsOpenAgenda(filters); 
         return openAgendaEventsUpComing;
     } catch (error) {
         console.error('Erreur lors de la récupération des cinq prochains événements:', error);
         throw new Error('Erreur lors de la récupération des cinq prochains événements');
     }
-};
+  };
+  

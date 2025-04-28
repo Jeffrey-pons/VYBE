@@ -88,13 +88,14 @@ export const getEventsThisWeekOpenAgenda = async (city: string) => {
     }
   };
 
-  export const getUpcomingEventsOpenAgenda = async (filters = {}) => {
+  export const getUpcomingEventsOpenAgenda = async (filters = { keyword: ''}) => {
     try {
         const urlOpenAgenda = generateOpenAgendaUrl(filters);  
         const response = await fetch(urlOpenAgenda);  
+        console.log("URL générée:", urlOpenAgenda);
         const data = await response.json();  
         if (data && data.events) {
-            return data.events.slice(0, 50);
+            return data.events.slice(0, 10);
         }
         return [];  
     } catch (error) {

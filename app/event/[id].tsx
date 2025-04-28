@@ -6,11 +6,15 @@ import globalStyles from '@/styles/globalStyle';
 
 const EventDetailPage = () => {
   const { id, category } = useLocalSearchParams();
+  console.log('ID de l\'événement:', id);
+  console.log('Paramètres de l\'URL:', { id, category });
   const router = useRouter();
   const { events, loading, error } = useEvents(category || 'upcoming');
 
-  const selectedEvent = events.find(event => String(event.uid) === id);
-
+  const selectedEvent = events.find(event => String(event.uid) === String(id));
+  console.log('Événement trouvé:', selectedEvent);
+  console.log('Détails de l\'événement:', selectedEvent);
+  console.log('Événements récupérés:', events);
   if (loading) return <Text style={styles.loading}>Chargement...</Text>;
   if (error) return <Text style={styles.error}>Erreur : {error}</Text>;
   if (!selectedEvent) return <Text style={styles.error}>Événement introuvable</Text>;
