@@ -8,11 +8,15 @@ interface EventListProps {
   events: Event[];
 }
 
-const EventList: React.FC<EventListProps> = ({ events }) => {
+const EventList: React.FC<EventListProps> = ({ events  }) => {
     const router = useRouter();
 
-    const handleEventPress = (event: Event) => {
-        router.push(`/event/${event.uid}`);
+    const handlePressDetails = (event: Event) => {
+      if (event?.uid && event.originAgenda?.uid) {
+        router.push(`/event/${event.originAgenda.uid}/${event.uid}`);
+      } else {
+        console.warn("UID ou originAgenda manquant");
+      }
     };
   return (
     <FlatList
@@ -31,11 +35,16 @@ const EventList: React.FC<EventListProps> = ({ events }) => {
             <View />
           )}
           <View>
-            <Text style={styles.eventTitle}>{item.title?.fr || 'Titre non disponible'}</Text>
+            <Text style=
+            {styles.eventTitle}  
+            numberOfLines={1}
+            ellipsizeMode="tail">
+              {item.title?.fr || 'Titre non disponible'}
+              </Text>
             <Text style={styles.eventTextDate}>
               {item.location?.city || 'Ville inconnue'} - {item.dateRange?.fr || 'Date non disponible'}
             </Text>
-            <TouchableOpacity onPress={() => handleEventPress(item)}>
+            <TouchableOpacity onPress={() => handlePressDetails(item)}>
               <Text style={styles.eventText}>Voir plus </Text>
             </TouchableOpacity>
           </View>
@@ -47,19 +56,19 @@ const EventList: React.FC<EventListProps> = ({ events }) => {
 
 const styles = StyleSheet.create({
   eventCard: {
-    padding: 15,
+    padding: 8,
     marginVertical: 10,
     borderRadius: 8,
-    borderColor: 'white',
-    borderWidth: 1,
     flexDirection: 'row',
     alignItems: 'center'
   },
   eventTitle: {
     color: 'white',
     fontWeight: '500',
-    fontSize: 19,
-    fontFamily: 'FunnelSans-Regular',
+    fontSize: 18,
+    flexShrink: 1,      
+    maxWidth: '90%',       
+    overflow: 'hidden',  
   },
   eventText: {
     color: '#fff',
@@ -71,8 +80,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   eventImage: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
     borderRadius: 8,
     marginRight: 15,
   },

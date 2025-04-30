@@ -1,12 +1,13 @@
-import { Link } from "expo-router";
-import { Button } from "react-native-elements";
+import { TouchableOpacity, Text } from 'react-native';
 import globalStyles from "@/styles/globalStyle";
 import { ThemedText } from "@/components/ThemedText";
 import { View, Image, StyleSheet, Platform } from "react-native";
 import { Theme } from "@/constants/Theme";
 import { vybeLogo } from '../utils/imagesUtils';
+import { useRouter } from "expo-router";
 
 const WelcomeScreen = () => {
+  const router = useRouter();
     return (
         <View style={styles.containerHomePage}>
           <Image
@@ -15,12 +16,9 @@ const WelcomeScreen = () => {
             style={styles.logoHome}
           />
           <ThemedText type="title"style={styles.welcomeTitle}>TROUVE LES{'\n'}ÉVÈNEMENTS{'\n'}RIEN QUE POUR TOI</ThemedText>
-          <Link href={"/login"} asChild>
-            <Button 
-              buttonStyle={globalStyles.buttonStyle} 
-              title="CONNEXION / INSCRIPTION"
-              titleStyle={globalStyles.titleStyle} />
-          </Link>
+          <TouchableOpacity onPress={() => router.push('/login')} style={globalStyles.buttonStyle}>
+            <Text style={globalStyles.titleStyle}>CONNEXION / INSCRIPTION</Text>
+        </TouchableOpacity>
         </View>
     )
 };

@@ -7,7 +7,7 @@ import iconChoiceLocation from '../../assets/images/icons/icon_choice_location.p
 import globalStyles from '@/styles/globalStyle';
 import { Theme } from '@/constants/Theme';
 import { useFilteredEvents } from '@/hooks/useFilteredEvents';
-import EventList from '@/components/events/EventListFilterCard';
+import EventList from '@/components/events/EventListCard';
 
 const FilterScreen: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -45,7 +45,6 @@ const FilterScreen: React.FC = () => {
     const matchesKeyword = !keyword || (
       event.keywords && Array.isArray(event.keywords.fr) && event.keywords.fr.some((k) => k.toLowerCase().includes(keyword.toLowerCase()))
     );
-    console.log('Event:', event.title.fr, 'id:',event.uid, 'Matches search:', matchesSearch, 'Matches date:', matchesDate, 'Matches city:', matchesCity, 'Matches keyword:', matchesKeyword);
     return matchesSearch && matchesDate && matchesCity && matchesKeyword;
     
   });  
@@ -130,7 +129,7 @@ const FilterScreen: React.FC = () => {
             </TouchableOpacity>
           </View>
         </Modal>
-        <EventList events={filteredEvents} />
+        <EventList events={filteredEvents}/>
       </View>
     </ScrollView>
   );
@@ -147,6 +146,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     padding: 8,
     marginVertical: 10,
+    marginBottom: 0,
   },
   searchIcon: {
     marginRight: 5,
@@ -197,8 +197,6 @@ const styles = StyleSheet.create({
   gridContainer: {
     justifyContent: 'center', 
     flexDirection: 'column',
-    // flexWrap: 'wrap-reverse',
-    // paddingVertical: 10,
   },
   cityButtonText: {
     color: Theme.colors.text,
@@ -207,59 +205,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '100%',
     fontFamily: "FunnelSans-Regular"
-  },
-  modalOption: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-  },
-  modalOptionText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  modalInput: {
-    backgroundColor: '#1e1e1e',
-    color: '#fff',
-    padding: 10,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#333',
-    marginVertical: 10,
-  },
-  eventCard: {
-    backgroundColor: '#1e1e1e',
-    padding: 15,
-    marginVertical: 10,
-    borderRadius: 8,
-    borderColor: '#333',
-    borderWidth: 1,
-    flexDirection: 'row',  
-    alignItems: 'center'
-  },
-  eventTitle: {
-    color: 'white',
-    fontWeight: 500,
-    fontSize: 19,
-     fontFamily: "FunnelSans-Regular"
-  },
-  eventText: {
-    color: '#fff',
-     fontFamily: "FunnelSans-Regular"
-  },
-  eventTextDate: {
-    color:  "#ffdd59",
-    fontSize: 13,
-  },
-  eventImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 8,
-    marginRight: 15,
-  },
-  eventImageDetail: {
-    width: "100%",
-    height: 300,
-    resizeMode: "cover",
   },
 });
 

@@ -8,6 +8,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { LoadingProvider } from '@/contexts/LoadingContext';
 import { DarkTheme, ThemeProvider } from '@react-navigation/native';
 import { LocationProvider } from '@/contexts/LocationContext';
+import Loader from '@/components/Loader';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,6 +23,7 @@ export default function RootLayout() {
         <LoadingProvider>
           <AuthProvider>
             <View style={{ flex: 1 }}>
+            <Loader /> 
               <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
                 <Stack.Screen name="(tabs)"/>
                 <Stack.Screen name="login"/>

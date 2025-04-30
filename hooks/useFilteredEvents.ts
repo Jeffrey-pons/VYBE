@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Event } from '@/interfaces/event';
-import { getFiveUpcomingEventsByOpenAgenda } from '@/services/eventService';
+import { getFiveUpcomingEvents } from '@/services/eventService';
 
 interface Filters {
   city: string;
@@ -25,7 +25,7 @@ export const useFilteredEvents = ({ city, date, keyword }: Filters) => {
       };
 
       try {
-        const upcomingEvents = await getFiveUpcomingEventsByOpenAgenda(filters);
+        const upcomingEvents = await getFiveUpcomingEvents(filters);
         setEvents(upcomingEvents);
       } catch (err) {
         console.error("Erreur lors du chargement des événements:", err);

@@ -1,39 +1,32 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEvents } from '@/hooks/useEvent';
+import { useEventById } from '@/hooks/useEventById';
 import globalStyles from '@/styles/globalStyle';
 
 const EventDetailPage = () => {
-  const { id, category } = useLocalSearchParams();
-  console.log('ID de l\'événement:', id);
-  console.log('Paramètres de l\'URL:', { id, category });
+  const { id, agendaId } = useLocalSearchParams();
   const router = useRouter();
-  const { events, loading, error } = useEvents(category || 'upcoming');
+  const { event, loading, error } = useEventById(agendaId, id);
 
-  const selectedEvent = events.find(event => String(event.uid) === String(id));
-  console.log('Événement trouvé:', selectedEvent);
-  console.log('Détails de l\'événement:', selectedEvent);
-  console.log('Événements récupérés:', events);
   if (loading) return <Text style={styles.loading}>Chargement...</Text>;
   if (error) return <Text style={styles.error}>Erreur : {error}</Text>;
-  if (!selectedEvent) return <Text style={styles.error}>Événement introuvable</Text>;
-
+  if (!event) return <Text style={styles.error}>Événement introuvable</Text>; 
   return (
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
       <View style={styles.container}>
-        {selectedEvent.image && (
+        {event.image && (
           <Image
-            source={{ uri: `${selectedEvent.image.base}${selectedEvent.image.filename}` }}
+            source={{ uri: `${event.image.base}${event.image.filename}` }}
             style={styles.eventImage}
             alt="Image de l'évènement"
           />
         )}
-        <Text style={styles.modalTitle}>{selectedEvent.title?.fr}</Text>
+        <Text style={styles.modalTitle}>{event.title?.fr}</Text>
         <Text style={styles.modalDate}>
-          {selectedEvent.dateRange?.fr ||
-            (selectedEvent.firstTiming?.begin
-              ? new Date(selectedEvent.firstTiming.begin).toLocaleString('fr-FR', {
+          {event.dateRange?.fr ||
+            (event.firstTiming?.begin
+              ? new Date(event.firstTiming.begin).toLocaleString('fr-FR', {
                   weekday: 'long',
                   year: 'numeric',
                   month: 'long',
@@ -44,10 +37,10 @@ const EventDetailPage = () => {
               : 'Date non disponible')}
         </Text>
         <Text style={styles.modalDescription}>
-          {selectedEvent.description?.fr || 'Aucune description disponible'}
+          {event.description?.fr || 'Aucune description disponible'}
         </Text>
         <Text style={styles.modalEventPrice}>
-          {selectedEvent.price ? `${selectedEvent.price} €` : 'Prix non disponible'}
+          {event.price ? `${event.price} €` : 'Prix non disponible'}
         </Text>
         <TouchableOpacity style={styles.closeModalButton} onPress={() => router.back()}>
           <Text style={styles.closeModalButtonText}>← Retour</Text>

@@ -39,6 +39,7 @@ const globalStyles = StyleSheet.create({
   titleStyle: {
     color: Theme.colors.background,
     fontFamily: Theme.typography.fontFamily,
+    fontSize: Theme.typography.base.fontSize,
     fontWeight: Theme.typography.megaBold.fontWeight,
   },
   titleSecondStyle: {

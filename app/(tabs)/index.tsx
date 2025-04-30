@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import Logo from '@/components/LogoHeader';
-import { router } from 'expo-router';
 import { useLocationHandler } from '@/hooks/useLocationHandler';
 import { iconChoiceLocation } from '@/utils/imagesUtils';
 import { useEvents } from '@/hooks/useEvent';
@@ -24,6 +23,10 @@ const App = () => {
   } = useLocationHandler();
   const [activeCategory, setActiveCategory] = useState<string | null>('');
   const { events } = useEvents(activeCategory || 'upcoming');
+
+  const filteredEvents = events
+  .slice(1, 11)
+  .filter(event => event.originAgenda?.uid);
 
   return (
   <ScrollView>
@@ -72,26 +75,22 @@ const App = () => {
   <>
     {/* Afficher levenement le + en vedette */}
     <View style={styles.featuredEventContainer}>
-      <EventCard
-        event={events[0]}
-        onPressDetails={() => router.push(`/event/${events[0].uid}?category=${activeCategory}`)}
-      />
+    {events[0]?.originAgenda?.uid ? (
+  <EventCard event={events[0]} />
+) : null}
     </View>
     <ThemedText type='text'>{getIntroPhrase(activeCategory, city)}</ThemedText>
 
     {/* Scroll horizontal des autres événements */}
-        {/* Afficher les evenements filtres du plus recent au plus loin */}
-    <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} style={styles.horizontalScroll}>
-      {events.slice(1, 11).map((event, index) => (
-        <View key={index} style={styles.miniEventCard}>
-          <EventCard
-            event={event}
-            variant="horizontal"
-            onPressDetails={() => router.push(`/event/${event.uid}?category=${activeCategory}`)}
-          />
-        </View>
-      ))}
-    </ScrollView>
+    {/* Afficher les evenements filtres du plus recent au plus loin */}
+<ScrollView horizontal showsHorizontalScrollIndicator style={styles.horizontalScroll}>
+  {filteredEvents.map(event => (
+    <View key={event.uid} style={styles.miniEventCard}>
+      <EventCard event={event} variant="horizontal" />
+    </View>
+  ))}
+</ScrollView>
+
   </>
 ) : (
   <ThemedText type='text'>Aucun événement trouvé</ThemedText>

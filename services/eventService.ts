@@ -1,9 +1,8 @@
+import { getEventByIdOpenAgenda } from './../api/openAgenda';
 import { getEventsForTonightOpenAgenda, getEventsThisWeekOpenAgenda, getEventsByCategoryOpenAgenda, getUpcomingEventsOpenAgenda } from '@/api/openAgenda';
-// import { getEventBriteEvents } from '@/api/eventBrite';
-// import { getEventsTmdb } from '@/api/tmdb';
 
 // OpenAgenda API
-export const fetchEventsForTonightByOpenAgenda = async (city: string) => {
+export const fetchEventsForTonight = async (city: string) => {
     if (!city) {
         throw new Error("La ville n'est pas définie. Impossible de récupérer les événements.");
     }
@@ -16,7 +15,7 @@ export const fetchEventsForTonightByOpenAgenda = async (city: string) => {
     }
 };
 
-export const fetchEventsForThisWeekByOpenAgenda = async (city: string) => {
+export const fetchEventsForThisWeek = async (city: string) => {
     if (!city) {
         throw new Error("La ville n'est pas définie. Impossible de récupérer les événements.");
     }
@@ -29,7 +28,7 @@ export const fetchEventsForThisWeekByOpenAgenda = async (city: string) => {
     }
 };
 
-export const fetchEventsByCategoryByOpenAgenda = async (city: string, category: string) => {
+export const fetchEventsByCategory = async (city: string, category: string) => {
     if (!city) {
         throw new Error("La ville n'est pas définie. Impossible de récupérer les événements.");
     }
@@ -42,13 +41,16 @@ export const fetchEventsByCategoryByOpenAgenda = async (city: string, category: 
     }
 };
 
-export const getFiveUpcomingEventsByOpenAgenda = async (filters: { 
+export const getFiveUpcomingEvents = async (filters: { 
     city: string, 
     timings?: { gte: string, lte: string }, 
     keyword?: string 
   }) => {
     try {
-        const openAgendaEventsUpComing = await getUpcomingEventsOpenAgenda(filters); 
+        const openAgendaEventsUpComing = await getUpcomingEventsOpenAgenda({
+            ...filters,
+            keyword: filters.keyword || ''
+        }); 
         return openAgendaEventsUpComing;
     } catch (error) {
         console.error('Erreur lors de la récupération des cinq prochains événements:', error);
@@ -56,3 +58,12 @@ export const getFiveUpcomingEventsByOpenAgenda = async (filters: {
     }
   };
   
+export const getEventDetails = async (agendaId: string, eventId: string) => {
+    try {
+        const eventDetails = await getEventByIdOpenAgenda(agendaId, eventId);
+        return eventDetails;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des détails de l\'événement:', error);
+        throw new Error('Erreur lors de la récupération des détails de l\'événement');
+    }
+}

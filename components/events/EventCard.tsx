@@ -1,13 +1,13 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Event } from '@/interfaces/event';
+import { router } from 'expo-router';
 
 type Props = {
   event: Event;
-  onPressDetails: () => void;
   variant?: 'featured' | 'horizontal' | 'grid'; 
 };
 
-export const EventCard = ({ event, onPressDetails, variant = 'featured' }: Props) => {
+export const EventCard = ({ event, variant = 'featured' }: Props) => {
   const startDate = event.dateRange?.fr || (
     event.firstTiming?.begin
       ? new Date(event.firstTiming.begin).toLocaleString('fr-FR', {
@@ -20,6 +20,13 @@ export const EventCard = ({ event, onPressDetails, variant = 'featured' }: Props
         })
       : 'Date non disponible'
   );
+      const handlePressDetails = (event: Event) => {
+        if (event?.uid && event.originAgenda?.uid) {
+          router.push(`/event/${event.originAgenda.uid}/${event.uid}`);
+        } else {
+          console.warn("UID ou originAgenda manquant");
+        }
+      };
 
   return (
     <View style={[styles.eventCard, variant === 'horizontal' && styles.horizontalCard]}>
@@ -32,7 +39,7 @@ export const EventCard = ({ event, onPressDetails, variant = 'featured' }: Props
       <Text style={styles.eventDate}>{startDate}</Text>
       <Text style={styles.eventLocation}>{event.location?.name}</Text>
 
-      <TouchableOpacity onPress={onPressDetails} style={styles.detailButton}>
+      <TouchableOpacity onPress={() => handlePressDetails(event)} style={styles.detailButton}>
         <Text style={styles.detailButtonText}>Voir plus</Text>
       </TouchableOpacity>
     </View>
