@@ -1,7 +1,7 @@
 import { useLocation } from '@/contexts/LocationContext';
 import { useState, useEffect } from 'react';
 import { Event } from '@/interfaces/event';
-import { fetchEventsForTonight, fetchEventsForThisWeek, fetchEventsByCategory, getFiveUpcomingEvents } from '../services/eventService';
+import { fetchEventsForTonight, fetchEventsForThisWeek, fetchEventsByCategory, getFiveUpcomingEvents, fetchPopularEvents, fetchLastPostedEventsByCity } from '../services/eventService';
 
 export const useEvents = (category: string) => {
     const { city } = useLocation();
@@ -21,28 +21,37 @@ export const useEvents = (category: string) => {
             setError(null);
             setEvents([]);
 
-                try {
+            try {
                 let data = [];
-                if (category === 'tonight') {
-                    data = await fetchEventsForTonight(city);
-                } else if (category === 'week') {
-                    data = await fetchEventsForThisWeek(city);
-                } else if (category === 'upcoming') {
-                    data = await getFiveUpcomingEvents(city);
-                } else {
-                    data = await fetchEventsByCategory(city, category);
+                switch (category) {
+                    case 'tonight':
+                        data = await fetchEventsForTonight(city);
+                        break;
+                    case 'week':
+                        data = await fetchEventsForThisWeek(city);
+                        break;
+                    case 'upcoming':
+                        data = await getFiveUpcomingEvents({ city });
+                        break;
+                    case 'featured':
+                        data = await fetchPopularEvents(city);
+                        break;
+                    case 'recent':
+                        data = await fetchLastPostedEventsByCity(city, 15);
+                        break;
+                    default:
+                        data = await fetchEventsByCategory(city, category);
+                        break;
                 }
                 setEvents(data);
             } catch (error: any) {
                 setError('Impossible de charger les événements');
                 console.error('Erreur lors de la récupération des événements:', error);
-                throw new Error('Erreur lors de la récupération des événements');
             } finally {
                 setLoading(false);
             }
         };
         fetchEvents();
     }, [city, category]);
-    
     return { events, loading, error };
-};
+}

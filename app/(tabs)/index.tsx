@@ -31,7 +31,7 @@ const App = () => {
   return (
   <ScrollView>
     <View style={globalStyles.scrollContainer}>
-    <Logo></Logo>
+    <Logo/>
     <View style={styles.inlineLocation}>
       <ThemedText style={styles.titleLocal}>Découvre ton prochain évènements à{' '}</ThemedText>
         <TouchableOpacity onPress={toggleCitySelector}></TouchableOpacity>

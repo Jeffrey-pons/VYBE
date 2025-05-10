@@ -1,5 +1,5 @@
 import { getEventByIdOpenAgenda } from './../api/openAgenda';
-import { getEventsForTonightOpenAgenda, getEventsThisWeekOpenAgenda, getEventsByCategoryOpenAgenda, getUpcomingEventsOpenAgenda } from '@/api/openAgenda';
+import { getEventsForTonightOpenAgenda, getEventsThisWeekOpenAgenda, getEventsByCategoryOpenAgenda, getUpcomingEventsOpenAgenda, getUpcomingPopularEventsInCity, getLastPostedEventsByCity } from '@/api/openAgenda';
 
 // OpenAgenda API
 export const fetchEventsForTonight = async (city: string) => {
@@ -67,3 +67,15 @@ export const getEventDetails = async (agendaId: string, eventId: string) => {
         throw new Error('Erreur lors de la récupération des détails de l\'événement');
     }
 }
+export const fetchPopularEvents = async (city: string) => {
+    try {
+        const events = await getUpcomingPopularEventsInCity(city);
+        return events;  // Retourner les événements populaires
+         console.log('Événements populaires récupérés:', events);
+    } catch (error) {
+        console.error('Erreur lors de la récupération des événements populaires:', error);
+        throw new Error('Erreur lors de la récupération des événements populaires');
+    }
+};
+
+export const fetchLastPostedEventsByCity = getLastPostedEventsByCity;
