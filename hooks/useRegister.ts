@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { registerUser } from "@/services/authService"; 
 import { Alert } from "react-native";
+import { AuthServiceError, ValidationError } from "@/types/errors";
 
 export const useRegister = () => {
   const [isLoading, setIsLoading] = useState(false); 
@@ -13,12 +14,12 @@ export const useRegister = () => {
         Alert.alert("Succès", "Compte créé avec succès !");
       }
       return response; 
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        Alert.alert("Erreur", error.message); 
-      } else {
-        Alert.alert("Erreur", "Une erreur inconnue s'est produite.");
-      }
+    } catch (error) {
+      if (error instanceof ValidationError || error instanceof AuthServiceError) {
+      Alert.alert("Erreur", error.message);
+    } else {
+      Alert.alert("Erreur", "Une erreur inconnue est survenue.");
+    }
     } finally {
       setIsLoading(false); 
     }

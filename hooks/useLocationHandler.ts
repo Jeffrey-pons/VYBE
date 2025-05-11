@@ -3,14 +3,25 @@ import { useLocation } from '@/contexts/LocationContext';
 import { getLocation } from '@/services/locationService';
 import { updateUserOnboardingProgress } from '@/services/authService';
 import { cities } from '@/utils/citiesUtils';
+import { updateUserCity } from '@/services/locationService';
 
 export const useLocationHandler = () => {
   const { city, updateLocation } = useLocation();
   const [showCitySelector, setShowCitySelector] = useState(false);
   let lastLocationRequest = 0;
 
+  const updateCity = async (newCity: string) => {
+    try {
+      updateLocation(newCity); 
+      await updateUserCity(newCity);
+    } catch (error) {
+      console.error("Erreur mise à jour ville :", error);
+    }
+  };
+
+
   const handleCitySelect = (selectedCity: string) => {
-    updateLocation(selectedCity);
+    updateCity(selectedCity);
   };
 
   const handleUseLocation = async () => {
@@ -24,7 +35,7 @@ export const useLocationHandler = () => {
     try {
       await getLocation({
         onCityDetected: (detectedCity) => {
-          updateLocation(detectedCity);
+        updateCity(detectedCity);
         }
       });
     } catch (error) {

@@ -1,4 +1,7 @@
 import * as Location from 'expo-location';
+import { doc, updateDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { db } from '@/config/firebaseConfig';
 
 export const getLocation = async ({ onCityDetected }: { onCityDetected: (city: string) => void }) => {
   try {
@@ -26,4 +29,12 @@ export const getLocation = async ({ onCityDetected }: { onCityDetected: (city: s
   } catch (error) {
     console.error('Erreur lors de la récupération de la ville:', error);
   }
+};
+
+export const updateUserCity = async (city: string) => {
+  const user = getAuth().currentUser;
+  if (!user) throw new Error('Utilisateur non connecté');
+
+  const userRef = doc(db, 'users', user.uid);
+  await updateDoc(userRef, { city });
 };

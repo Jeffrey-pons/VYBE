@@ -21,7 +21,6 @@ const ProfileScreen: React.FC = () => {
   const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(true);
   const [isLastTicketsEnabled, setIsLastTicketsEnabled] = useState<boolean>(true);
   const [isModalLogoutAccountVisible, setIsModalLogoutAccountVisible] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState('')
   const { userData, name, setName, lastname, setLastname, email, setEmail, phoneNumber, setPhoneNumber, 
           password, setPassword, isModalDeletedAccountVisible, setIsModalDeletedAccountVisible, isModalUpdatedAccountVisible, setIsModalUpdatedAccountVisible, 
     handleUpdateUserInfo,handleDeleteAccount 
@@ -47,7 +46,7 @@ const ProfileScreen: React.FC = () => {
               <ThemedText type="informationsProfile">Nom : {userData?.lastname}</ThemedText>
               <ThemedText type="informationsProfile">Prénom : {userData?.name}</ThemedText>
             </View>
-            <ThemedText type="informationsProfile">Email : {userData?.mail}</ThemedText>
+            <ThemedText type="informationsProfile">Email : {userData?.email}</ThemedText>
             <ThemedText type="informationsProfile">Numéro : {userData?.phoneNumber}</ThemedText>
             <ThemedText type="informationsProfile">Mot de passe : ********</ThemedText>
             <View style={styles.buttonContainer}>

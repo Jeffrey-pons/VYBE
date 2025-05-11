@@ -1,12 +1,14 @@
+import { isValidEmail, isValidName, isValidPhone, isValidPassword } from '@/utils/registerUtils';
 import { RegisterDTO } from '@/dtos/AuthDto';
 import { auth, db } from "@/config/firebaseConfig";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { router } from "expo-router";
 import { Alert } from "react-native";
-import { AuthServiceError } from '@/types/errors';
-import { handleAuthError, handleReauthError, isFirebaseError } from './errorHandlerService';
+import { AuthServiceError, ValidationError } from '@/types/errors';
+import { handleAuthError  } from './errorHandlerService';
 import { FirebaseError } from 'firebase/app';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User, deleteUser, EmailAuthProvider, reauthenticateWithCredential, onAuthStateChanged, updateEmail, sendEmailVerification } from "firebase/auth";
+
 
 interface AuthResponse {
   user: User;
@@ -20,6 +22,16 @@ export interface UserProgress {
 
 export const registerUser = async (data: RegisterDTO): Promise<AuthResponse> => {
   try {
+    if (!isValidName(data.name)) throw new ValidationError("Le prénom est invalide."),  console.log("Prénom invalide");
+    if (!isValidName(data.lastname)) throw new ValidationError("Le nom est invalide.") , console.log("Nom invalide");
+    if (!isValidEmail(data.email)) throw new ValidationError("L'email est invalide.") , console.log("Email invalide");
+    if (!isValidPhone(data.phoneNumber)) throw new ValidationError("Le numéro de téléphone est invalide.") , console.log("Numéro de téléphone invalide");
+    if (!isValidPassword(data.password)) throw new ValidationError("Le mot de passe est invalide.") , console.log("Mot de passe invalide");
+  // if (!isVerified) {
+  //   Alert.alert("Erreur", "Veuillez vérifier votre numéro de téléphone.");
+  //   console.log("Numéro de téléphone non vérifié");
+  //   return;
+  // }
     const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
     
     const userRef = doc(db, "users", userCredential.user.uid);
@@ -27,15 +39,16 @@ export const registerUser = async (data: RegisterDTO): Promise<AuthResponse> => 
       name: data.name,
       lastname: data.lastname,
       mail: data.email,
-      phoneNumber: data.phoneNumber,
+      phoneNumber: userCredential.user.phoneNumber ?? data.phoneNumber,
       createdAt: new Date(),
     });
     Alert.alert("Succès", "Inscription reussie");
     await signOut(auth);
     return { user: userCredential.user };
-  } catch (error: any) {
-    console.error("Firebase Auth Error:", error);
-    throw new Error(error.message);
+  } catch (error) {
+      if (error instanceof ValidationError) throw error;
+      if (error instanceof FirebaseError) throw handleAuthError(error, "Erreur Firebase");
+      throw new AuthServiceError("Erreur lors de l'inscription", "auth/unknown");
   }
 };
 

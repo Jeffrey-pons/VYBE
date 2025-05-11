@@ -1,5 +1,7 @@
 import React , { useState, useEffect } from "react";
 import { Dimensions, TextInput, View, Text, StyleSheet, Image, Alert, ScrollView } from "react-native";
+import { usePhoneVerification } from "@/hooks/usePhoneVerification";
+import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { Button } from "react-native-elements";
 import { router } from "expo-router";
 import globalStyles from "@/styles/globalStyle";
@@ -14,6 +16,10 @@ const RegisterScreen: React.FC = () => {
   const [phone, setPhone] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isMounted, setIsMounted] = useState<boolean>(true);
+  const { recaptchaVerifier, sendVerificationCode, confirmCode } = usePhoneVerification();
+  const [code, setCode] = useState(""); // pour entrer le code SMS
+  const [isCodeSent, setIsCodeSent] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
 
   const { handleSignUp, isLoading } = useRegister();
 
@@ -78,6 +84,36 @@ const RegisterScreen: React.FC = () => {
           value={phone}
           onChangeText={setPhone}
         />
+        {/* <Button
+          title="Envoyer le code"
+          onPress={async () => {
+            await sendVerificationCode(phone);
+            setIsCodeSent(true);
+          }}
+        />
+
+        {isCodeSent && !isVerified && (
+  <>
+    <TextInput
+      style={globalStyles.input}
+      placeholder="Code reçu par SMS"
+      keyboardType="numeric"
+      value={code}
+      onChangeText={setCode}
+    />
+    <Button
+      title="Vérifier le code"
+      onPress={async () => {
+        const verifiedPhone = await confirmCode(code);
+        if (verifiedPhone) {
+          setPhone(verifiedPhone); // on garde le numéro vérifié
+          setIsVerified(true);
+        }
+      }}
+    />
+  </>
+)} */}
+
         <TextInput
           style={globalStyles.input}
           placeholder="Mot de passe"
@@ -98,6 +134,10 @@ const RegisterScreen: React.FC = () => {
           Connectez-vous ici
         </Text>
       </View>
+          {/* <FirebaseRecaptchaVerifierModal
+      ref={recaptchaVerifier}
+      firebaseConfig={auth.app.options}
+    /> */}
     </ScrollView>
   );
 };

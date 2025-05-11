@@ -16,17 +16,20 @@ const FilterScreen: React.FC = () => {
   const [keyword, setKeyword] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showCityInput, setShowCityInput] = useState(false);
-
   const { events, loading, error } = useFilteredEvents({ city, date, keyword });
+
+    if (loading) return <Text style={styles.loading}>Chargement...</Text>;
+    if (error) return <Text style={styles.error}>Erreur : {error}</Text>;
+    if (!event) return <Text style={styles.error}>Événement introuvable</Text>;
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedDate = e.target.value; 
     setDate(selectedDate);
     setShowDatePicker(false);
   };
-  const toggleDatePicker = () => {
-    setShowDatePicker(!showDatePicker); 
-  };
+  // const toggleDatePicker = () => {
+  //   setShowDatePicker(!showDatePicker); 
+  // };
 
   const handleCitySelect = (enteredCity: string) => {
     setCity(enteredCity);
@@ -117,21 +120,21 @@ const FilterScreen: React.FC = () => {
               )}
             />
               <TouchableOpacity
-                style={[styles.buttonModaleCity, { padding: 10, borderRadius: 5, marginVertical: 10 }]}
+                style={styles.buttonModaleCity}
                 onPress={() => {
                   setCity(''); // Réinitialiser la ville
                   setShowCityInput(false); // Fermer la modale
                 }}
               >
-                <Text style={{ color: 'white', textAlign: 'center', fontFamily: "FunnelSans-Regular" }}>
+                <Text style={styles.textButtonModaleCity}>
                   Réinitialiser le lieu
                 </Text>
               </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.buttonModaleCity, { padding: 10, borderRadius: 5 }]}
+              style={styles.buttonModaleCity}
               onPress={() => setShowCityInput(false)}
             >
-              <Text style={{ color: 'white', textAlign: 'center', fontFamily: "FunnelSans-Regular" }}>
+              <Text style={styles.textButtonModaleCity}>
                 Fermer
               </Text>
             </TouchableOpacity>
@@ -185,6 +188,9 @@ const styles = StyleSheet.create({
   },
   buttonModaleCity:{
     backgroundColor: '#b36dff',
+    padding: 10, 
+    borderRadius: 5, 
+    marginVertical: 10
   },
   filterButtonText: {
     color: '#fff',
@@ -214,6 +220,21 @@ const styles = StyleSheet.create({
     width: '100%',
     fontFamily: "FunnelSans-Regular"
   },
+    loading: {
+    textAlign: 'center',
+    marginTop: 40,
+    color: 'white',
+  },
+  error: {
+    textAlign: 'center',
+    marginTop: 40,
+    color: '#ff4d4d',
+  },
+  textButtonModaleCity: {
+    color: 'white',
+    textAlign: 'center',
+    fontFamily: "FunnelSans-Regular",
+  }
 });
 
 export default FilterScreen;

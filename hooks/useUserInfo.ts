@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { auth } from '@/config/firebaseConfig';
 import { updateCurrentUser } from 'firebase/auth';
-import { getUserInfo, updateUserInfo, deleteUserAccount, logoutUser } from '@/services/authService';
+import { getUserInfo, updateUserInfo, deleteUserAccount } from '@/services/authService';
 
 interface UserInfo {
     name: string;
