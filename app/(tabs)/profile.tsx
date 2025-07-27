@@ -46,7 +46,7 @@ const ProfileScreen: React.FC = () => {
               <ThemedText type="informationsProfile">Nom : {userData?.lastname}</ThemedText>
               <ThemedText type="informationsProfile">Prénom : {userData?.name}</ThemedText>
             </View>
-            <ThemedText type="informationsProfile">Email : {userData?.email}</ThemedText>
+            <ThemedText type="informationsProfile">Email : {userData?.mail}</ThemedText>
             <ThemedText type="informationsProfile">Numéro : {userData?.phoneNumber}</ThemedText>
             <ThemedText type="informationsProfile">Mot de passe : ********</ThemedText>
             <View style={styles.buttonContainer}>
