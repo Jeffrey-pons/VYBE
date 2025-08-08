@@ -1,10 +1,11 @@
-import { useState } from "react";
 import { registerUser } from "@/services/authService"; 
 import { Alert } from "react-native";
 import { AuthServiceError, ValidationError } from "@/types/errors";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export const useRegister = () => {
-  const [isLoading, setIsLoading] = useState(false); 
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const setIsLoading = useAuthStore((state) => state.setIsLoading);
 
   const handleSignUp = async (userData: { name: string, lastname: string, email: string, phoneNumber: string, password: string }) => {
     setIsLoading(true); 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, Modal, Image, ScrollView } from 'react-native';
 import iconLoupe from '../../assets/images/icons/icon_loupe.png';
 import { cities } from '@/utils/citiesUtils';
@@ -8,19 +8,31 @@ import globalStyles from '@/styles/globalStyle';
 import { Theme } from '@/constants/Theme';
 import { useFilteredEvents } from '@/hooks/useFilteredEvents';
 import EventList from '@/components/events/EventListCard';
+import { useFilterStore } from '@/stores/useFilterStore';
+import { useDebounce } from '@/hooks/useDebounce';
 
 const FilterScreen: React.FC = () => {
-  const [search, setSearch] = useState('');
-  const [date, setDate] = useState('');
-  const [city, setCity] = useState('');
-  const [keyword, setKeyword] = useState('');
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showCityInput, setShowCityInput] = useState(false);
-  const { events, loading, error } = useFilteredEvents({ city, date, keyword });
+  const {
+    search,
+    date,
+    city,
+    showDatePicker,
+    showCityInput,
+    setDate,
+    setCity,
+    setShowDatePicker,
+    setShowCityInput,
+  } = useFilterStore();
+
+    const keyword = useFilterStore((state) => state.keyword);
+    const setKeyword = useFilterStore((state) => state.setKeyword);
+
+    const debouncedKeyword = useDebounce(keyword, 500); // délai de 500ms
+    const { events, loading, error } = useFilteredEvents({ city, date, keyword: debouncedKeyword });
 
     if (loading) return <Text style={styles.loading}>Chargement...</Text>;
     if (error) return <Text style={styles.error}>Erreur : {error}</Text>;
-    if (!event) return <Text style={styles.error}>Événement introuvable</Text>;
+    // if (!event) return <Text style={styles.error}>Événement introuvable</Text>;
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedDate = e.target.value; 
@@ -34,10 +46,6 @@ const FilterScreen: React.FC = () => {
   const handleCitySelect = (enteredCity: string) => {
     setCity(enteredCity);
     setShowCityInput(false);
-  };
-
-  const handleKeywordChange = (text: string) => {
-    setKeyword(text); 
   };
 
   const filteredEvents = events.filter((event) => {
@@ -65,7 +73,8 @@ const FilterScreen: React.FC = () => {
             style={styles.searchInput}
             placeholder="Rechercher un événement ou un.e artiste"
             value={keyword}
-            onChangeText={handleKeywordChange}
+            placeholderTextColor="white" 
+            onChangeText={setKeyword}
           />
         </View>
 

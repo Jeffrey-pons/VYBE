@@ -76,16 +76,16 @@ const LocationScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginTop: 20,
-    marginBottom: 20,
-    backgroundColor: 'white',
-    color: 'black',
-  },
+  // input: {
+  //   borderWidth: 1,
+  //   borderColor: '#ccc',
+  //   borderRadius: 5,
+  //   padding: 10,
+  //   marginTop: 20,
+  //   marginBottom: 20,
+  //   backgroundColor: 'white',
+  //   color: 'black',
+  // },
   cityText: {
     fontSize: 18,
     color: '#B36DFF',

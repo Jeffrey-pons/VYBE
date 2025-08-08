@@ -10,7 +10,6 @@ import CategoryMenu from '@/components/CategoryMenu';
 import globalStyles from '@/styles/globalStyle';
 import { getIntroPhrase } from '@/utils/categoryUtils';
 import { musicConnectImg } from '@/utils/imagesUtils';
-import { SpotCard } from '@/components/events/SpotCard';
 
 const App = () => {
   const { 
@@ -117,10 +116,10 @@ const App = () => {
 <View>
   {/*  (API LIEU CATEGORIE DANS LA VILLE ) puis une fois rempli, afficher un bloc devenement propose en fonction des gouts musicaux*/}
   <ThemedText type='text'>Les derniers lieux cools près de chez toi</ThemedText>
-  <ScrollView horizontal showsHorizontalScrollIndicator={true} style={styles.horizontalScroll}>
+  {/* <ScrollView horizontal showsHorizontalScrollIndicator={true} style={styles.horizontalScroll}>
     <SpotCard title="Élysée Montmartre" uid="elysee" image={require('@/assets/elysee.webp')} />
     <SpotCard title="Zénith Paris - La Villette" uid="zenith" image={require('@/assets/zenith.webp')} />
-  </ScrollView>
+  </ScrollView> */}
 </View>
       </View>
       </ScrollView>

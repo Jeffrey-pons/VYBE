@@ -8,6 +8,7 @@ import pluginReactHooks from "eslint-plugin-react-hooks";
 export default [
   {
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
+    ignores: ["**/.expo/**"],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
@@ -41,7 +42,6 @@ export default [
       "react-hooks/exhaustive-deps": "warn",
       "react-native/no-inline-styles": "warn",
       "react-native/no-unused-styles": "warn",
-      "no-unused-vars": "warn",
     },
   },
 ];

@@ -2,33 +2,40 @@ import { useState, useEffect } from 'react';
 import { auth } from '@/config/firebaseConfig';
 import { updateCurrentUser } from 'firebase/auth';
 import { getUserInfo, updateUserInfo, deleteUserAccount } from '@/services/authService';
-
-interface UserInfo {
-    name: string;
-    lastname: string;
-    email: string;
-    phoneNumber: string;
-  }
+import { useUserStore } from '@/stores/userStore';
+import { User } from '@/interfaces/User';
+import { mapFirebaseUserToUser } from '@/interfaces/User';
 
 export const useUserInfo = () => {
   const [userId, setUserId] = useState<string | null>(null);
-  const [userData, setUserData] = useState<UserInfo | null>(null);
-  const [name, setName] = useState<string>('');
-  const [lastname, setLastname] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [isModalDeletedAccountVisible, setIsModalDeletedAccountVisible] = useState<boolean>(false);
-  const [isModalUpdatedAccountVisible, setIsModalUpdatedAccountVisible] = useState<boolean>(false);
+  const [userData, setUserData] = useState<User | null>(null);
+    const {
+    name,
+    setName,
+    lastname,
+    setLastname,
+    email,
+    setEmail,
+    phoneNumber,
+    setPhoneNumber,
+    password,
+    setPassword,
+    isModalDeletedAccountVisible,
+    setIsModalDeletedAccountVisible,
+    isModalUpdatedAccountVisible,
+    setIsModalUpdatedAccountVisible,
+  } = useUserStore();
 
   const fetchUserInfo = async (userId: string) => {
     try {
-      const userInfo = await getUserInfo(userId);
+      const firebaseUser = await getUserInfo(userId);  
+      const userInfo = mapFirebaseUserToUser(firebaseUser); 
       setUserData(userInfo);
+      
       setName(userInfo?.name || '');
       setLastname(userInfo?.lastname || '');
       setEmail(userInfo?.mail || '');
-      setPhoneNumber(userInfo?.phoneNumber || '');
+      setPhoneNumber(userInfo?.number || '');
     } catch (error) {
       console.error('Error fetching user info:', error);
     }
@@ -51,7 +58,11 @@ export const useUserInfo = () => {
 
       // Mise à jour des informations de l'utilisateur dans la base de données
       await updateUserInfo(userId, { name, lastname, email, phoneNumber });
-      setUserData((prevData) => ({...prevData, name, lastname, email, phoneNumber }));
+      setUserData((prevData) =>
+        prevData
+          ? { ...prevData, name, lastname, email, phoneNumber }
+          : null
+      );
       alert("Informations mises à jour avec succès.");
       setIsModalUpdatedAccountVisible(false);  // Fermer la modal après la mise à jour
     } catch (error: unknown) {

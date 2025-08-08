@@ -1,19 +1,25 @@
-import React, { useState } from "react";
-import { TextInput, View, Text, Image, ScrollView, Keyboard, TouchableWithoutFeedback} from "react-native";
+import React from "react";
+import { TextInput, View, Text, Image, ScrollView } from "react-native";
 import { Button } from "react-native-elements";
 import { router } from "expo-router";
 import { loginIcon } from "../utils/imagesUtils";
 import globalStyles from "@/styles/globalStyle"; 
 import { ThemedText } from "@/components/ThemedText";
 import { useLogin } from "@/hooks/useLogin"; 
+import { useLoginStore } from "@/stores/useLoginStore";
 
 const LoginScreen: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const { handleLogin, isLoading } = useLogin();
+  const {
+    email,
+    password,
+    isLoading,
+    setEmail,
+    setPassword,
+  } = useLoginStore();
+
+  const { handleLogin } = useLogin();
 
   return (
-    // <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
         <View style={globalStyles.container}>
           <Image
@@ -49,7 +55,6 @@ const LoginScreen: React.FC = () => {
           <Text style={globalStyles.footerAuthLinkStyle} onPress={() => router.replace("/register")}>Inscrivez-vous ici</Text>
         </View>
       </ScrollView>
-    // </TouchableWithoutFeedback>
   );
 };
 

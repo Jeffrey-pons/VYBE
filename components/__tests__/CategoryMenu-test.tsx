@@ -35,7 +35,7 @@ describe('CategoryMenu', () => {
     render(<CategoryMenu {...defaultProps} activeCategory="concert" />);
 
     const concertButton = screen.getByText('Concerts').parent;
-    expect(concertButton.props.style).toEqual(
+    expect(concertButton?.props.style).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ borderColor: 'yellow' })
       ])

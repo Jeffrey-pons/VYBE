@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React from 'react';
 import { View, Switch, Image, ScrollView } from 'react-native';
 import ProgressBar from '@/components/ProgressBar';
 import { router } from 'expo-router';
@@ -9,21 +9,18 @@ import { ThemedText } from '@/components/ThemedText';
 // import * as Notifications from "expo-notifications"
 import { notificationIcon } from '@/utils/imagesUtils';
 import useOnboardingProgress from '@/hooks/useOnboardingProgress';
+import { useNotificationStore } from '@/stores/useNotificationStore';
 
 const NotificationScreen = () => {
   const { updateProgress, loading } = useOnboardingProgress();
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-
-  const handleNotificationToggle = () => {
-    setNotificationsEnabled(prevState => !prevState);
-  };
+   const { notificationsEnabled, toggleNotifications } = useNotificationStore();
 
   const handleSkip = () => {
     router.replace('/(tabs)'); 
   };
 
   const handleFinish = async () => {
-    await updateProgress({ hasActiveNotification: true });
+    await updateProgress({ hasActiveNotification: notificationsEnabled });
     router.replace('/(tabs)');
   };
 
@@ -41,7 +38,7 @@ const NotificationScreen = () => {
         <ThemedText type="authSubtitle">Voulez-vous activer les notifications pour être alerté lorsque les places d’un événement est disponible à l’achat ?</ThemedText>
         <Switch
           value={notificationsEnabled}
-          onValueChange={handleNotificationToggle}
+          onValueChange={toggleNotifications}
           trackColor={{ false: '#767577', true: '#b36dff' }} 
           thumbColor={notificationsEnabled ? 'white' : 'white'}
         />

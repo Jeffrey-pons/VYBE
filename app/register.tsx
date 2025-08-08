@@ -1,32 +1,31 @@
-import React , { useState, useEffect } from "react";
-import { Dimensions, TextInput, View, Text, StyleSheet, Image, Alert, ScrollView } from "react-native";
-import { usePhoneVerification } from "@/hooks/usePhoneVerification";
-import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+import React , { useEffect } from "react";
+import { Dimensions, TextInput, View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import { Button } from "react-native-elements";
 import { router } from "expo-router";
 import globalStyles from "@/styles/globalStyle";
 import { ThemedText } from "@/components/ThemedText";
 import { registerIcon } from "@/utils/imagesUtils";
 import { useRegister } from "@/hooks/useRegister"; 
+import { useRegisterStore } from '@/stores/useRegisterStore';
 
 const RegisterScreen: React.FC = () => {
-  const [name, setName] = useState<string>("");
-  const [lastname, setLastname] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [isMounted, setIsMounted] = useState<boolean>(true);
-  const { recaptchaVerifier, sendVerificationCode, confirmCode } = usePhoneVerification();
-  const [code, setCode] = useState(""); // pour entrer le code SMS
-  const [isCodeSent, setIsCodeSent] = useState(false);
-  const [isVerified, setIsVerified] = useState(false);
+  const {
+    name, setName,
+    lastname, setLastname,
+    email, setEmail,
+    phone, setPhone,
+    password, setPassword,
+    isLoading,
+    isMounted, setIsMounted,
+    resetRegister,
+  } = useRegisterStore();
 
-  const { handleSignUp, isLoading } = useRegister();
+  const { handleSignUp } = useRegister();
 
   useEffect(() => {
     setIsMounted(true);
     return () => setIsMounted(false);
-  }, []);
+  }, [setIsMounted]);
 
   const handleRegister = async () => {
     const userData = {
@@ -39,6 +38,7 @@ const RegisterScreen: React.FC = () => {
 
     const response = await handleSignUp(userData); 
     if (isMounted && response) {
+      resetRegister();
       router.replace("/login"); 
     }
   };

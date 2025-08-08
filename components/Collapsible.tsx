@@ -3,11 +3,9 @@ import { StyleSheet, TouchableOpacity , View} from 'react-native';
 import { Theme } from '@/constants/Theme';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { DarkTheme } from '@react-navigation/native';
 
 export function Collapsible({ children, title, subtitle }: PropsWithChildren & { title?: string, subtitle?: string }) {
   const [isOpen, setIsOpen] = useState(false);
-  const theme = DarkTheme
 
   return (
     <View>
@@ -20,6 +18,7 @@ export function Collapsible({ children, title, subtitle }: PropsWithChildren & {
           size={22}
           weight="medium"
           color={Theme.colors.text}
+          // eslint-disable-next-line react-native/no-inline-styles
           style={{ transform: [{ rotate: isOpen ? '90deg' : '0deg' }], marginTop: 30 }}
         />
 

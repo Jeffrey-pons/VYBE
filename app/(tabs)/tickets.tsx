@@ -16,7 +16,7 @@ const TicketsScreen = () => {
         handleUseLocation,  
         toggleCitySelector 
       } = useLocationHandler();
-      const { events: popularEvents, loading, error } = useEvents('featured');
+      const { events: popularEvents } = useEvents('featured');
       const { events: recentEvents } = useEvents('recent');
     return (
         <ScrollView>
@@ -60,27 +60,27 @@ const TicketsScreen = () => {
                             
                 </View>
                 <View style={globalStyles.scrollContainer}>
-                  <ThemedText style={globalStyles.title}>Les dernières nouveautés</ThemedText>
+                  <ThemedText >Les dernières nouveautés</ThemedText>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                    {recentEvents.map((event, index) => (
-                      <View key={event.uid} style={styles.miniEventCard}>
+                    {recentEvents.map((event) => (
+                      <View key={event.uid}>
                         <EventCard event={event} variant="horizontal" />
                       </View>
                     ))}
                   </ScrollView>
                 </View>
                 <View style={globalStyles.scrollContainer}>
-                  <ThemedText style={globalStyles.title}>Les plus populaires</ThemedText>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
-                    {popularEvents.map((event, index) => (
-                      <View key={event.uid} style={styles.miniEventCard}>
+                  <ThemedText >Les plus populaires</ThemedText>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {popularEvents.map((event) => (
+                      <View key={event.uid} >
                         <EventCard event={event} variant="horizontal" />
                       </View>
                     ))}
                   </ScrollView>
                 </View>
                   <View style={globalStyles.scrollContainer}>
-                    <ThemedText style={globalStyles.title}>Par catégorie</ThemedText>
+                    <ThemedText >Par catégorie</ThemedText>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                         {/* {filteredEvents.map((event, index) => (
                             <SpotCard

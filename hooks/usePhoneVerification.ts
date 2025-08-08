@@ -1,6 +1,5 @@
-import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { linkWithCredential } from "firebase/auth";
-import { PhoneAuthProvider, signInWithCredential } from 'firebase/auth';
+import { PhoneAuthProvider } from 'firebase/auth';
 import { auth } from '@/config/firebaseConfig';
 import { useRef, useState } from 'react';
 import { Alert } from 'react-native';

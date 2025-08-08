@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-unused-styles */
 import { Text, type TextProps, StyleSheet } from 'react-native';
 import { Theme } from '@/constants/Theme';
 
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     fontSize: Theme.typography.mega.fontSize,
     fontWeight: Theme.typography.megaMedium.fontWeight, 
     textAlign: Theme.alignments.textCenter.textAlign,
-    marginBottom: 30,// Exceptionc
+    marginBottom: 30,
   },
   authSubtitle: {
     fontSize: Theme.typography.base.fontSize,

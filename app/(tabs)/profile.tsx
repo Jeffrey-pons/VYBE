@@ -13,19 +13,40 @@ import { logoutUser } from '@/services/authService';
 import { useLocation } from '@/contexts/LocationContext';
 import { useUserInfo } from '@/hooks/useUserInfo';
 import { UserModal } from '@/components/modal/UserModal';
+import { useNotificationStore } from '@/stores/notificationStore';
 
 const ProfileScreen: React.FC = () => {
   const { city } = useLocation();
   const router = useRouter();
-  const [isPushEnabled, setIsPushEnabled] = useState<boolean>(true);
-  const [isEmailEnabled, setIsEmailEnabled] = useState<boolean>(true);
-  const [isLastTicketsEnabled, setIsLastTicketsEnabled] = useState<boolean>(true);
-  const [isModalLogoutAccountVisible, setIsModalLogoutAccountVisible] = useState<boolean>(false);
-  const { userData, name, setName, lastname, setLastname, email, setEmail, phoneNumber, setPhoneNumber, 
-          password, setPassword, isModalDeletedAccountVisible, setIsModalDeletedAccountVisible, isModalUpdatedAccountVisible, setIsModalUpdatedAccountVisible, 
-    handleUpdateUserInfo,handleDeleteAccount 
+  const {
+  isPushEnabled,
+  isEmailEnabled,
+  isLastTicketsEnabled,
+  setIsPushEnabled,
+  setIsEmailEnabled,
+  setIsLastTicketsEnabled,
+} = useNotificationStore();
+  const {
+    name,
+    setName,
+    lastname,
+    setLastname,
+    email,
+    setEmail,
+    phoneNumber,
+    setPhoneNumber,
+    password,
+    setPassword,
+    isModalDeletedAccountVisible,
+    setIsModalDeletedAccountVisible,
+    isModalUpdatedAccountVisible,
+    setIsModalUpdatedAccountVisible,
+    userData,
+    handleUpdateUserInfo,
+    handleDeleteAccount,
   } = useUserInfo();
 
+  const [isModalLogoutAccountVisible, setIsModalLogoutAccountVisible] = useState(false);
 
   return (
     <ScrollView>
@@ -270,7 +291,7 @@ const ProfileScreen: React.FC = () => {
         onConfirm={logoutUser}
         modalType="logout" 
       >
-        <ThemedText type="text" style={{ color: 'white', textAlign: 'center' }}>
+        <ThemedText type="text" style={styles.modalText}>
           Tu es sur le point de te déconnecter, es-tu sûr de vouloir te déconnecter ?
         </ThemedText>
       </UserModal>
@@ -284,7 +305,7 @@ const ProfileScreen: React.FC = () => {
         modalType="delete"
       >
         <View>
-          <ThemedText type="text" style={{ color: 'white', marginBottom: 15, textAlign: 'center' }}>
+          <ThemedText type="text" style={styles.modalText}>
             Pour supprimer votre compte, veuillez confirmer votre mot de passe.
           </ThemedText>
           <TextInput
@@ -306,6 +327,11 @@ const styles = StyleSheet.create({
     paddingTop: 20, 
     width: "70%",
     margin: "auto"
+  },
+    modalText: {
+    color: 'white',
+    marginBottom: 15,
+    textAlign: 'center',
   },
   centeredContainer: {
     alignItems: 'center',

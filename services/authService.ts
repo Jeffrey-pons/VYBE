@@ -8,6 +8,9 @@ import { AuthServiceError, ValidationError } from '@/types/errors';
 import { handleAuthError  } from './errorHandlerService';
 import { FirebaseError } from 'firebase/app';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User, deleteUser, EmailAuthProvider, reauthenticateWithCredential, onAuthStateChanged, updateEmail, sendEmailVerification } from "firebase/auth";
+import { useLoginStore } from '@/stores/useLoginStore';
+import { extractErrorMessage } from '@/utils/errorsUtils';
+import { useRegisterStore } from "@/stores/useRegisterStore";
 
 
 interface AuthResponse {
@@ -22,16 +25,11 @@ export interface UserProgress {
 
 export const registerUser = async (data: RegisterDTO): Promise<AuthResponse> => {
   try {
-    if (!isValidName(data.name)) throw new ValidationError("Le prénom est invalide."),  console.log("Prénom invalide");
-    if (!isValidName(data.lastname)) throw new ValidationError("Le nom est invalide.") , console.log("Nom invalide");
-    if (!isValidEmail(data.email)) throw new ValidationError("L'email est invalide.") , console.log("Email invalide");
-    if (!isValidPhone(data.phoneNumber)) throw new ValidationError("Le numéro de téléphone est invalide.") , console.log("Numéro de téléphone invalide");
-    if (!isValidPassword(data.password)) throw new ValidationError("Le mot de passe est invalide.") , console.log("Mot de passe invalide");
-  // if (!isVerified) {
-  //   Alert.alert("Erreur", "Veuillez vérifier votre numéro de téléphone.");
-  //   console.log("Numéro de téléphone non vérifié");
-  //   return;
-  // }
+    if (!isValidName(data.name)) throw new ValidationError("Le prénom est invalide.")
+    if (!isValidName(data.lastname)) throw new ValidationError("Le nom est invalide.") 
+    if (!isValidEmail(data.email)) throw new ValidationError("L'email est invalide.") 
+    if (!isValidPhone(data.phoneNumber)) throw new ValidationError("Le numéro de téléphone est invalide.") 
+    if (!isValidPassword(data.password)) throw new ValidationError("Le mot de passe est invalide.") 
     const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
     
     const userRef = doc(db, "users", userCredential.user.uid);
@@ -44,8 +42,10 @@ export const registerUser = async (data: RegisterDTO): Promise<AuthResponse> => 
     });
     Alert.alert("Succès", "Inscription reussie");
     await signOut(auth);
+    useRegisterStore.getState().resetRegister();
     return { user: userCredential.user };
-  } catch (error) {
+  } catch (error : unknown) {
+      Alert.alert("Erreur", extractErrorMessage(error));
       if (error instanceof ValidationError) throw error;
       if (error instanceof FirebaseError) throw handleAuthError(error, "Erreur Firebase");
       throw new AuthServiceError("Erreur lors de l'inscription", "auth/unknown");
@@ -55,11 +55,9 @@ export const registerUser = async (data: RegisterDTO): Promise<AuthResponse> => 
 export const loginUser = async (email: string, password: string): Promise<AuthResponse> => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    Alert.alert("Succès", "Connexion reussie");
     return { user: userCredential.user };
-  } catch (error: any) {
-    console.error("Firebase Auth Error:", error);
-    throw new Error(error.message);
+  } catch (error: unknown) {
+      throw handleAuthError(error, "Une erreur est survenue", { showAlert: true });
   }
 };
 
@@ -67,9 +65,10 @@ export const logoutUser = async (): Promise<void> => {
   try {
     await signOut(auth);
     Alert.alert("Succès", "Déconnexion reussie");
+    useLoginStore.getState().resetLogin(); // Reset login state in zustand store
     router.replace('/home')
-  } catch (error: any) {
-    throw new Error(error.message);
+   } catch (error: unknown) {
+    throw new Error(extractErrorMessage(error));
   }
 };
 
@@ -83,7 +82,7 @@ export const updateUserInfo = async (userId: string, updatedData: Partial<Regist
     if (updatedData.email && updatedData.email !== user.email) {
       try {
         await updateEmail(user, updatedData.email);
-      } catch (error: any) {
+      } catch (error: unknown) {
         if (error instanceof FirebaseError) {
           throw handleAuthError(error, "Erreur de mise à jour de l'email", { showAlert: false });
         } else {
@@ -94,9 +93,10 @@ export const updateUserInfo = async (userId: string, updatedData: Partial<Regist
   }
     const userRef = doc(db, "users", userId);
     await setDoc(userRef, updatedData, { merge: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    Alert.alert("Erreur", extractErrorMessage(error));
     console.error("Error updating user info:", error);
-    throw new Error(error.message);
+    throw new Error(extractErrorMessage(error));
   }
 };
 
@@ -104,9 +104,9 @@ export const updateUserOnboardingProgress = async (userId: string, data: Partial
   try {
     const userRef = doc(db, "users", userId);
     await setDoc(userRef, data, { merge: true });
-  } catch (error: any) {
-    console.error("Erreur mise à jour progression :", error);
-    throw new Error(error.message);
+   } catch (error: unknown) {
+    Alert.alert("Erreur", extractErrorMessage(error));
+    throw new Error(extractErrorMessage(error));
   }
 };
 
@@ -119,58 +119,53 @@ export const getUserProgress = async (userId: string): Promise<UserProgress | nu
       return userSnap.data() as UserProgress;
     }
     return null;
-  } catch (error: any) {
-    console.error("Erreur récupération données utilisateur :", error);
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    Alert.alert("Erreur", extractErrorMessage(error));
+    throw new Error(extractErrorMessage(error));
   }
 };
 
-export const getUserInfo = async (userId: string): Promise<any> => {
+export const getUserInfo = async (userId: string): Promise<User> => {
   try {
     const userRef = doc(db, "users", userId);
     const userSnap = await getDoc(userRef);
 
     if (userSnap.exists()) {
-      return userSnap.data();
+      const data = userSnap.data() as User;
+      return {
+        ...data,
+      };
     } else {
       throw new AuthServiceError("Utilisateur non trouvé.", "firestore/not-found");
     }
-  } catch (error: any) {
-    console.error("Error retrieving user info:", error);
-    throw new Error(error.message);
+  } catch (error: unknown) {
+      throw handleAuthError(error, "Erreur lors de la récupération de l'utilisateur")
   }
 };
 
 export const deleteUserAccount = async (userId: string, password: string): Promise<void> => {
   try {
     const user = auth.currentUser;
+    if (!user) throw new AuthServiceError("Aucun utilisateur connecté.", "auth/no-user");
 
-    if (!user) {
-      throw new AuthServiceError("Aucun utilisateur connecté.", "auth/no-user");
-    }
-    
     try {
       await reauthenticateUser(user, password);
     } catch (error: unknown) {
-      Alert.alert("Erreur d'authentification", 
-        "Pour des raisons de sécurité, veuillez vérifier votre mot de passe avant de supprimer votre compte.");
+      Alert.alert(
+        "Erreur d'authentification",
+        "Veuillez vérifier votre mot de passe avant de supprimer votre compte."
+      );
       throw handleAuthError(error, "Erreur d'authentification", { showAlert: false });
     }
 
-    try {
-      const userRef = doc(db, "users", userId);
-      await deleteDoc(userRef);
-      
-      await deleteUser(user);
-      Alert.alert("Succès", "Compte supprimé avec succès");
-      router.replace('/home');
-    } catch (error: any) {
-      console.error("Error deleting user account:", error);
-      throw new Error(error.message);
-    }
-  } catch (error: any) {
-    console.error("Error deleting user account:", error);
-    throw new Error(error.message);
+    const userRef = doc(db, "users", userId);
+    await deleteDoc(userRef);
+    await deleteUser(user);
+    Alert.alert("Succès", "Compte supprimé avec succès");
+    router.replace("/home");
+  } catch (error: unknown) {
+    Alert.alert("Erreur", extractErrorMessage(error));
+    throw new Error(extractErrorMessage(error));
   }
 };
 
@@ -182,9 +177,9 @@ export const reauthenticateUser = async (user: User, password: string) => {
     
     const credential = EmailAuthProvider.credential(user.email, password);
     await reauthenticateWithCredential(user, credential);
-  } catch (error: any) {
-    console.error("Erreur", error);
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    Alert.alert("Erreur", extractErrorMessage(error));
+    throw handleAuthError(error, "Erreur");
   }
 };
 

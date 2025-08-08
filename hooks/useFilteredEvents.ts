@@ -1,17 +1,13 @@
+import { useLoading } from './../contexts/LoadingContext';
 import { useState, useEffect } from 'react';
 import { Event } from '@/interfaces/event';
 import { getFiveUpcomingEvents } from '@/services/eventService';
-
-interface Filters {
-  city: string;
-  date: string;
-  keyword: string;
-}
+import { Filters } from '@/interfaces/Filters';
 
 export const useFilteredEvents = ({ city, date, keyword }: Filters) => {
   const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { setLoading } = useLoading();
 
   useEffect(() => {
     const fetchFilteredEvents = async () => {
@@ -38,5 +34,5 @@ export const useFilteredEvents = ({ city, date, keyword }: Filters) => {
     fetchFilteredEvents();
   }, [city, date, keyword]);
 
-  return { events, loading, error };
+  return { events, error };
 };
