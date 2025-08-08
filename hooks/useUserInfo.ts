@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Alert } from 'react-native';
 import { auth } from '@/config/firebaseConfig';
 import { updateCurrentUser } from 'firebase/auth';
 import { getUserInfo, updateUserInfo, deleteUserAccount } from '@/services/authService';
@@ -66,40 +67,32 @@ export const useUserInfo = () => {
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error('Erreur lors de la mise à jour des informations :', error.message);
-        alert('Une erreur est survenue lors de la mise à jour des informations.');
+        Alert.alert('Une erreur est survenue lors de la mise à jour des informations.');
       } else {
         console.error('Erreur inconnue lors de la mise à jour.');
-        alert('Une erreur est survenue lors de la mise à jour des informations.');
+        Alert.alert('Une erreur est survenue lors de la mise à jour des informations.');
       }
     }
   };
 
   const handleDeleteAccount = async () => {
     if (!userId) {
-      alert('Utilisateur non identifié !');
+      Alert.alert('Utilisateur non identifié !');
       return;
     }
-
-    const confirmDelete = window.confirm(
-      'Es-tu sûr de vouloir supprimer ton compte ? Cette action est irréversible.',
-    );
-    if (!confirmDelete) return;
 
     try {
       const user = auth.currentUser;
       if (user) {
         await deleteUserAccount(userId, password);
-        alert('Compte supprimé avec succès.');
+        Alert.alert('Compte supprimé avec succès.');
       } else {
-        alert('Aucun utilisateur connecté.');
+        Alert.alert('Aucun utilisateur connecté.');
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error('Erreur lors de la suppression du compte:', error.message);
-        alert('Une erreur est survenue lors de la suppression du compte.');
-      } else {
         console.error('Erreur inconnue lors de la suppression.');
-        alert('Une erreur est survenue lors de la suppression du compte.');
+        Alert.alert('Une erreur est survenue lors de la suppression du compte.');
       }
     }
   };
@@ -116,6 +109,7 @@ export const useUserInfo = () => {
         })
         .catch((error) => {
           console.error("Erreur lors de la récupération des informations de l'utilisateur", error);
+          Alert.alert('Erreur', 'Impossible de récupérer les informations de l\'utilisateur.');
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

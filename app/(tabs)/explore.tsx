@@ -96,10 +96,6 @@ const FilterScreen: React.FC = () => {
             <Image style={styles.searchIcon} source={iconChoiceLocation} alt="Icône de lieu" />
             <Text style={styles.filterButtonText}>{city || 'LIEU'}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton} onPress={() => setShowCityInput(true)}>
-            <Image style={styles.searchIcon} source={iconChoiceLocation} alt="Icône de lieu" />
-            <Text style={styles.filterButtonText}>{city || 'PRIX A METTRE EN PLACE'}</Text>
-          </TouchableOpacity>
         </View>
 
         {showDatePicker && (

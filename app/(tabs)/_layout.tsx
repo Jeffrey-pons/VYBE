@@ -19,6 +19,12 @@ export default function TabLayout() {
             position: 'absolute',
             paddingTop: 4,
           },
+            android: {
+            backgroundColor: 'transparent',
+            height: 50, 
+            paddingBottom: 48,
+            paddingTop: 8,
+          },
           default: {},
         }),
       }}

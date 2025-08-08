@@ -75,22 +75,24 @@ const LocationScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  // input: {
-  //   borderWidth: 1,
-  //   borderColor: '#ccc',
-  //   borderRadius: 5,
-  //   padding: 10,
-  //   marginTop: 20,
-  //   marginBottom: 20,
-  //   backgroundColor: 'white',
-  //   color: 'black',
-  // },
+    pickerContainer: {
+    marginTop: 20,
+    borderWidth: 2,
+    borderColor: '#ffffffff',
+    borderRadius: 8,
+    backgroundColor: 'black',
+  },
+  pickerStyle: {
+    fontSize: 36,
+    paddingHorizontal: 200,
+    color: 'white',
+    paddingRight: 30,
+  },
   cityText: {
     fontSize: 18,
     color: '#B36DFF',
     textDecorationLine: 'underline',
     marginTop: 20,
-    textAlign: 'center',
   },
   cityChoice: {
     fontSize: 18,
