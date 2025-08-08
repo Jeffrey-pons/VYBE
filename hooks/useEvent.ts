@@ -44,7 +44,7 @@ export const useEvents = (category: string) => {
                         break;
                 }
                 setEvents(data);
-            } catch (error: any) {
+            } catch (error: unknown) {
                 setError('Impossible de charger les événements');
                 console.error('Erreur lors de la récupération des événements:', error);
             } finally {

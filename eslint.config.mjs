@@ -6,9 +6,15 @@ import pluginReactHooks from "eslint-plugin-react-hooks";
 
 /** @type {import("eslint").Linter.Config[]} */
 export default [
+    {
+    ignores: [
+      "**/.expo/types/router.d.ts", 
+      "**/.expo/**",             
+      "**/*.d.ts"             
+    ],
+  },
   {
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
-    ignores: ["**/.expo/**"],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {

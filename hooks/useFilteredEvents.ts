@@ -11,15 +11,14 @@ export const useFilteredEvents = ({ city, date, keyword }: Filters) => {
 
   useEffect(() => {
     const fetchFilteredEvents = async () => {
-      setLoading(true);
       setError(null);
+      setLoading(true);
 
-      const filters = {
+      const filters = { 
         city,
         timings: date ? { gte: `${date}T00:00:00Z`, lte: `${date}T23:59:59Z` } : undefined,
         keyword: keyword || '',
       };
-
       try {
         const upcomingEvents = await getFiveUpcomingEvents(filters);
         setEvents(upcomingEvents);
@@ -32,7 +31,8 @@ export const useFilteredEvents = ({ city, date, keyword }: Filters) => {
     };
 
     fetchFilteredEvents();
-  }, [city, date, keyword]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [city, date, keyword ]);
 
   return { events, error };
 };

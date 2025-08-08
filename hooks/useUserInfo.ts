@@ -109,14 +109,12 @@ export const useUserInfo = () => {
     if (currentUser) {
       setUserId(currentUser.uid);
       fetchUserInfo(currentUser.uid);
+
       getUserInfo(currentUser.uid)
-              .then((data) => {
-                setUserData(data);
-              })
-              .catch((error) => {
-                console.error("Erreur lors de la récupération des informations de l'utilisateur", error);
-              });
+      .then((data) => { setUserData(data); })
+      .catch((error) => {console.error("Erreur lors de la récupération des informations de l'utilisateur", error);});
           }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

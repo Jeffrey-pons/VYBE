@@ -81,15 +81,6 @@ const TicketsScreen = () => {
                 </View>
                   <View style={globalStyles.scrollContainer}>
                     <ThemedText >Par catégorie</ThemedText>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                        {/* {filteredEvents.map((event, index) => (
-                            <SpotCard
-                                key={index}
-                                event={event}
-                                image={musicConnectImg}
-                            />
-                        ))} */}
-                    </ScrollView>
                 
                 </View>
             </View>
