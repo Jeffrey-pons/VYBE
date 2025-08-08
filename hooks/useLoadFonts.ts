@@ -1,12 +1,12 @@
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import {  useEffect } from "react";
-import { fontMap } from "../utils/fontsUtils";
-import { useAppStore } from "@/stores/appStore";
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
+import { fontMap } from '../utils/fontsUtils';
+import { useAppStore } from '@/stores/appStore';
 
 export const useLoadFonts = () => {
   const [fontsLoaded] = useFonts(fontMap);
-    const { appReady, setAppReady } = useAppStore();
+  const { appReady, setAppReady } = useAppStore();
 
   useEffect(() => {
     const prepareApp = async () => {
@@ -17,9 +17,9 @@ export const useLoadFonts = () => {
         }
       } catch (error: unknown) {
         if (error instanceof Error) {
-        console.warn("Erreur de chargement des fonts", error);
+          console.warn('Erreur de chargement des fonts', error);
+        }
       }
-    }
     };
 
     prepareApp();

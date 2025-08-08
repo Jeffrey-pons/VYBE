@@ -25,15 +25,15 @@ export default function RootLayout() {
           <AuthProvider>
             <View style={{ flex: 1 }}>
               <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
-                <Stack.Screen name="(tabs)"/>
-                <Stack.Screen name="login"/>
-                <Stack.Screen name="register"/>
-                <Stack.Screen name="findlocation"/>
-                <Stack.Screen name="connectmusic"/>
-                <Stack.Screen name="activenotification"/>
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="login" />
+                <Stack.Screen name="register" />
+                <Stack.Screen name="findlocation" />
+                <Stack.Screen name="connectmusic" />
+                <Stack.Screen name="activenotification" />
                 <Stack.Screen name="+not-found" />
               </Stack>
-              <Loader /> 
+              <Loader />
             </View>
             <StatusBar style="auto" />
           </AuthProvider>

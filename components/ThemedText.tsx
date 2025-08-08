@@ -3,20 +3,22 @@ import { Text, type TextProps, StyleSheet } from 'react-native';
 import { Theme } from '@/constants/Theme';
 
 export type ThemedTextProps = TextProps & {
-  type?: 'default' | 'title' | 'text' | 'sectionProfile' | 'authTitle' | 'authSubtitle' | 'subtitle' | 'link' | 'profileInitials' | 'profileName' | 'informationsProfile';
+  type?:
+    | 'default'
+    | 'title'
+    | 'text'
+    | 'sectionProfile'
+    | 'authTitle'
+    | 'authSubtitle'
+    | 'subtitle'
+    | 'link'
+    | 'profileInitials'
+    | 'profileName'
+    | 'informationsProfile';
 };
 
-export function ThemedText({
-  style, 
-  type = 'default',
-  ...rest
-}: ThemedTextProps) {
-  return (
-    <Text
-      style={[styles.default, styles[type], style]}
-      {...rest}
-    />
-  );
+export function ThemedText({ style, type = 'default', ...rest }: ThemedTextProps) {
+  return <Text style={[styles.default, styles[type], style]} {...rest} />;
 }
 
 const styles = StyleSheet.create({
@@ -28,7 +30,6 @@ const styles = StyleSheet.create({
   profileName: {
     fontSize: Theme.typography.mega.fontSize,
     fontWeight: Theme.typography.giga.fontWeight,
-
   },
   sectionProfile: {
     fontSize: Theme.typography.kilo.fontSize,
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
   text: {
     color: Theme.colors.text,
     fontSize: Theme.typography.deca.fontSize,
-    textAlign: Theme.alignments.textCenter.textAlign
+    textAlign: Theme.alignments.textCenter.textAlign,
   },
   informationsProfile: {
     color: Theme.colors.text,
@@ -53,13 +54,13 @@ const styles = StyleSheet.create({
   },
   authTitle: {
     fontSize: Theme.typography.mega.fontSize,
-    fontWeight: Theme.typography.megaMedium.fontWeight, 
+    fontWeight: Theme.typography.megaMedium.fontWeight,
     textAlign: Theme.alignments.textCenter.textAlign,
     marginBottom: 30,
   },
   authSubtitle: {
     fontSize: Theme.typography.base.fontSize,
-    marginBottom: 36,// Exception
+    marginBottom: 36, // Exception
     color: Theme.colors.text,
     textAlign: Theme.alignments.textCenter.textAlign,
   },
@@ -71,6 +72,6 @@ const styles = StyleSheet.create({
     lineHeight: Theme.typography.hecto.lineHeight,
     fontSize: Theme.typography.deci.fontSize,
     color: Theme.colors.violetShade1,
-    textDecorationLine: "underline"
+    textDecorationLine: 'underline',
   },
 });

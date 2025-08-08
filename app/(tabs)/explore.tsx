@@ -1,5 +1,15 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, Modal, Image, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Modal,
+  Image,
+  ScrollView,
+} from 'react-native';
 import iconLoupe from '../../assets/images/icons/icon_loupe.png';
 import { cities } from '@/utils/citiesUtils';
 import iconCalendar from '../../assets/images/icons/icon_calender.png';
@@ -24,23 +34,23 @@ const FilterScreen: React.FC = () => {
     setShowCityInput,
   } = useFilterStore();
 
-    const keyword = useFilterStore((state) => state.keyword);
-    const setKeyword = useFilterStore((state) => state.setKeyword);
+  const keyword = useFilterStore((state) => state.keyword);
+  const setKeyword = useFilterStore((state) => state.setKeyword);
 
-    const debouncedKeyword = useDebounce(keyword, 500); // délai de 500ms
-    const { events, loading, error } = useFilteredEvents({ city, date, keyword: debouncedKeyword });
+  const debouncedKeyword = useDebounce(keyword, 500); // délai de 500ms
+  const { events, loading, error } = useFilteredEvents({ city, date, keyword: debouncedKeyword });
 
-    if (loading) return <Text style={styles.loading}>Chargement...</Text>;
-    if (error) return <Text style={styles.error}>Erreur : {error}</Text>;
-    // if (!event) return <Text style={styles.error}>Événement introuvable</Text>;
+  if (loading) return <Text style={styles.loading}>Chargement...</Text>;
+  if (error) return <Text style={styles.error}>Erreur : {error}</Text>;
+  // if (!event) return <Text style={styles.error}>Événement introuvable</Text>;
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedDate = e.target.value; 
+    const selectedDate = e.target.value;
     setDate(selectedDate);
     setShowDatePicker(false);
   };
   // const toggleDatePicker = () => {
-  //   setShowDatePicker(!showDatePicker); 
+  //   setShowDatePicker(!showDatePicker);
   // };
 
   const handleCitySelect = (enteredCity: string) => {
@@ -49,58 +59,45 @@ const FilterScreen: React.FC = () => {
   };
 
   const filteredEvents = events.filter((event) => {
-    const matchesSearch = !search || (event.title.fr && event.title.fr.toLowerCase().includes(search.toLowerCase()));
+    const matchesSearch =
+      !search || (event.title.fr && event.title.fr.toLowerCase().includes(search.toLowerCase()));
     const matchesDate = !date || event.dateRange?.fr?.includes(date);
-    const matchesCity = !city || (event.location?.city && event.location.city.toLowerCase() === city.toLowerCase());
-    
-    const matchesKeyword = !keyword || (
-      event.keywords && Array.isArray(event.keywords.fr) && event.keywords.fr.some((k) => k.toLowerCase().includes(keyword.toLowerCase()))
-    );
+    const matchesCity =
+      !city || (event.location?.city && event.location.city.toLowerCase() === city.toLowerCase());
+
+    const matchesKeyword =
+      !keyword ||
+      (event.keywords &&
+        Array.isArray(event.keywords.fr) &&
+        event.keywords.fr.some((k) => k.toLowerCase().includes(keyword.toLowerCase())));
     return matchesSearch && matchesDate && matchesCity && matchesKeyword;
-    
-  });  
+  });
 
   return (
     <ScrollView>
       <View style={globalStyles.containerX}>
         <View style={styles.searchContainer}>
-          <Image
-            style={styles.searchIcon}
-            source={iconLoupe}
-            alt="Icône de recherche"
-          />
+          <Image style={styles.searchIcon} source={iconLoupe} alt="Icône de recherche" />
           <TextInput
             style={styles.searchInput}
             placeholder="Rechercher un événement ou un.e artiste"
             value={keyword}
-            placeholderTextColor="white" 
+            placeholderTextColor="white"
             onChangeText={setKeyword}
           />
         </View>
 
         <View style={styles.filterContainer}>
           <TouchableOpacity style={styles.filterButton}>
-            <Image
-              style={styles.searchIcon}
-              source={iconCalendar}
-              alt="Icône de calendrier"
-            />
+            <Image style={styles.searchIcon} source={iconCalendar} alt="Icône de calendrier" />
             <Text style={styles.filterButtonText}>{date || 'DATE'}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.filterButton} onPress={() => setShowCityInput(true)}>
-            <Image
-              style={styles.searchIcon}
-              source={iconChoiceLocation}
-              alt="Icône de lieu"
-            />
+            <Image style={styles.searchIcon} source={iconChoiceLocation} alt="Icône de lieu" />
             <Text style={styles.filterButtonText}>{city || 'LIEU'}</Text>
           </TouchableOpacity>
-             <TouchableOpacity style={styles.filterButton} onPress={() => setShowCityInput(true)}>
-            <Image
-              style={styles.searchIcon}
-              source={iconChoiceLocation}
-              alt="Icône de lieu"
-            />
+          <TouchableOpacity style={styles.filterButton} onPress={() => setShowCityInput(true)}>
+            <Image style={styles.searchIcon} source={iconChoiceLocation} alt="Icône de lieu" />
             <Text style={styles.filterButtonText}>{city || 'PRIX A METTRE EN PLACE'}</Text>
           </TouchableOpacity>
         </View>
@@ -128,28 +125,24 @@ const FilterScreen: React.FC = () => {
                 </TouchableOpacity>
               )}
             />
-              <TouchableOpacity
-                style={styles.buttonModaleCity}
-                onPress={() => {
-                  setCity(''); // Réinitialiser la ville
-                  setShowCityInput(false); // Fermer la modale
-                }}
-              >
-                <Text style={styles.textButtonModaleCity}>
-                  Réinitialiser le lieu
-                </Text>
-              </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonModaleCity}
+              onPress={() => {
+                setCity(''); // Réinitialiser la ville
+                setShowCityInput(false); // Fermer la modale
+              }}
+            >
+              <Text style={styles.textButtonModaleCity}>Réinitialiser le lieu</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={styles.buttonModaleCity}
               onPress={() => setShowCityInput(false)}
             >
-              <Text style={styles.textButtonModaleCity}>
-                Fermer
-              </Text>
+              <Text style={styles.textButtonModaleCity}>Fermer</Text>
             </TouchableOpacity>
           </View>
         </Modal>
-        <EventList events={filteredEvents}/>
+        <EventList events={filteredEvents} />
       </View>
     </ScrollView>
   );
@@ -170,15 +163,15 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     marginRight: 5,
-    color: "#aaa",
+    color: '#aaa',
     width: 20,
-    height: 20
+    height: 20,
   },
   searchInput: {
     flex: 1,
     color: 'white',
     fontSize: 15,
-    fontFamily: "FunnelSans-Regular",
+    fontFamily: 'FunnelSans-Regular',
   },
   filterContainer: {
     flexDirection: 'row',
@@ -195,17 +188,17 @@ const styles = StyleSheet.create({
     borderColor: '#333',
     borderWidth: 1,
   },
-  buttonModaleCity:{
+  buttonModaleCity: {
     backgroundColor: '#b36dff',
-    padding: 10, 
-    borderRadius: 5, 
-    marginVertical: 10
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 10,
   },
   filterButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: "bold",
-    fontFamily: "FunnelSans-Regular",
+    fontWeight: 'bold',
+    fontFamily: 'FunnelSans-Regular',
     marginLeft: 4,
     marginBottom: 2,
   },
@@ -218,7 +211,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   gridContainer: {
-    justifyContent: 'center', 
+    justifyContent: 'center',
     flexDirection: 'column',
   },
   cityButtonText: {
@@ -227,9 +220,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     width: '100%',
-    fontFamily: "FunnelSans-Regular"
+    fontFamily: 'FunnelSans-Regular',
   },
-    loading: {
+  loading: {
     textAlign: 'center',
     marginTop: 40,
     color: 'white',
@@ -242,8 +235,8 @@ const styles = StyleSheet.create({
   textButtonModaleCity: {
     color: 'white',
     textAlign: 'center',
-    fontFamily: "FunnelSans-Regular",
-  }
+    fontFamily: 'FunnelSans-Regular',
+  },
 });
 
 export default FilterScreen;

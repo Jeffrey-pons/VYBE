@@ -7,7 +7,7 @@ interface RegisterState {
   phone: string;
   password: string;
   isLoading: boolean;
-  isMounted?: boolean;  
+  isMounted?: boolean;
 
   setName: (name: string) => void;
   setLastname: (lastname: string) => void;

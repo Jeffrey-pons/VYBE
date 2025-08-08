@@ -1,22 +1,28 @@
-import React , { useEffect } from "react";
-import { Dimensions, TextInput, View, Text, StyleSheet, Image, ScrollView } from "react-native";
-import { Button } from "react-native-elements";
-import { router } from "expo-router";
-import globalStyles from "@/styles/globalStyle";
-import { ThemedText } from "@/components/ThemedText";
-import { registerIcon } from "@/utils/imagesUtils";
-import { useRegister } from "@/hooks/useRegister"; 
+import React, { useEffect } from 'react';
+import { Dimensions, TextInput, View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { Button } from 'react-native-elements';
+import { router } from 'expo-router';
+import globalStyles from '@/styles/globalStyle';
+import { ThemedText } from '@/components/ThemedText';
+import { registerIcon } from '@/utils/imagesUtils';
+import { useRegister } from '@/hooks/useRegister';
 import { useRegisterStore } from '@/stores/useRegisterStore';
 
 const RegisterScreen: React.FC = () => {
   const {
-    name, setName,
-    lastname, setLastname,
-    email, setEmail,
-    phone, setPhone,
-    password, setPassword,
+    name,
+    setName,
+    lastname,
+    setLastname,
+    email,
+    setEmail,
+    phone,
+    setPhone,
+    password,
+    setPassword,
     isLoading,
-    isMounted, setIsMounted,
+    isMounted,
+    setIsMounted,
     resetRegister,
   } = useRegisterStore();
 
@@ -36,21 +42,17 @@ const RegisterScreen: React.FC = () => {
       password,
     };
 
-    const response = await handleSignUp(userData); 
+    const response = await handleSignUp(userData);
     if (isMounted && response) {
       resetRegister();
-      router.replace("/login"); 
+      router.replace('/login');
     }
   };
 
   return (
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
       <View style={globalStyles.container}>
-        <Image
-          style={globalStyles.logoAuthStyle}
-          source={registerIcon}
-          alt="Icône d'inscription"
-        />
+        <Image style={globalStyles.logoAuthStyle} source={registerIcon} alt="Icône d'inscription" />
         <ThemedText type="authTitle">Inscris-toi !</ThemedText>
 
         <View style={styles.rowContainer}>
@@ -122,19 +124,19 @@ const RegisterScreen: React.FC = () => {
           value={password}
           onChangeText={setPassword}
         />
-        <Button 
-          buttonStyle={globalStyles.buttonStyle} 
+        <Button
+          buttonStyle={globalStyles.buttonStyle}
           title="S'inscrire"
-          titleStyle={globalStyles.titleStyle} 
-          onPress={handleRegister} 
-          loading={isLoading} 
+          titleStyle={globalStyles.titleStyle}
+          onPress={handleRegister}
+          loading={isLoading}
         />
         <Text style={globalStyles.footerAuthTextStyle}>Vous avez déjà un compte ?</Text>
-        <Text style={globalStyles.footerAuthLinkStyle} onPress={() => router.replace("/login")}>
+        <Text style={globalStyles.footerAuthLinkStyle} onPress={() => router.replace('/login')}>
           Connectez-vous ici
         </Text>
       </View>
-          {/* <FirebaseRecaptchaVerifierModal
+      {/* <FirebaseRecaptchaVerifierModal
       ref={recaptchaVerifier}
       firebaseConfig={auth.app.options}
     /> */}
@@ -144,12 +146,12 @@ const RegisterScreen: React.FC = () => {
 const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   rowContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: width > 500 ? "50%" : "100%", 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: width > 500 ? '50%' : '100%',
   },
   halfInput: {
-    width: "48%",
+    width: '48%',
   },
 });
 

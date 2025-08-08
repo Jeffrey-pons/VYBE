@@ -5,11 +5,11 @@ import { vybeLogoHeader } from '@/utils/imagesUtils';
 
 const Logo = () => {
   const handleLogoPress = () => {
-        router.replace('/(tabs)'); 
-  }
+    router.replace('/(tabs)');
+  };
   return (
     <TouchableOpacity onPress={handleLogoPress} activeOpacity={0.7}>
-      <Image 
+      <Image
         source={vybeLogoHeader}
         resizeMode="contain"
         style={styles.logo}
@@ -22,7 +22,7 @@ const Logo = () => {
 
 const styles = StyleSheet.create({
   logo: {
-    width: 150, 
+    width: 150,
     height: 100,
   },
 });

@@ -14,7 +14,7 @@ export const useFilteredEvents = ({ city, date, keyword }: Filters) => {
       setError(null);
       setLoading(true);
 
-      const filters = { 
+      const filters = {
         city,
         timings: date ? { gte: `${date}T00:00:00Z`, lte: `${date}T23:59:59Z` } : undefined,
         keyword: keyword || '',
@@ -23,7 +23,7 @@ export const useFilteredEvents = ({ city, date, keyword }: Filters) => {
         const upcomingEvents = await getFiveUpcomingEvents(filters);
         setEvents(upcomingEvents);
       } catch (err) {
-        console.error("Erreur lors du chargement des événements:", err);
+        console.error('Erreur lors du chargement des événements:', err);
         setError('Erreur lors du chargement des événements.');
       } finally {
         setLoading(false);
@@ -31,8 +31,8 @@ export const useFilteredEvents = ({ city, date, keyword }: Filters) => {
     };
 
     fetchFilteredEvents();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [city, date, keyword ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [city, date, keyword]);
 
   return { events, error };
 };

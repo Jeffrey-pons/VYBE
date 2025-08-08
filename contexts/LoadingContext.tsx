@@ -15,9 +15,7 @@ export const LoadingProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <LoadingContext.Provider value={{ isLoading, setLoading }}>
-      {children}
-    </LoadingContext.Provider>
+    <LoadingContext.Provider value={{ isLoading, setLoading }}>{children}</LoadingContext.Provider>
   );
 };
 

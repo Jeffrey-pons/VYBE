@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 interface NotificationState {
   notificationsEnabled: boolean;
@@ -10,7 +10,6 @@ interface NotificationState {
 export const useNotificationStore = create<NotificationState>((set, get) => ({
   notificationsEnabled: false,
   setNotificationsEnabled: (enabled) => set({ notificationsEnabled: enabled }),
-  toggleNotifications: () =>
-    set({ notificationsEnabled: !get().notificationsEnabled }),
+  toggleNotifications: () => set({ notificationsEnabled: !get().notificationsEnabled }),
   resetNotifications: () => set({ notificationsEnabled: false }),
 }));

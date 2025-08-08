@@ -6,11 +6,10 @@ import { Theme } from '@/constants/Theme';
 import { iconHome, iconLoupe, iconTicket, iconUser } from '@/utils/imagesUtils';
 
 export default function TabLayout() {
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Theme.colors.text, 
+        tabBarActiveTintColor: Theme.colors.text,
         headerShown: false,
         tabBarBackground: TabBarBackground,
         tabBarShowLabel: false,
@@ -21,8 +20,9 @@ export default function TabLayout() {
             paddingTop: 4,
           },
           default: {},
-        })
-      }}>
+        }),
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
@@ -31,7 +31,6 @@ export default function TabLayout() {
               source={iconHome}
               style={{ width: size, height: size, tintColor: color }}
               alt="Icône pour revenir au menu principal"
-              
             />
           ),
         }}

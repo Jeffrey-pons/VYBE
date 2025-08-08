@@ -1,25 +1,21 @@
-import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
-import pluginReactNative from "eslint-plugin-react-native";
-import pluginReactHooks from "eslint-plugin-react-hooks";
+import pluginJs from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import pluginReact from 'eslint-plugin-react';
+import pluginReactNative from 'eslint-plugin-react-native';
+import pluginReactHooks from 'eslint-plugin-react-hooks';
 
 /** @type {import("eslint").Linter.Config[]} */
 export default [
-    {
-    ignores: [
-      "**/.expo/types/router.d.ts", 
-      "**/.expo/**",             
-      "**/*.d.ts"             
-    ],
+  {
+    ignores: ['**/.expo/types/router.d.ts', '**/.expo/**', '**/*.d.ts'],
   },
   {
-    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
+    files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        ecmaVersion: "latest",
-        sourceType: "module",
+        ecmaVersion: 'latest',
+        sourceType: 'module',
         ecmaFeatures: {
           jsx: true,
         },
@@ -27,7 +23,7 @@ export default [
     },
     settings: {
       react: {
-        version: "detect",
+        version: 'detect',
       },
     },
   },
@@ -37,17 +33,17 @@ export default [
   {
     plugins: {
       react: pluginReact,
-      "react-native": pluginReactNative,
-      "react-hooks": pluginReactHooks,
+      'react-native': pluginReactNative,
+      'react-hooks': pluginReactHooks,
     },
     rules: {
-      "@typescript-eslint/no-require-imports": "error",
-      "@typescript-eslint/no-unused-vars": "warn",
-      "react/react-in-jsx-scope": "off",
-      "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn",
-      "react-native/no-inline-styles": "warn",
-      "react-native/no-unused-styles": "warn",
+      '@typescript-eslint/no-require-imports': 'error',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      'react/react-in-jsx-scope': 'off',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      'react-native/no-inline-styles': 'warn',
+      'react-native/no-unused-styles': 'warn',
     },
   },
 ];

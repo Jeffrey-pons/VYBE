@@ -2,25 +2,24 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-elements';
 import ProgressBar from '@/components/ProgressBar';
-import globalStyles from '@/styles/globalStyle'; 
+import globalStyles from '@/styles/globalStyle';
 import { ThemedText } from '@/components/ThemedText';
 import { locationIcon } from '@/utils/imagesUtils';
-import { auth } from "@/config/firebaseConfig";
-import { router } from "expo-router";
+import { auth } from '@/config/firebaseConfig';
+import { router } from 'expo-router';
 import { useLocationHandler } from '@/hooks/useLocationHandler';
 import RNPickerSelect from 'react-native-picker-select';
 
 const LocationScreen = () => {
-  const { 
-    city, 
+  const {
+    city,
     cities,
-    showCitySelector, 
-    handleCitySelect, 
-    handleUseLocation, 
-    handleCityNext, 
-    toggleCitySelector 
+    showCitySelector,
+    handleCitySelect,
+    handleUseLocation,
+    handleCityNext,
+    toggleCitySelector,
   } = useLocationHandler();
-
 
   return (
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
@@ -40,7 +39,7 @@ const LocationScreen = () => {
           titleStyle={globalStyles.titleStyle}
           onPress={handleUseLocation}
         />
-         <TouchableOpacity onPress={toggleCitySelector}>
+        <TouchableOpacity onPress={toggleCitySelector}>
           <Text style={styles.cityText}>Choisir ma ville</Text>
         </TouchableOpacity>
 
@@ -58,8 +57,8 @@ const LocationScreen = () => {
           </View>
         )}
         <View>
-        {/* {city && */}
-        <Text style={styles.cityChoice}>Ville sélectionnée : { city} </Text>
+          {/* {city && */}
+          <Text style={styles.cityChoice}>Ville sélectionnée : {city} </Text>
         </View>
         <Button
           title="Suivant"
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'white',
     paddingTop: 30,
-  }
+  },
 });
 
 export default LocationScreen;

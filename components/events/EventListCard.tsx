@@ -8,16 +8,16 @@ interface EventListProps {
   events: Event[];
 }
 
-const EventList: React.FC<EventListProps> = ({ events  }) => {
-    const router = useRouter();
+const EventList: React.FC<EventListProps> = ({ events }) => {
+  const router = useRouter();
 
-    const handlePressDetails = (event: Event) => {
-      if (event?.uid && event.originAgenda?.uid) {
-        router.push(`/event/${event.originAgenda.uid}/${event.uid}`);
-      } else {
-        console.warn("UID ou originAgenda manquant");
-      }
-    };
+  const handlePressDetails = (event: Event) => {
+    if (event?.uid && event.originAgenda?.uid) {
+      router.push(`/event/${event.originAgenda.uid}/${event.uid}`);
+    } else {
+      console.warn('UID ou originAgenda manquant');
+    }
+  };
   return (
     <FlatList
       data={events}
@@ -35,14 +35,12 @@ const EventList: React.FC<EventListProps> = ({ events  }) => {
             <View />
           )}
           <View>
-            <Text style=
-            {styles.eventTitle}  
-            numberOfLines={1}
-            ellipsizeMode="tail">
+            <Text style={styles.eventTitle} numberOfLines={1} ellipsizeMode="tail">
               {item.title?.fr || 'Titre non disponible'}
-              </Text>
+            </Text>
             <Text style={styles.eventTextDate}>
-              {item.location?.city || 'Ville inconnue'} - {item.dateRange?.fr || 'Date non disponible'}
+              {item.location?.city || 'Ville inconnue'} -{' '}
+              {item.dateRange?.fr || 'Date non disponible'}
             </Text>
             <TouchableOpacity onPress={() => handlePressDetails(item)}>
               <Text style={styles.eventText}>Voir plus </Text>
@@ -60,15 +58,15 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 8,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   eventTitle: {
     color: 'white',
     fontWeight: '500',
     fontSize: 18,
-    flexShrink: 1,      
-    maxWidth: '90%',       
-    overflow: 'hidden',  
+    flexShrink: 1,
+    maxWidth: '90%',
+    overflow: 'hidden',
   },
   eventText: {
     color: '#fff',

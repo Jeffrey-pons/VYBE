@@ -17,8 +17,8 @@ const useOnboardingProgress = () => {
       }
     } catch (error) {
       setLoading(false);
-      console.error("Erreur de mise à jour de la progression :", error);
-      Alert.alert("Erreur", "Impossible de sauvegarder.");
+      console.error('Erreur de mise à jour de la progression :', error);
+      Alert.alert('Erreur', 'Impossible de sauvegarder.');
     }
   };
 

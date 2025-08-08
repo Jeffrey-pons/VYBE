@@ -1,7 +1,7 @@
-import { useAuthStore } from "@/stores/useAuthStore";
-import { loginUser } from "@/services/authService"; 
-import { Alert } from "react-native";
-import { useLoginStore } from "@/stores/useLoginStore";
+import { useAuthStore } from '@/stores/useAuthStore';
+import { loginUser } from '@/services/authService';
+import { Alert } from 'react-native';
+import { useLoginStore } from '@/stores/useLoginStore';
 
 export const useLogin = () => {
   const isLoading = useAuthStore((state) => state.isLoading);
@@ -12,19 +12,19 @@ export const useLogin = () => {
     try {
       const response = await loginUser(email, password);
       if (response) {
-        Alert.alert("Succès", "Connexion réussie");
+        Alert.alert('Succès', 'Connexion réussie');
         useLoginStore.getState().resetLogin();
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        Alert.alert("Erreur", error.message); 
+        Alert.alert('Erreur', error.message);
       } else {
-        Alert.alert("Erreur", "Une erreur inconnue s'est produite");
+        Alert.alert('Erreur', "Une erreur inconnue s'est produite");
       }
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { handleLogin, isLoading }; 
+  return { handleLogin, isLoading };
 };

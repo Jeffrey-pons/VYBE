@@ -13,10 +13,10 @@ import { useNotificationStore } from '@/stores/useNotificationStore';
 
 const NotificationScreen = () => {
   const { updateProgress, loading } = useOnboardingProgress();
-   const { notificationsEnabled, toggleNotifications } = useNotificationStore();
+  const { notificationsEnabled, toggleNotifications } = useNotificationStore();
 
   const handleSkip = () => {
-    router.replace('/(tabs)'); 
+    router.replace('/(tabs)');
   };
 
   const handleFinish = async () => {
@@ -35,18 +35,21 @@ const NotificationScreen = () => {
         />
         <SkipButton onPress={handleSkip} />
         <ThemedText type="authTitle">Choisis tes notifications</ThemedText>
-        <ThemedText type="authSubtitle">Voulez-vous activer les notifications pour être alerté lorsque les places d’un événement est disponible à l’achat ?</ThemedText>
+        <ThemedText type="authSubtitle">
+          Voulez-vous activer les notifications pour être alerté lorsque les places d’un événement
+          est disponible à l’achat ?
+        </ThemedText>
         <Switch
           value={notificationsEnabled}
           onValueChange={toggleNotifications}
-          trackColor={{ false: '#767577', true: '#b36dff' }} 
+          trackColor={{ false: '#767577', true: '#b36dff' }}
           thumbColor={notificationsEnabled ? 'white' : 'white'}
         />
         <Button
           title="Terminer"
-          onPress={handleFinish} 
-          buttonStyle={globalStyles.buttonSecondStyle} 
-          titleStyle={globalStyles.titleSecondStyle} 
+          onPress={handleFinish}
+          buttonStyle={globalStyles.buttonSecondStyle}
+          titleStyle={globalStyles.titleSecondStyle}
           loading={loading}
         />
       </View>

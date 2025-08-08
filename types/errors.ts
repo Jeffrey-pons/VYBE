@@ -1,7 +1,7 @@
 export class ValidationError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "ValidationError";
+    this.name = 'ValidationError';
   }
 }
 
@@ -10,7 +10,7 @@ export class AuthServiceError extends Error {
 
   constructor(message: string, code: string) {
     super(message);
-    this.name = "AuthServiceError";
+    this.name = 'AuthServiceError';
     this.code = code;
   }
 }
