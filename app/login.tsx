@@ -16,7 +16,7 @@ const LoginScreen: React.FC = () => {
   return (
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
       <View style={globalStyles.container}>
-        <Image style={globalStyles.logoAuthStyle} source={loginIcon} alt="Icône de connexion" />
+        <Image style={globalStyles.logoAuthStyle} source={loginIcon} alt="Icône de connexion" accessibilityLabel='Icône de connexion'/>
         <ThemedText type="authTitle">Connecte toi !</ThemedText>
         <TextInput
           style={globalStyles.input}
@@ -25,6 +25,7 @@ const LoginScreen: React.FC = () => {
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
+          accessibilityLabel='Champ pour entrer l"email'
         />
         <TextInput
           style={globalStyles.input}
@@ -33,6 +34,7 @@ const LoginScreen: React.FC = () => {
           secureTextEntry
           value={password}
           onChangeText={setPassword}
+          accessibilityLabel='Champ pour entrer le mot de passe'
         />
         <Button
           buttonStyle={globalStyles.buttonStyle}
@@ -40,6 +42,7 @@ const LoginScreen: React.FC = () => {
           titleStyle={globalStyles.titleStyle}
           onPress={() => handleLogin(email, password)}
           loading={isLoading}
+          accessibilityLabel="Bouton pour se connecter"
         />
         <Text style={globalStyles.footerAuthTextStyle}>Vous n'avez pas de compte ?</Text>
         <Text style={globalStyles.footerAuthLinkStyle} onPress={() => router.replace('/register')}>

@@ -30,6 +30,7 @@ const EventList: React.FC<EventListProps> = ({ events }) => {
               source={{ uri: `${item.image.base}${item.image.filename}` }}
               style={styles.eventImage}
               alt="Image événement"
+              accessibilityLabel="Image de l'événement"
             />
           ) : (
             <View />

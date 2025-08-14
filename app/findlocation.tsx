@@ -29,6 +29,7 @@ const LocationScreen = () => {
           style={globalStyles.logoAuthStyle}
           source={locationIcon}
           alt="Icône de Localisation"
+          accessibilityLabel="Icône de Localisation"
         />
         <ThemedText type="authTitle">Voir ce qu'il se passe près de chez toi</ThemedText>
         <ThemedText type="authSubtitle">Découvre ce qui se passe dans ta ville !</ThemedText>
@@ -38,6 +39,7 @@ const LocationScreen = () => {
           buttonStyle={globalStyles.buttonStyle}
           titleStyle={globalStyles.titleStyle}
           onPress={handleUseLocation}
+          accessibilityLabel="Bouton pour utiliser la position actuelle"
         />
         <TouchableOpacity onPress={toggleCitySelector}>
           <Text style={styles.cityText}>Choisir ma ville</Text>
@@ -64,6 +66,7 @@ const LocationScreen = () => {
           title="Suivant"
           buttonStyle={globalStyles.buttonSecondStyle}
           titleStyle={globalStyles.titleSecondStyle}
+          accessibilityLabel="Bouton pour passer à l'étape suivante"
           onPress={() => {
             handleCityNext(auth.currentUser, router);
             router.replace('/connectmusic');

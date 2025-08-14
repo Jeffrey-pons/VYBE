@@ -77,23 +77,29 @@ const FilterScreen: React.FC = () => {
     <ScrollView>
       <View style={globalStyles.containerX}>
         <View style={styles.searchContainer}>
-          <Image style={styles.searchIcon} source={iconLoupe} alt="Icône de recherche" />
+          <Image 
+          style={styles.searchIcon} 
+          source={iconLoupe} 
+          alt="Icône de recherche"
+          accessibilityLabel='Icône de recherche'
+            />
           <TextInput
             style={styles.searchInput}
             placeholder="Rechercher un événement ou un.e artiste"
             value={keyword}
             placeholderTextColor="white"
             onChangeText={setKeyword}
+            accessibilityLabel='Champ pour entrer la recherche'
           />
         </View>
 
         <View style={styles.filterContainer}>
-          <TouchableOpacity style={styles.filterButton}>
-            <Image style={styles.searchIcon} source={iconCalendar} alt="Icône de calendrier" />
+          <TouchableOpacity style={styles.filterButton} accessibilityLabel='Ouvrir le sélecteur de date' >
+            <Image style={styles.searchIcon} source={iconCalendar} alt="Icône de calendrier" accessibilityLabel='Icône de calendrier'/>
             <Text style={styles.filterButtonText}>{date || 'DATE'}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton} onPress={() => setShowCityInput(true)}>
-            <Image style={styles.searchIcon} source={iconChoiceLocation} alt="Icône de lieu" />
+          <TouchableOpacity style={styles.filterButton} onPress={() => setShowCityInput(true)} accessibilityLabel='Ouvrir le sélecteur de ville'>
+            <Image style={styles.searchIcon} source={iconChoiceLocation} alt="Icône de lieu" accessibilityLabel='Icône de lieu' />
             <Text style={styles.filterButtonText}>{city || 'LIEU'}</Text>
           </TouchableOpacity>
         </View>
@@ -127,12 +133,14 @@ const FilterScreen: React.FC = () => {
                 setCity(''); // Réinitialiser la ville
                 setShowCityInput(false); // Fermer la modale
               }}
+              accessibilityLabel='Réinitialiser le lieu'
             >
               <Text style={styles.textButtonModaleCity}>Réinitialiser le lieu</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.buttonModaleCity}
               onPress={() => setShowCityInput(false)}
+              accessibilityLabel='Fermer le sélecteur de ville'
             >
               <Text style={styles.textButtonModaleCity}>Fermer</Text>
             </TouchableOpacity>

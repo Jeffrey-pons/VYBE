@@ -81,6 +81,7 @@ const ProfileScreen: React.FC = () => {
                 onPress={() => {
                   setIsModalUpdatedAccountVisible(true);
                 }}
+                accessibilityLabel="Bouton pour modifier les informations du profil"
               ></Button>
             </View>
           </View>
@@ -95,24 +96,28 @@ const ProfileScreen: React.FC = () => {
           modalType="update"
         >
           <View style={styles.inputContainer}>
-            <TextInput placeholder="Nom" value={name} onChangeText={setName} style={styles.input} />
+            <TextInput placeholder="Nom" value={name} onChangeText={setName} style={styles.input} accessibilityLabel='Nom'/>
             <TextInput
               placeholder="Prénom"
               value={lastname}
               onChangeText={setLastname}
               style={styles.input}
+              accessibilityLabel='Prénom'
             />
             <TextInput
               placeholder="Email"
               value={email}
               onChangeText={setEmail}
               style={styles.input}
+              keyboardType="email-address"
+              accessibilityLabel='Email'
             />
             <TextInput
               placeholder="Numéro de téléphone"
               value={phoneNumber}
               onChangeText={setPhoneNumber}
               style={styles.input}
+              accessibilityLabel='Numéro de téléphone'
             />
           </View>
         </UserModal>
@@ -135,6 +140,7 @@ const ProfileScreen: React.FC = () => {
               icon={<Entypo name="spotify" size={24} color="black" />}
               buttonStyle={globalStyles.buttonStyle}
               titleStyle={globalStyles.titleStyle}
+              accessibilityLabel="Bouton pour connecter Spotify"
             />
             <Button
               title="  Apple Music"
@@ -142,6 +148,7 @@ const ProfileScreen: React.FC = () => {
               icon={<Fontisto name="applemusic" size={24} color="black" />}
               buttonStyle={globalStyles.buttonStyle}
               titleStyle={globalStyles.titleStyle}
+              accessibilityLabel="Bouton pour connecter Apple Music"
             />
           </View>
         </Collapsible>
@@ -158,6 +165,7 @@ const ProfileScreen: React.FC = () => {
               title="ACTIVER LES NOTIFICATIONS"
               buttonStyle={styles.activateButton}
               titleStyle={styles.titleUpdatedProfileStyle}
+              accessibilityLabel='Bouton pour activer les notifications'
             />
           </View>
           <View style={styles.sectionNotification}>
@@ -291,12 +299,14 @@ const ProfileScreen: React.FC = () => {
             buttonStyle={globalStyles.buttonStyle}
             titleStyle={globalStyles.TextButtonStyle}
             onPress={() => setIsModalLogoutAccountVisible(true)}
+            accessibilityLabel="Bouton pour se déconnecter"
           />
           <Button
             title="Supprimer mon compte"
             buttonStyle={globalStyles.buttonDeletedeStyle}
             titleStyle={globalStyles.titleDeletedStyle}
             onPress={() => setIsModalDeletedAccountVisible(true)}
+            accessibilityLabel="Bouton pour supprimer le compte"
           />
         </View>
       </View>
@@ -333,6 +343,7 @@ const ProfileScreen: React.FC = () => {
             onChangeText={setPassword}
             // onBlur={() => setInputValue('')}
             style={styles.input}
+            accessibilityLabel='Champ pour entrer le mot de passe'
           />
         </View>
       </UserModal>

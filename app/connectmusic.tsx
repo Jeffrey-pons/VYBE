@@ -27,7 +27,7 @@ const MusicScreen = () => {
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
       <View style={globalStyles.container}>
         <ProgressBar step={2} totalSteps={3} />
-        <Image style={globalStyles.logoAuthStyle} source={musicIcon} alt="Icône de musique" />
+        <Image style={globalStyles.logoAuthStyle} source={musicIcon} alt="Icône de musique" accessibilityLabel='Icône de musique'/>
         <SkipButton onPress={handleSkip} />
         <ThemedText type="authTitle">Connecte ta musique</ThemedText>
         <ThemedText type="authSubtitle">
@@ -40,6 +40,7 @@ const MusicScreen = () => {
           icon={<Entypo name="spotify" size={24} color="black" />}
           buttonStyle={globalStyles.buttonStyle}
           titleStyle={globalStyles.titleStyle}
+          accessibilityLabel="Bouton pour connecter Spotify"
         />
         <Button
           title="  Apple Music"
@@ -47,6 +48,7 @@ const MusicScreen = () => {
           icon={<Fontisto name="applemusic" size={24} color="black" />}
           buttonStyle={globalStyles.buttonStyle}
           titleStyle={globalStyles.titleStyle}
+          accessibilityLabel="Bouton pour connecter Apple Music"
         />
         <Button
           title="Suivant"
@@ -54,6 +56,7 @@ const MusicScreen = () => {
           buttonStyle={globalStyles.buttonSecondStyle}
           titleStyle={globalStyles.titleSecondStyle}
           loading={loading}
+          accessibilityLabel="Bouton pour passer à l'étape suivante"
         />
       </View>
     </ScrollView>

@@ -37,6 +37,7 @@ export default function TabLayout() {
               source={iconHome}
               style={{ width: size, height: size, tintColor: color }}
               alt="Icône pour revenir au menu principal"
+              accessibilityLabel="Icône pour revenir au menu principal"
             />
           ),
         }}
@@ -49,6 +50,7 @@ export default function TabLayout() {
               source={iconLoupe}
               style={{ width: size, height: size, tintColor: color }}
               alt="Icône de recherche"
+              accessibilityLabel="Icône de recherche"
             />
           ),
         }}
@@ -61,6 +63,7 @@ export default function TabLayout() {
               source={iconTicket}
               style={{ width: size, height: size, tintColor: color }}
               alt="Icône de la page de tickets"
+              accessibilityLabel="Icône de la page de tickets"
             />
           ),
         }}
@@ -73,6 +76,7 @@ export default function TabLayout() {
               source={iconUser}
               style={{ width: size, height: size, tintColor: color }}
               alt="Icône de la page profil"
+              accessibilityLabel="Icône de la page profil"
             />
           ),
         }}

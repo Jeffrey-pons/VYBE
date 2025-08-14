@@ -75,6 +75,7 @@ const TermsOfServiceScreen = () => {
             buttonStyle={globalStyles.buttonStyle}
             titleStyle={globalStyles.TextButtonStyle}
             onPress={() => router.back()}
+            accessibilityLabel='Bouton pour revenir en arrière'
           />
         </View>
       </View>

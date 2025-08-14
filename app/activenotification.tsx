@@ -32,6 +32,7 @@ const NotificationScreen = () => {
           style={globalStyles.logoAuthStyle}
           source={notificationIcon}
           alt="Icône de notification"
+          accessibilityLabel='Icône de notification'
         />
         <SkipButton onPress={handleSkip} />
         <ThemedText type="authTitle">Choisis tes notifications</ThemedText>
@@ -51,6 +52,7 @@ const NotificationScreen = () => {
           buttonStyle={globalStyles.buttonSecondStyle}
           titleStyle={globalStyles.titleSecondStyle}
           loading={loading}
+          accessibilityLabel="Bouton pour terminer l'inscription"
         />
       </View>
     </ScrollView>

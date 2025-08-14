@@ -15,6 +15,7 @@ const Logo = () => {
         style={styles.logo}
         alt="Logo Vybe Header"
         accessible={true}
+        accessibilityLabel="Logo Vybe Header"
       />
     </TouchableOpacity>
   );

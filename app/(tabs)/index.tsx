@@ -57,6 +57,7 @@ const App = () => {
                   source={iconChoiceLocation}
                   style={styles.inlineIcon}
                   alt="Icône de géolocalisation"
+                  accessibilityLabel="Icône de géolocalisation"
                 />
               </TouchableOpacity>
             </TouchableOpacity>
@@ -94,11 +95,12 @@ const App = () => {
             <TouchableOpacity
               style={styles.musicConnectButton}
               // onPress={() => router.push('/musicscreen')}
+              accessibilityLabel='Démarrer la connexion musicale'
             >
               <Text style={styles.musicConnectButtonText}>Démarrer</Text>
             </TouchableOpacity>
           </View>
-          <Image source={musicConnectImg} style={styles.musicImage} resizeMode="contain" />
+          <Image source={musicConnectImg} style={styles.musicImage} resizeMode="contain" accessibilityLabel='Icône connexion à la musique'/>
         </View>
         <View>
           {/*  (API LIEU CATEGORIE DANS LA VILLE ) puis une fois rempli, afficher un bloc devenement propose en fonction des gouts musicaux*/}

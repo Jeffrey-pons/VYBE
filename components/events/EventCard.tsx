@@ -34,13 +34,14 @@ export const EventCard = ({ event, variant = 'featured' }: Props) => {
         source={{ uri: `${event.image?.base || ''}${event.image?.filename}` }}
         style={[styles.eventImage, variant === 'horizontal' && styles.horizontalImage]}
         alt="Preview de l'événement"
+        accessibilityLabel="Preview de l'événement"
       />
       <Text style={styles.eventTitle}>{event.title.fr || "Titre de l'évènement indisponible"}</Text>
       <Text style={styles.eventDate}>{startDate}</Text>
       <Text style={styles.eventLocation}>{event.location?.name}</Text>
 
-      <TouchableOpacity onPress={() => handlePressDetails(event)} style={styles.detailButton}>
-        <Text style={styles.detailButtonText}>Voir plus</Text>
+      <TouchableOpacity onPress={() => handlePressDetails(event)} style={styles.detailButton} accessibilityLabel='Voir les détails de l’événement'>
+        <Text style={styles.detailButtonText} accessibilityLabel="Voir le détails de l'événement">Voir plus</Text>
       </TouchableOpacity>
     </View>
   );

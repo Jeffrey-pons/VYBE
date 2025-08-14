@@ -62,6 +62,7 @@ const EventDetailPage = () => {
             source={{ uri: `${event.image.base}${event.image.filename}` }}
             style={styles.eventImage}
             alt="Image de l'évènement"
+            accessibilityLabel="Image de l'évènement"
           />
         )}
         {/* Titre et description de l'événement */}
@@ -69,7 +70,7 @@ const EventDetailPage = () => {
         <Text style={styles.eventDate}>{event.dateRange?.fr ?? 'Date non disponible'}</Text>
         <Text style={styles.eventLocation}>{event.location?.name ?? 'Lieu non disponible'}</Text>
         <View style={styles.textInformation}>
-          <Image source={iconChoiceLocation} style={styles.iconLocation} alt="Icône lieu" />
+          <Image source={iconChoiceLocation} style={styles.iconLocation} alt="Icône lieu" accessibilityLabel='Icône lieu'/>
           <Text style={styles.eventCity}>{event.location?.city ?? 'Ville non disponible'}</Text>
         </View>
         <View style={styles.separator} />
@@ -91,6 +92,7 @@ const EventDetailPage = () => {
                 source={isDescriptionExpanded ? iconArrowDown : iconArrowUp}
                 style={styles.iconActionButton}
                 alt="Flèche pour description"
+                accessibilityLabel="Flèche pour description"
               />
             </TouchableOpacity>
           </View>
@@ -162,7 +164,7 @@ const EventDetailPage = () => {
         )} */}
         {/* Restriction dage */}
         <View style={styles.textInformation}>
-          <Image source={iconInformation} style={styles.iconImage} alt="Icône information" />
+          <Image source={iconInformation} style={styles.iconImage} alt="Icône information" accessibilityLabel='Icône information'/>
           <Text style={styles.eventText}>
             {event.age?.min
               ? `Réservé aux plus de ${event.age.min} ans.`
@@ -182,7 +184,7 @@ const EventDetailPage = () => {
 
         {/* ACCESSIBILITÉ */}
         <View style={styles.textInformation}>
-          <Image source={iconAccessibility} style={styles.iconImage} alt="Icône accessibilité" />
+          <Image source={iconAccessibility} style={styles.iconImage} alt="Icône accessibilité" accessibilityLabel='Icône accessibilité' />
           <Text style={styles.eventText}>
             {event.accessibility?.ii ||
             event.accessibility?.hi ||
@@ -204,7 +206,7 @@ const EventDetailPage = () => {
         {/* MOTS CLES */}
         {(event.keywords?.fr ?? []).length > 0 && (
           <View style={styles.textInformation}>
-            <Image source={iconWordKey} style={styles.iconImage} alt="Icône accessibilité" />
+            <Image source={iconWordKey} style={styles.iconImage} alt="Icône accessibilité" accessibilityLabel='Icône accessibilité'/>
             <Text style={styles.eventText}>
               Mots-clés : {(event.keywords?.fr ?? []).join(', ')}
             </Text>
@@ -213,7 +215,7 @@ const EventDetailPage = () => {
         {/* STATUS DE LEVENEMENT */}
         {event.status !== 1 && (
           <View style={styles.textInformation}>
-            <Image source={iconStatus} style={styles.iconImage} alt="Icône statut" />
+            <Image source={iconStatus} style={styles.iconImage} alt="Icône statut" accessibilityLabel='Icône statut'/>
             <Text style={styles.eventText}>
               {event.status
                 ? statusLabels[event.status] || 'Statut inconnu'
@@ -223,7 +225,7 @@ const EventDetailPage = () => {
         )}
         {/* API */}
         <View style={styles.textInformation}>
-          <Image source={iconApi} style={styles.iconImage} alt="Icône API" />
+          <Image source={iconApi} style={styles.iconImage} alt="Icône API" accessibilityLabel='Icône API'/>
           <Text style={styles.eventText}>
             {event.originAgenda?.title
               ? `Données fournies par ${event.originAgenda.title}. Récupérées via l'API OpenAgenda.`
@@ -232,20 +234,22 @@ const EventDetailPage = () => {
         </View>
         {/* FERMER LA PAGE EVENT ID */}
         <TouchableOpacity style={styles.closeEventDetailButton} onPress={() => router.back()}>
-          <Image source={iconCroix} style={styles.iconCloseDetail} alt="Icône croix" />
+          <Image source={iconCroix} style={styles.iconCloseDetail} alt="Icône croix" accessibilityLabel='Icône croix'/>
         </TouchableOpacity>
         {/* Boutons "Aimer" et "Repartager" */}
         <TouchableOpacity
           style={styles.actionButton}
           onPress={() => console.log("Repartager l'événement")}
+          accessibilityLabel='Repartager l"événement'
         >
-          <Image source={iconLink} style={styles.iconActionButton} alt="Repartager" />
+          <Image source={iconLink} style={styles.iconActionButton} alt="Repartager" accessibilityLabel='Repartager'/>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.actionButtonTwo}
           onPress={() => console.log("Aimer l'événement")}
+          accessibilityLabel='Aimer l"événement'
         >
-          <Image source={iconFavorite} style={styles.iconActionButton} alt="Aimer" />
+          <Image source={iconFavorite} style={styles.iconActionButton} alt="Aimer" accessibilityLabel='Aimer'/>
         </TouchableOpacity>
       </View>
 
@@ -254,6 +258,7 @@ const EventDetailPage = () => {
         <Text style={styles.reserveText}>{priceLabel}</Text>
         <TouchableOpacity
           style={styles.buyButton}
+          accessibilityLabel='Prendre sa place pour l’événement'
           onPress={() => {
             const url = event.registration?.[0]?.value;
             if (url) Linking.openURL(url);

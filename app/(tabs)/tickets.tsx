@@ -50,6 +50,7 @@ const TicketsScreen = () => {
                   source={iconChoiceLocation}
                   style={styles.inlineIcon}
                   alt="Icône de géolocalisation"
+                  accessibilityLabel="Icône de géolocalisation"
                 />
               </TouchableOpacity>
             </TouchableOpacity>
