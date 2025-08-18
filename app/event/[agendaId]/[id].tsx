@@ -141,8 +141,10 @@ const EventDetailPage = () => {
 
         {/* MAP VIEW UNIQUEMENT MOBILE*/}
          {event.location?.latitude && event.location?.longitude && (
+          // eslint-disable-next-line react-native/no-inline-styles
           <View style={{ height: 200, marginTop: 10, borderRadius: 10, overflow: 'hidden' }}>
             <MapView
+              // eslint-disable-next-line react-native/no-inline-styles
               style={{ flex: 1 }}
               initialRegion={{
                 latitude: event.location.latitude,
