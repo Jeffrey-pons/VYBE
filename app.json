@@ -4,13 +4,14 @@
     "slug": "Vybe",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logos/VYBE_logo_black_transparent.png",
+    "icon": "./assets/images/logos/Logo_Vybe_512.png",
     "splash": {
       "image": "./assets/images/logos/VYBE_logo_black_transparent.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "scheme": "Vybe",
+    "scheme": ["vybe"],
+    "platforms": ["ios", "android"],  
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -18,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logos/VYBE_logo_black_transparent.png",
+        "foregroundImage": "./assets/images/logos/Logo_Vybe_1024.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.Vybe"
