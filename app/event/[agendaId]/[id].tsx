@@ -18,7 +18,7 @@ import {
   iconArrowUp,
 } from '@/utils/imagesUtils';
 import { getEventDuration } from '@/utils/dateUtils';
-// import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { extractPriceLabel } from '@/utils/priceUtils';
 
 const formatDate = (dateString?: string) => {
@@ -140,7 +140,7 @@ const EventDetailPage = () => {
         <Text style={styles.eventText}>{event.location?.address ?? 'Adresse indisponible'}</Text>
 
         {/* MAP VIEW UNIQUEMENT MOBILE*/}
-        {/* {event.location?.latitude && event.location?.longitude && (
+         {event.location?.latitude && event.location?.longitude && (
           <View style={{ height: 200, marginTop: 10, borderRadius: 10, overflow: 'hidden' }}>
             <MapView
               style={{ flex: 1 }}
@@ -161,7 +161,7 @@ const EventDetailPage = () => {
               />
             </MapView>
           </View>
-        )} */}
+        )} 
         {/* Restriction dage */}
         <View style={styles.textInformation}>
           <Image source={iconInformation} style={styles.iconImage} alt="Icône information" accessibilityLabel='Icône information'/>
