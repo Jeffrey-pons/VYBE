@@ -15,9 +15,7 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <LocationContext.Provider value={{ city, updateLocation }}>
-      {children}
-    </LocationContext.Provider>
+    <LocationContext.Provider value={{ city, updateLocation }}>{children}</LocationContext.Provider>
   );
 };
 

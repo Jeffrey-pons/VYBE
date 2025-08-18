@@ -1,5 +1,5 @@
 import loginIcon from '../assets/images/icons/icon_login.png';
-import registerIcon from '../assets/images/icons/icon_register.png'
+import registerIcon from '../assets/images/icons/icon_register.png';
 import vybeLogo from '../assets/images/logos/VYBE_logo_white_transparent_home.png';
 import vybeLogoHeader from '../assets/images/logos/VYBE_logo_white_transparent.png';
 import locationIcon from '../assets/images/icons/icon_location.png';
@@ -22,7 +22,7 @@ import iconDj from '../assets/images/icons/icon_dj.png';
 import updateUserIcon from '../assets/images/icons/icon_updateuser.png';
 import deleteUserIcon from '../assets/images/icons/icon_deleteuser.gif';
 import musicConnectImg from '../assets/images/img/connectmusic-img.png';
-import iconInformation from '../assets/images/icons/icon_information.png'
+import iconInformation from '../assets/images/icons/icon_information.png';
 import iconPlace from '../assets/images/icons/icon_place.png';
 import iconAccessibility from '../assets/images/icons/icon_accessibility.png';
 import iconStatus from '../assets/images/icons/icon_status.png';
@@ -33,4 +33,40 @@ import iconFavorite from '../assets/images/icons/icon_favorite.png';
 import iconLink from '../assets/images/icons/icon_link.png';
 import iconArrowUp from '../assets/images/icons/icon_arrow_bottom.png';
 import iconArrowDown from '../assets/images/icons/icon_arrow_top.png';
-export { loginIcon, vybeLogo, locationIcon, musicIcon, notificationIcon, iconHome, iconLoupe, iconTicket, iconUser, iconChoiceLocation, iconTonight, iconThisWeek, iconConcert, iconFestival, iconSpectacle, iconExposition, iconHumor, iconAtelier, iconDj, registerIcon, vybeLogoHeader, updateUserIcon, deleteUserIcon, musicConnectImg, iconInformation, iconPlace, iconAccessibility, iconStatus, iconWordKey, iconApi, iconCroix, iconFavorite, iconLink, iconArrowUp, iconArrowDown };
+export {
+  loginIcon,
+  vybeLogo,
+  locationIcon,
+  musicIcon,
+  notificationIcon,
+  iconHome,
+  iconLoupe,
+  iconTicket,
+  iconUser,
+  iconChoiceLocation,
+  iconTonight,
+  iconThisWeek,
+  iconConcert,
+  iconFestival,
+  iconSpectacle,
+  iconExposition,
+  iconHumor,
+  iconAtelier,
+  iconDj,
+  registerIcon,
+  vybeLogoHeader,
+  updateUserIcon,
+  deleteUserIcon,
+  musicConnectImg,
+  iconInformation,
+  iconPlace,
+  iconAccessibility,
+  iconStatus,
+  iconWordKey,
+  iconApi,
+  iconCroix,
+  iconFavorite,
+  iconLink,
+  iconArrowUp,
+  iconArrowDown,
+};

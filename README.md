@@ -19,10 +19,10 @@ Essayez VYBE maintenant !
 ## Features
 
 - Authentification
-- Géolocalisation 
+- Géolocalisation
 - Filtres de recherche
 - Notifications push
-- Espace utilisateur 
+- Espace utilisateur
 - Favoris
 - Redirection vers le site d'achat de billet
 - Suggestion basées sur les données utilisateurs
@@ -40,6 +40,7 @@ Essayez VYBE maintenant !
 - #### 15 villes couvertes en France
 
 ## Prérequis
+
 Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur votre machine :
 
 - **Node.js** (v18+) - [Télécharger ici](https://nodejs.org/)
@@ -52,13 +53,14 @@ Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur 
 
 ## Installation
 
- #### Clonez le projet et installez les dépendances :
+#### Clonez le projet et installez les dépendances :
 
 ```bash
 git clone https://github.com/VYBE-Project/VYBE.git
 cd VYBE
 npm install
 ```
+
 #### Démarrez l'application :
 
 ```
@@ -66,6 +68,7 @@ npx expo start
 ```
 
 #### Ou avec npm :
+
 ```
 npm start
 ```
@@ -73,40 +76,51 @@ npm start
 ## Running Tests
 
 #### Tests unitaires
+
 ```bash
   npm test
 ```
 
 #### Tests avec coverage
+
 ```bash
 npm run test:coverage
 ```
 
 #### Tests E2E
+
 ```bash
 npm run test:e2e
 ```
 
 #### Linter
+
 ```bash
 npm run lint
 ```
 
 #### Format du code
+
 ```bash
 npm run format
 ```
+
 ## Deployment
 
 #### Déploiement avec EAS
+
 ```
 eas build:configure
 ```
-####  Build de production
+
+#### Build de production
+
 ```
 eas build --platform all
 ```
-####  Soumission aux stores
+
+#### Soumission aux stores
+
 ```
 eas submit --platform all
 ```
@@ -138,17 +152,23 @@ Les contributions sont les bienvenues ! Voici comment contribuer :
 
 - Fork le projet
 - Créer une branche pour votre fonctionnalité
+
 ```
 git checkout -b feature/AmazingFeature
 ```
+
 - Commit vos changements
+
 ```
 git commit -m 'feat: Add some AmazingFeature'
 ```
+
 - Push vers la branche
+
 ```
 git push origin feature/AmazingFeature
 ```
+
 - Ouvrir une Pull Request
 
 #### Conventions de commit
@@ -172,7 +192,7 @@ Consultez la documentation officielle pour en savoir plus :
 
 VYBE est utilisé pour :
 
-- Étudiants/Jeunes adultes - Pour découvrir des événements 
+- Étudiants/Jeunes adultes - Pour découvrir des événements
 - Touristes - Pour explorer la culture locale
 - Familles - Pour trouver des activités adaptées
 - Organisateurs - Pour promouvoir leurs événements
@@ -260,6 +280,7 @@ Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails.
 - Instagram : @vybe.app - Découvrez les événements en photos
 
 #### Programme bêta
+
 Envie de tester les nouvelles fonctionnalités en avant-première ?
 
 - iOS TestFlight : Devenir bêta testeur iOS

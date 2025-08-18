@@ -1,32 +1,37 @@
-import React , { useState, useEffect } from "react";
-import { Dimensions, TextInput, View, Text, StyleSheet, Image, Alert, ScrollView } from "react-native";
-import { usePhoneVerification } from "@/hooks/usePhoneVerification";
-import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import { Button } from "react-native-elements";
-import { router } from "expo-router";
-import globalStyles from "@/styles/globalStyle";
-import { ThemedText } from "@/components/ThemedText";
-import { registerIcon } from "@/utils/imagesUtils";
-import { useRegister } from "@/hooks/useRegister"; 
+import React, { useEffect } from 'react';
+import { Dimensions, TextInput, View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { Button } from 'react-native-elements';
+import { router } from 'expo-router';
+import globalStyles from '@/styles/globalStyle';
+import { ThemedText } from '@/components/ThemedText';
+import { registerIcon } from '@/utils/imagesUtils';
+import { useRegister } from '@/hooks/useRegister';
+import { useRegisterStore } from '@/stores/useRegisterStore';
 
 const RegisterScreen: React.FC = () => {
-  const [name, setName] = useState<string>("");
-  const [lastname, setLastname] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [isMounted, setIsMounted] = useState<boolean>(true);
-  const { recaptchaVerifier, sendVerificationCode, confirmCode } = usePhoneVerification();
-  const [code, setCode] = useState(""); // pour entrer le code SMS
-  const [isCodeSent, setIsCodeSent] = useState(false);
-  const [isVerified, setIsVerified] = useState(false);
+  const {
+    name,
+    setName,
+    lastname,
+    setLastname,
+    email,
+    setEmail,
+    phone,
+    setPhone,
+    password,
+    setPassword,
+    isLoading,
+    isMounted,
+    setIsMounted,
+    resetRegister,
+  } = useRegisterStore();
 
-  const { handleSignUp, isLoading } = useRegister();
+  const { handleSignUp } = useRegister();
 
   useEffect(() => {
     setIsMounted(true);
     return () => setIsMounted(false);
-  }, []);
+  }, [setIsMounted]);
 
   const handleRegister = async () => {
     const userData = {
@@ -37,20 +42,17 @@ const RegisterScreen: React.FC = () => {
       password,
     };
 
-    const response = await handleSignUp(userData); 
+    const response = await handleSignUp(userData);
     if (isMounted && response) {
-      router.replace("/login"); 
+      resetRegister();
+      router.replace('/login');
     }
   };
 
   return (
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
       <View style={globalStyles.container}>
-        <Image
-          style={globalStyles.logoAuthStyle}
-          source={registerIcon}
-          alt="Icône d'inscription"
-        />
+        <Image style={globalStyles.logoAuthStyle} source={registerIcon} alt="Icône d'inscription" accessibilityLabel='Icône d"inscription' />
         <ThemedText type="authTitle">Inscris-toi !</ThemedText>
 
         <View style={styles.rowContainer}>
@@ -60,6 +62,7 @@ const RegisterScreen: React.FC = () => {
             placeholderTextColor="#bbb"
             value={name}
             onChangeText={setName}
+            accessibilityLabel='Champ pour entrer le prénom'
           />
           <TextInput
             style={[globalStyles.input, styles.halfInput]}
@@ -67,6 +70,7 @@ const RegisterScreen: React.FC = () => {
             placeholderTextColor="#bbb"
             value={lastname}
             onChangeText={setLastname}
+            accessibilityLabel='Champ pour entrer le nom'
           />
         </View>
         <TextInput
@@ -76,6 +80,7 @@ const RegisterScreen: React.FC = () => {
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
+          accessibilityLabel='Champ pour entrer l"email'
         />
         <TextInput
           style={globalStyles.input}
@@ -83,6 +88,7 @@ const RegisterScreen: React.FC = () => {
           placeholderTextColor="#bbb"
           value={phone}
           onChangeText={setPhone}
+          accessibilityLabel='Champ pour entrer le téléphone'
         />
         {/* <Button
           title="Envoyer le code"
@@ -121,20 +127,22 @@ const RegisterScreen: React.FC = () => {
           secureTextEntry
           value={password}
           onChangeText={setPassword}
+          accessibilityLabel='Champ pour entrer le mot de passe'
         />
-        <Button 
-          buttonStyle={globalStyles.buttonStyle} 
+        <Button
+          buttonStyle={globalStyles.buttonStyle}
           title="S'inscrire"
-          titleStyle={globalStyles.titleStyle} 
-          onPress={handleRegister} 
-          loading={isLoading} 
+          titleStyle={globalStyles.titleStyle}
+          onPress={handleRegister}
+          loading={isLoading}
+          accessibilityLabel="Bouton pour s'inscrire"
         />
         <Text style={globalStyles.footerAuthTextStyle}>Vous avez déjà un compte ?</Text>
-        <Text style={globalStyles.footerAuthLinkStyle} onPress={() => router.replace("/login")}>
+        <Text style={globalStyles.footerAuthLinkStyle} onPress={() => router.replace('/login')}>
           Connectez-vous ici
         </Text>
       </View>
-          {/* <FirebaseRecaptchaVerifierModal
+      {/* <FirebaseRecaptchaVerifierModal
       ref={recaptchaVerifier}
       firebaseConfig={auth.app.options}
     /> */}
@@ -144,12 +152,12 @@ const RegisterScreen: React.FC = () => {
 const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   rowContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: width > 500 ? "50%" : "100%", 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: width > 500 ? '50%' : '100%',
   },
   halfInput: {
-    width: "48%",
+    width: '48%',
   },
 });
 

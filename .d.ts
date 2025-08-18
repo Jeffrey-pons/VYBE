@@ -4,7 +4,7 @@ declare module '*.jpg';
 declare module '*.jpeg';
 declare module '*.gif';
 //fonts
-declare module "*.ttf" {
-    const value: string;
-    export default value;
-  }
+declare module '*.ttf' {
+  const value: string;
+  export default value;
+}

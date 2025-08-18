@@ -22,8 +22,9 @@ export const useEventById = (agendaId?: string | string[], eventId?: string | st
         } else {
           setEvent(fetchedEvent);
         }
-      } catch (err: any) {
-        setError(err.message || 'Erreur inconnue');
+      } catch (error: unknown) {
+        setError('Impossible de charger les événements');
+        console.error('Erreur lors de la récupération des événements:', error);
       } finally {
         setLoading(false);
       }

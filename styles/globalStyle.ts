@@ -4,17 +4,17 @@ const { width } = Dimensions.get('window');
 const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
   },
   scrollContainer: {
-    flexGrow: 1, 
-    justifyContent: "center",
+    flexGrow: 1,
+    justifyContent: 'center',
   },
   containerX: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     padding: 20,
   },
   buttonStyle: {
@@ -52,7 +52,7 @@ const globalStyles = StyleSheet.create({
     fontSize: Theme.typography.deca.fontSize,
   },
   buttonDeletedeStyle: {
-    backgroundColor: "grey",
+    backgroundColor: 'grey',
     borderRadius: 100,
     paddingTop: 10,
     paddingBottom: 10,
@@ -62,17 +62,17 @@ const globalStyles = StyleSheet.create({
     marginTop: 10,
   },
   titleDeletedStyle: {
-    fontFamily: "FunnelSans-Regular",
+    fontFamily: 'FunnelSans-Regular',
   },
-  // Page Auth 
+  // Page Auth
   logoAuthStyle: {
-    width: 150,  
-    height: 150,  
-    resizeMode: "contain",  
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
   },
   input: {
     height: 60,
-    width: width > 500 ? "50%" : "100%", 
+    width: width > 500 ? '50%' : '100%',
     padding: 18,
     marginBottom: 15,
     borderWidth: 1,
@@ -84,7 +84,7 @@ const globalStyles = StyleSheet.create({
   },
   footerAuthTextStyle: {
     fontSize: Theme.typography.deci.fontSize,
-    color: "#bbb", 
+    color: '#bbb',
     marginTop: 10,
     fontFamily: Theme.typography.fontFamily,
   },
@@ -92,7 +92,7 @@ const globalStyles = StyleSheet.create({
     fontSize: Theme.typography.deci.fontSize,
     color: Theme.colors.violet,
     marginTop: 5,
-    textDecorationLine: "underline",
+    textDecorationLine: 'underline',
     fontFamily: Theme.typography.fontFamily,
   },
 });

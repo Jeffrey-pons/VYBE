@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import 'react-native-reanimated';
 import { View } from 'react-native';
 import { Stack } from 'expo-router';
@@ -23,16 +24,16 @@ export default function RootLayout() {
         <LoadingProvider>
           <AuthProvider>
             <View style={{ flex: 1 }}>
-            <Loader /> 
               <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
-                <Stack.Screen name="(tabs)"/>
-                <Stack.Screen name="login"/>
-                <Stack.Screen name="register"/>
-                <Stack.Screen name="findlocation"/>
-                <Stack.Screen name="connectmusic"/>
-                <Stack.Screen name="activenotification"/>
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="login" />
+                <Stack.Screen name="register" />
+                <Stack.Screen name="findlocation" />
+                <Stack.Screen name="connectmusic" />
+                <Stack.Screen name="activenotification" />
                 <Stack.Screen name="+not-found" />
               </Stack>
+              <Loader />
             </View>
             <StatusBar style="auto" />
           </AuthProvider>

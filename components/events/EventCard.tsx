@@ -4,12 +4,13 @@ import { router } from 'expo-router';
 
 type Props = {
   event: Event;
-  variant?: 'featured' | 'horizontal' | 'grid'; 
+  variant?: 'featured' | 'horizontal' | 'grid';
 };
 
 export const EventCard = ({ event, variant = 'featured' }: Props) => {
-  const startDate = event.dateRange?.fr || (
-    event.firstTiming?.begin
+  const startDate =
+    event.dateRange?.fr ||
+    (event.firstTiming?.begin
       ? new Date(event.firstTiming.begin).toLocaleString('fr-FR', {
           weekday: 'long',
           year: 'numeric',
@@ -18,15 +19,14 @@ export const EventCard = ({ event, variant = 'featured' }: Props) => {
           hour: '2-digit',
           minute: '2-digit',
         })
-      : 'Date non disponible'
-  );
-      const handlePressDetails = (event: Event) => {
-        if (event?.uid && event.originAgenda?.uid) {
-          router.push(`/event/${event.originAgenda.uid}/${event.uid}`);
-        } else {
-          console.warn("UID ou originAgenda manquant");
-        }
-      };
+      : 'Date non disponible');
+  const handlePressDetails = (event: Event) => {
+    if (event?.uid && event.originAgenda?.uid) {
+      router.push(`/event/${event.originAgenda.uid}/${event.uid}`);
+    } else {
+      console.warn('UID ou originAgenda manquant');
+    }
+  };
 
   return (
     <View style={[styles.eventCard, variant === 'horizontal' && styles.horizontalCard]}>
@@ -34,82 +34,82 @@ export const EventCard = ({ event, variant = 'featured' }: Props) => {
         source={{ uri: `${event.image?.base || ''}${event.image?.filename}` }}
         style={[styles.eventImage, variant === 'horizontal' && styles.horizontalImage]}
         alt="Preview de l'événement"
+        accessibilityLabel="Preview de l'événement"
       />
       <Text style={styles.eventTitle}>{event.title.fr || "Titre de l'évènement indisponible"}</Text>
       <Text style={styles.eventDate}>{startDate}</Text>
       <Text style={styles.eventLocation}>{event.location?.name}</Text>
 
-      <TouchableOpacity onPress={() => handlePressDetails(event)} style={styles.detailButton}>
-        <Text style={styles.detailButtonText}>Voir plus</Text>
+      <TouchableOpacity onPress={() => handlePressDetails(event)} style={styles.detailButton} accessibilityLabel='Voir les détails de l’événement'>
+        <Text style={styles.detailButtonText} accessibilityLabel="Voir le détails de l'événement">Voir plus</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-    eventCard: {
-        backgroundColor: "black",
-        borderRadius: 10,
-        borderColor: 'white',
-        padding: 10,
-        borderWidth: 1,
-        overflow: "hidden",
-        marginBottom: 20,
-        elevation: 5,
-      },
-      eventImage: {
-        width: "100%",
-        height: 300,
-        borderRadius: 10,
-        resizeMode: "cover",
-      },
-      horizontalCard: {
-        padding: 5,
-        marginBottom: 10,
-        width: 250,
-        borderWidth: 0.5,
-        borderColor: '#999',
-      },
-      horizontalImage: {
-        height: 200,
-        width: 250,
-        alignSelf: "center",
-        textAlign: "center",
-  
-      },
-      
+  eventCard: {
+    backgroundColor: 'black',
+    borderRadius: 10,
+    borderColor: 'white',
+    padding: 10,
+    borderWidth: 1,
+    overflow: 'hidden',
+    marginBottom: 20,
+    elevation: 5,
+  },
+  eventImage: {
+    width: '100%',
+    height: 300,
+    borderRadius: 10,
+    resizeMode: 'cover',
+  },
+  horizontalCard: {
+    padding: 5,
+    marginBottom: 10,
+    width: 250,
+    borderWidth: 0.5,
+    borderColor: '#999',
+  },
+  horizontalImage: {
+    height: 200,
+    width: 250,
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+
   eventTitle: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "white",
+    fontWeight: 'bold',
+    color: 'white',
     margin: 10,
-    fontFamily: "FunnelSans-Regular",
+    fontFamily: 'FunnelSans-Regular',
   },
   eventDate: {
     fontSize: 14,
-    color: "#ffdd59",
+    color: '#ffdd59',
     marginHorizontal: 10,
-    fontFamily: "FunnelSans-Regular",
+    fontFamily: 'FunnelSans-Regular',
   },
   eventLocation: {
     fontSize: 14,
-    color: "grey",
+    color: 'grey',
     marginHorizontal: 10,
-    marginBottom:10,
-    fontFamily: "FunnelSans-Regular",
+    marginBottom: 10,
+    fontFamily: 'FunnelSans-Regular',
   },
   detailButton: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     padding: 10,
     borderRadius: 100,
-    width: "35%",
-    alignSelf: "center",
-    alignItems: "center",
-    marginBottom:10,
+    width: '35%',
+    alignSelf: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   detailButtonText: {
-    color: "black",
-    fontWeight: "bold",
-    fontFamily: "FunnelSans-Regular",
+    color: 'black',
+    fontWeight: 'bold',
+    fontFamily: 'FunnelSans-Regular',
   },
-})
+});

@@ -10,131 +10,123 @@ import CategoryMenu from '@/components/CategoryMenu';
 import globalStyles from '@/styles/globalStyle';
 import { getIntroPhrase } from '@/utils/categoryUtils';
 import { musicConnectImg } from '@/utils/imagesUtils';
-import { SpotCard } from '@/components/events/SpotCard';
 
 const App = () => {
-  const { 
-    city, 
+  const {
+    city,
     cities,
-    showCitySelector, 
+    showCitySelector,
     handleCitySelect,
-    handleUseLocation,  
-    toggleCitySelector 
+    handleUseLocation,
+    toggleCitySelector,
   } = useLocationHandler();
   const [activeCategory, setActiveCategory] = useState<string | null>('');
   const { events } = useEvents(activeCategory || 'upcoming');
 
-  const filteredEvents = events
-  .slice(1, 11)
-  .filter(event => event.originAgenda?.uid);
+  const filteredEvents = events.slice(1, 11).filter((event) => event.originAgenda?.uid);
 
   return (
-  <ScrollView>
-    <View style={globalStyles.scrollContainer}>
-    <Logo/>
-    <View style={styles.inlineLocation}>
-      <ThemedText style={styles.titleLocal}>Découvre ton prochain évènements à{' '}</ThemedText>
-        <TouchableOpacity onPress={toggleCitySelector}></TouchableOpacity>
+    <ScrollView>
+      <View style={globalStyles.scrollContainer}>
+        <Logo />
+        <View style={styles.inlineLocation}>
+          <ThemedText style={styles.titleLocal}>Découvre ton prochain évènements à </ThemedText>
+          <TouchableOpacity onPress={toggleCitySelector}></TouchableOpacity>
           {showCitySelector ? (
             <View style={styles.cityListWrapper}>
-               <ScrollView>
-              {cities.map((item, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.cityItem}
-                  onPress={() => {
-                    handleCitySelect(item.value);
-                    toggleCitySelector();
-                  }}
-                >
-                  <Text style={styles.cityText}>{item.label}</Text>
-                </TouchableOpacity>
-              ))}
+              <ScrollView>
+                {cities.map((item, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.cityItem}
+                    onPress={() => {
+                      handleCitySelect(item.value);
+                      toggleCitySelector();
+                    }}
+                  >
+                    <Text style={styles.cityText}>{item.label}</Text>
+                  </TouchableOpacity>
+                ))}
               </ScrollView>
             </View>
           ) : (
             <TouchableOpacity onPress={toggleCitySelector} style={styles.inlineCity}>
               <Text style={styles.underlinedCity}>{city}</Text>
-              <TouchableOpacity
-                onPress={handleUseLocation}
-                style={styles.locationIconWrapper}
-              >
+              <TouchableOpacity onPress={handleUseLocation} style={styles.locationIconWrapper}>
                 <Image
                   source={iconChoiceLocation}
                   style={styles.inlineIcon}
                   alt="Icône de géolocalisation"
+                  accessibilityLabel="Icône de géolocalisation"
                 />
               </TouchableOpacity>
             </TouchableOpacity>
           )}
-            
-    </View>
-    <CategoryMenu activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
-      <View style={styles.eventsContainer}>
-      {events && events.length > 0 ? (
-  <>
-    {/* Afficher levenement le + en vedette */}
-    <View style={styles.featuredEventContainer}>
-    {events[0]?.originAgenda?.uid ? (
-  <EventCard event={events[0]} />
-) : null}
-    </View>
-    <ThemedText type='text'>{getIntroPhrase(activeCategory, city)}</ThemedText>
+        </View>
+        <CategoryMenu activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
+        <View style={styles.eventsContainer}>
+          {events && events.length > 0 ? (
+            <>
+              {/* Afficher levenement le + en vedette */}
+              <View style={styles.featuredEventContainer}>
+                {events[0]?.originAgenda?.uid ? <EventCard event={events[0]} /> : null}
+              </View>
+              <ThemedText type="text">{getIntroPhrase(activeCategory, city)}</ThemedText>
 
-    {/* Scroll horizontal des autres événements */}
-    {/* Afficher les evenements filtres du plus recent au plus loin */}
-<ScrollView horizontal showsHorizontalScrollIndicator style={styles.horizontalScroll}>
-  {filteredEvents.map(event => (
-    <View key={event.uid} style={styles.miniEventCard}>
-      <EventCard event={event} variant="horizontal" />
-    </View>
-  ))}
-</ScrollView>
-
-  </>
-) : (
-  <ThemedText type='text'>Aucun événement trouvé</ThemedText>
-)}
-      </View>
-      <View style={styles.musicConnectCard}>
-  <View style={styles.musicConnectContent}>
-    <Text style={styles.musicConnectText}>
-      Connecte ta musique pour découvrir les évènements qui te correspondent 🎵
-    </Text>
-    <TouchableOpacity 
-      style={styles.musicConnectButton} 
-      // onPress={() => router.push('/musicscreen')}
-    >
-      <Text style={styles.musicConnectButtonText}>Démarrer</Text>
-    </TouchableOpacity>
-  </View>
-  <Image 
-    source={musicConnectImg} 
-    style={styles.musicImage}
-    resizeMode="contain"
-  />
-</View>
-<View>
-  {/*  (API LIEU CATEGORIE DANS LA VILLE ) puis une fois rempli, afficher un bloc devenement propose en fonction des gouts musicaux*/}
-  <ThemedText type='text'>Les derniers lieux cools près de chez toi</ThemedText>
-  <ScrollView horizontal showsHorizontalScrollIndicator={true} style={styles.horizontalScroll}>
+              {/* Scroll horizontal des autres événements */}
+              {/* Afficher les evenements filtres du plus recent au plus loin */}
+              <ScrollView horizontal showsHorizontalScrollIndicator style={styles.horizontalScroll}>
+                {filteredEvents.map((event) => (
+                  <View key={event.uid} style={styles.miniEventCard}>
+                    <EventCard event={event} variant="horizontal" />
+                  </View>
+                ))}
+              </ScrollView>
+            </>
+          ) : (
+            <ThemedText type="text">Aucun événement trouvé</ThemedText>
+          )}
+        </View>
+        <View style={styles.musicConnectCard}>
+          <View style={styles.musicConnectContent}>
+            <Text style={styles.musicConnectText}>
+              Connecte ta musique pour découvrir les évènements qui te correspondent 🎵
+            </Text>
+            <TouchableOpacity
+              style={styles.musicConnectButton}
+              // onPress={() => router.push('/musicscreen')}
+              accessibilityLabel='Démarrer la connexion musicale'
+            >
+              <Text style={styles.musicConnectButtonText}>Démarrer</Text>
+            </TouchableOpacity>
+          </View>
+          <Image source={musicConnectImg} style={styles.musicImage} resizeMode="contain" accessibilityLabel='Icône connexion à la musique'/>
+        </View>
+        <View>
+          {/*  (API LIEU CATEGORIE DANS LA VILLE ) puis une fois rempli, afficher un bloc devenement propose en fonction des gouts musicaux*/}
+          <ThemedText type="text">Les derniers lieux cools près de chez toi</ThemedText>
+          {/* <ScrollView horizontal showsHorizontalScrollIndicator={true} style={styles.horizontalScroll}>
     <SpotCard title="Élysée Montmartre" uid="elysee" image={require('@/assets/elysee.webp')} />
     <SpotCard title="Zénith Paris - La Villette" uid="zenith" image={require('@/assets/zenith.webp')} />
-  </ScrollView>
-</View>
+  </ScrollView> */}
+        </View>
       </View>
-      </ScrollView>
-    
+    </ScrollView>
   );
-      
-         {/* PUIS EVENEMENT PAR 10 / 20 */}
-      {/* BLOC juste pour 'nom de la personne'''' */}
-      {/* FAIRE DAUTRES STYLES EVENT CARD' */}
 
+  {
+    /* PUIS EVENEMENT PAR 10 / 20 */
+  }
+  {
+    /* BLOC juste pour 'nom de la personne'''' */
+  }
+  {
+    /* FAIRE DAUTRES STYLES EVENT CARD' */
+  }
 };
 
 const styles = StyleSheet.create({
-    cityListWrapper: {
+  cityListWrapper: {
     borderRadius: 8,
     borderColor: '#ccc',
     borderWidth: 1,
@@ -144,14 +136,14 @@ const styles = StyleSheet.create({
   },
   cityItem: {
     paddingVertical: 10,
-    borderBottomWidth: 0.4, 
-    borderBottomColor: 'white', 
-    paddingBottom: 0, 
-    color: 'white', 
-    fontWeight: 'bold', 
+    borderBottomWidth: 0.4,
+    borderBottomColor: 'white',
+    paddingBottom: 0,
+    color: 'white',
+    fontWeight: 'bold',
   },
   cityText: {
-    fontFamily: "Fugaz-One",
+    fontFamily: 'Fugaz-One',
     fontSize: 30,
     color: 'white',
   },
@@ -182,20 +174,20 @@ const styles = StyleSheet.create({
     height: 25,
   },
   titleLocal: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: '#fff',
+    fontWeight: 'bold',
     fontFamily: 'FunnelSans-Regular',
     fontSize: 31,
-    textAlign: "center",
+    textAlign: 'center',
   },
   underlinedCity: {
-    fontFamily: "Fugaz-One",
+    fontFamily: 'Fugaz-One',
     fontSize: 30,
-    borderBottomWidth: 0.4, 
-    borderBottomColor: 'white', 
-    paddingBottom: 0, 
-    color: 'white', 
-    fontWeight: 'bold', 
+    borderBottomWidth: 0.4,
+    borderBottomColor: 'white',
+    paddingBottom: 0,
+    color: 'white',
+    fontWeight: 'bold',
   },
   eventsContainer: {
     paddingHorizontal: 10,

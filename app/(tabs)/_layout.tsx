@@ -6,11 +6,10 @@ import { Theme } from '@/constants/Theme';
 import { iconHome, iconLoupe, iconTicket, iconUser } from '@/utils/imagesUtils';
 
 export default function TabLayout() {
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Theme.colors.text, 
+        tabBarActiveTintColor: Theme.colors.text,
         headerShown: false,
         tabBarBackground: TabBarBackground,
         tabBarShowLabel: false,
@@ -20,9 +19,16 @@ export default function TabLayout() {
             position: 'absolute',
             paddingTop: 4,
           },
+            android: {
+            backgroundColor: 'transparent',
+            height: 50, 
+            paddingBottom: 48,
+            paddingTop: 8,
+          },
           default: {},
-        })
-      }}>
+        }),
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
@@ -31,7 +37,7 @@ export default function TabLayout() {
               source={iconHome}
               style={{ width: size, height: size, tintColor: color }}
               alt="Icône pour revenir au menu principal"
-              
+              accessibilityLabel="Icône pour revenir au menu principal"
             />
           ),
         }}
@@ -44,6 +50,7 @@ export default function TabLayout() {
               source={iconLoupe}
               style={{ width: size, height: size, tintColor: color }}
               alt="Icône de recherche"
+              accessibilityLabel="Icône de recherche"
             />
           ),
         }}
@@ -56,6 +63,7 @@ export default function TabLayout() {
               source={iconTicket}
               style={{ width: size, height: size, tintColor: color }}
               alt="Icône de la page de tickets"
+              accessibilityLabel="Icône de la page de tickets"
             />
           ),
         }}
@@ -68,6 +76,7 @@ export default function TabLayout() {
               source={iconUser}
               style={{ width: size, height: size, tintColor: color }}
               alt="Icône de la page profil"
+              accessibilityLabel="Icône de la page profil"
             />
           ),
         }}

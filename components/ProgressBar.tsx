@@ -20,10 +20,10 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     top: 65,
-    left: '30%',        
-    right: '30%',  
+    left: '30%',
+    right: '30%',
     height: 10,
-    width: "auto",
+    width: 'auto',
     backgroundColor: 'grey',
     borderRadius: 5,
     overflow: 'hidden',

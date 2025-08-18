@@ -21,7 +21,7 @@ interface UserModalProps {
   confirmTitleStyle?: object;
   cancelTitleStyle?: object;
   closeOnBackdropPress?: boolean;
-  modalType?: 'logout' | 'delete' | 'update'; 
+  modalType?: 'logout' | 'delete' | 'update';
 }
 
 export const UserModal: React.FC<UserModalProps> = ({
@@ -29,8 +29,8 @@ export const UserModal: React.FC<UserModalProps> = ({
   onClose,
   title,
   children,
-  confirmText = "Confirmer",
-  cancelText = "Annuler",
+  confirmText = 'Confirmer',
+  cancelText = 'Annuler',
   onConfirm,
   showCancelButton = true,
   showConfirmButton = true,
@@ -52,47 +52,35 @@ export const UserModal: React.FC<UserModalProps> = ({
       case 'logout':
         return registerIcon;
       case 'delete':
-        return deleteUserIcon; 
+        return deleteUserIcon;
       case 'update':
-        return updateUserIcon; 
+        return updateUserIcon;
       default:
         return registerIcon;
     }
   };
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="slide"
-      onRequestClose={onClose}
-    >
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={styles.container}>
         {/* Effet de flou sur tout l'écran */}
-        <View style={styles.blurContainer}/>
-        
+        <View style={styles.blurContainer} />
+
         <TouchableWithoutFeedback onPress={handleBackdropPress}>
           <View style={styles.backdrop}>
             <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
               <View style={styles.modalContent}>
                 <View style={styles.imageContainer}>
-                    <Image 
-                      source={getModalIcon()} 
-                      style={styles.modalImage}
-                      resizeMode="contain"
-                    />
-                  </View>
+                  <Image source={getModalIcon()} style={styles.modalImage} resizeMode="contain" />
+                </View>
                 {title && (
                   <ThemedText type="title" style={styles.modalTitle}>
                     {title}
                   </ThemedText>
                 )}
-                
-                
-                <View style={styles.contentContainer}>
-                  {children}
-                </View>
-                
+
+                <View style={styles.contentContainer}>{children}</View>
+
                 {(showCancelButton || showConfirmButton) && (
                   <View style={styles.buttonContainer}>
                     {showCancelButton && (
@@ -103,7 +91,7 @@ export const UserModal: React.FC<UserModalProps> = ({
                         onPress={onClose}
                       />
                     )}
-                    
+
                     {showConfirmButton && (
                       <Button
                         title={confirmText}
@@ -133,11 +121,11 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', 
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   backdrop: {
     flex: 1,
-    backgroundColor: 'transparent', 
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -147,7 +135,7 @@ const styles = StyleSheet.create({
     borderColor: Theme.colors.text,
     borderRadius: 10,
     padding: 20,
-    width: '95%'
+    width: '95%',
   },
   modalTitle: {
     color: 'white',

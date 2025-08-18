@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { auth } from '@/config/firebaseConfig';
 import { updateUserOnboardingProgress } from '@/services/authService';
 import { Alert } from 'react-native';
+import { OnboardingStepData } from '@/interfaces/OnBoarding';
 
 const useOnboardingProgress = () => {
   const [loading, setLoading] = useState(false);
 
-  const updateProgress = async (stepData: any) => {
+  const updateProgress = async (stepData: OnboardingStepData) => {
     try {
       const user = auth.currentUser;
       if (user) {
@@ -16,8 +17,8 @@ const useOnboardingProgress = () => {
       }
     } catch (error) {
       setLoading(false);
-      console.error("Erreur de mise à jour de la progression :", error);
-      Alert.alert("Erreur", "Impossible de sauvegarder.");
+      console.error('Erreur de mise à jour de la progression :', error);
+      Alert.alert('Erreur', 'Impossible de sauvegarder.');
     }
   };
 

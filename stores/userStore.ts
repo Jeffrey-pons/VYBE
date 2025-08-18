@@ -1,0 +1,60 @@
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+type UserStore = {
+  name: string;
+  lastname: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+  isModalUpdatedAccountVisible: boolean;
+  isModalDeletedAccountVisible: boolean;
+
+  setName: (value: string) => void;
+  setLastname: (value: string) => void;
+  setEmail: (value: string) => void;
+  setPhoneNumber: (value: string) => void;
+  setPassword: (value: string) => void;
+
+  setIsModalUpdatedAccountVisible: (value: boolean) => void;
+  setIsModalDeletedAccountVisible: (value: boolean) => void;
+
+  resetUserFields: () => void;
+};
+
+export const useUserStore = create<UserStore>()(
+  persist(
+    (set) => ({
+      name: '',
+      lastname: '',
+      email: '',
+      phoneNumber: '',
+      password: '',
+      isModalUpdatedAccountVisible: false,
+      isModalDeletedAccountVisible: false,
+
+      setName: (value) => set({ name: value }),
+      setLastname: (value) => set({ lastname: value }),
+      setEmail: (value) => set({ email: value }),
+      setPhoneNumber: (value) => set({ phoneNumber: value }),
+      setPassword: (value) => set({ password: value }),
+
+      setIsModalUpdatedAccountVisible: (value) => set({ isModalUpdatedAccountVisible: value }),
+      setIsModalDeletedAccountVisible: (value) => set({ isModalDeletedAccountVisible: value }),
+
+      resetUserFields: () =>
+        set({
+          name: '',
+          lastname: '',
+          email: '',
+          phoneNumber: '',
+          password: '',
+          isModalUpdatedAccountVisible: false,
+          isModalDeletedAccountVisible: false,
+        }),
+    }),
+    {
+      name: 'user-store', // nom clé stockage local
+    },
+  ),
+);

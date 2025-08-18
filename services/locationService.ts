@@ -3,7 +3,11 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '@/config/firebaseConfig';
 
-export const getLocation = async ({ onCityDetected }: { onCityDetected: (city: string) => void }) => {
+export const getLocation = async ({
+  onCityDetected,
+}: {
+  onCityDetected: (city: string) => void;
+}) => {
   try {
     // Demander la permission d'accéder à la géolocalisation
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -21,7 +25,8 @@ export const getLocation = async ({ onCityDetected }: { onCityDetected: (city: s
     const data = await response.json();
 
     if (data && data.address) {
-      const cityName = data.address.city || data.address.town || data.address.village || 'Ville non trouvée';
+      const cityName =
+        data.address.city || data.address.town || data.address.village || 'Ville non trouvée';
       onCityDetected(cityName); // Appeler la fonction callback pour passer la ville détectée
     } else {
       throw new Error('Ville non trouvée.');
