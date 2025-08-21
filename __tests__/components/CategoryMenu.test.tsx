@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react-native';
-import CategoryMenu from '../CategoryMenu';
+import CategoryMenu from '@/components/CategoryMenu';
 
 describe('CategoryMenu', () => {
   const mockSetActiveCategory = jest.fn();
