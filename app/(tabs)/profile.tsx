@@ -31,8 +31,6 @@ const ProfileScreen: React.FC = () => {
     setName,
     lastname,
     setLastname,
-    email,
-    setEmail,
     phoneNumber,
     setPhoneNumber,
     password,
@@ -119,7 +117,7 @@ const ProfileScreen: React.FC = () => {
               style={styles.input}
               accessibilityLabel='Numéro de téléphone'
             />
-            <ThemedText type='text'>Le mail et le mot de passe seront modifiable dans une seconde version</ThemedText>
+            <ThemedText type='text'>L'email et le mot de passe seront modifiables dans une seconde version de Vybe. </ThemedText>
           </View>
         </UserModal>
 

@@ -12,6 +12,12 @@ import { auth, db } from '@/config/firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 import { Alert } from 'react-native';
 
+type ProgressDoc = {
+  city: string;
+  hasConnectedMusic: boolean;
+  [key: string]: unknown;
+}
+
 const uniq = () => Math.random().toString(36).slice(2);
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -53,7 +59,7 @@ describe('INT: AuthService + Emulators (Auth/Firestore)', () => {
 
     const snap = await getDoc(doc(db, 'users', uid!));
     expect(snap.exists()).toBe(true);
-    const data = snap.data() as any;
+    const data = snap.data() as ProgressDoc;
     expect(data.city).toBe('Paris');
     expect(data.hasConnectedMusic).toBe(true);
 

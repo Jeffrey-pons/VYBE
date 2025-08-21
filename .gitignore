@@ -6,6 +6,9 @@ node_modules/
 # android
 android/
 
+# Coverage reports
+coverage/
+
 # idea
 .idea/
 

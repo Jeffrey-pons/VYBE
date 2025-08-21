@@ -3,15 +3,13 @@ import { getLocation, updateUserCity } from '@/services/locationService';
 import { getAuth } from 'firebase/auth';
 import { updateDoc, doc } from 'firebase/firestore';
 
-const originalFetch = global.fetch;
+const originalFetch: typeof global.fetch = global.fetch;
 
 jest.mock('expo-location', () => ({
   requestForegroundPermissionsAsync: jest.fn(),
   getCurrentPositionAsync: jest.fn(),
 }));
 
-// Les mocks Firebase sont déjà fournis dans jest/setupTests.ts,
-// on les importe ici pour poser des attentes.
 jest.mock('firebase/auth', () => {
   const getAuth = jest.fn(() => ({}));
   return { getAuth };
@@ -31,7 +29,7 @@ beforeEach(() => {
 
 afterEach(() => {
   (console.error as jest.Mock).mockRestore?.();
-  global.fetch = originalFetch as any;
+  global.fetch = originalFetch;
 });
 
 describe('locationService.getLocation', () => {

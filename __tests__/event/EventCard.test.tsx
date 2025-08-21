@@ -1,4 +1,3 @@
-// __tests__/components/EventCard.test.tsx
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { EventCard } from '@/components/events/EventCard';
@@ -56,7 +55,7 @@ describe('EventCard', () => {
   });
 
   it("fallback sur le titre si title.fr absent", () => {
-    const ev = makeEvent({ title: { fr: '' } as any });
+    const ev = makeEvent({ title: { fr: '' } as NonNullable<Event['title']> });
     render(<EventCard event={ev} />);
     expect(screen.getByText("Titre de l'évènement indisponible")).toBeTruthy();
   });

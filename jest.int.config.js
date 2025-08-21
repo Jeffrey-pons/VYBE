@@ -1,5 +1,4 @@
-// jest.int.config.js
-module.exports = {
+export default {
   preset: 'react-native',
   testEnvironment: 'jsdom',
   rootDir: '.',

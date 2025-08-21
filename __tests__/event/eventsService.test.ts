@@ -10,7 +10,6 @@ import {
 
 import * as api from '@/api/openAgenda';
 
-// Mocks API
 jest.mock('@/api/openAgenda', () => ({
   getEventsForTonightOpenAgenda: jest.fn(),
   getEventsThisWeekOpenAgenda: jest.fn(),

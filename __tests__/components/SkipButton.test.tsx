@@ -1,4 +1,3 @@
-// __tests__/components/SkipButton.test.tsx
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import SkipButton from '@/components/SkipButton';

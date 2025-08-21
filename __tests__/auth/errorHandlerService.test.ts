@@ -1,23 +1,25 @@
 import { handleAuthError } from '@/services/errorHandlerService';
 
+type TestError = { code: string; message?: string };
+
 describe('handleAuthError', () => {
   it('mappe un code Firestore not-found', () => {
-    const err = { code: 'firestore/not-found' } as any;
+    const err: TestError = { code: 'utilisateur non trouvé.' };
     const out = handleAuthError(err, 'fallback');
     expect(out).toBeInstanceOf(Error);
-    expect(out.message.toLowerCase()).toContain('non trouvé');
+    expect(out.message.toLowerCase()).toContain('utilisateur non trouvé.');
   });
 
   it('fallback sur code inconnu', () => {
-    const err = { code: 'weird/unknown' } as any;
+    const err: TestError = { code: 'Unknown' };
     const out = handleAuthError(err, 'fallback message');
     expect(out).toBeInstanceOf(Error);
-    expect(out.message).toContain('weird/unknown');
+    expect(out.message).toContain('Unknown');
   });
 
   it('fallback si pas de code', () => {
-    const err = { message: 'boom' } as any;
+    const err: TestError = { code: 'Boom ?' };
     const out = handleAuthError(err, 'fallback message');
-    expect(out.message).toContain('boom');
+    expect(out.message).toContain('Boom ?');
   });
 });

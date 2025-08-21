@@ -78,7 +78,6 @@ describe('AuthProvider', () => {
 
     await waitFor(() => {
       expect(mockUpdateLocation).toHaveBeenCalledWith('Paris');
-      // ✅ comportement réel observé
       expect(mockRouter.replace).toHaveBeenCalledWith('/activenotification');
     });
   });
@@ -102,7 +101,6 @@ describe('AuthProvider', () => {
 
     await waitFor(() => {
       expect(mockUpdateLocation).toHaveBeenCalledWith('Lyon');
-      // ✅ comportement réel observé
       expect(mockRouter.replace).toHaveBeenCalledWith('/connectmusic');
     });
   });

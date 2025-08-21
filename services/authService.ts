@@ -16,7 +16,6 @@ import {
   deleteUser,
   EmailAuthProvider,
   reauthenticateWithCredential,
-  onAuthStateChanged,
   updateEmail,
   sendEmailVerification,
 } from 'firebase/auth';

@@ -3,7 +3,6 @@ import { render, waitFor } from '@testing-library/react-native';
 import { Text, View } from 'react-native';
 import { useFilteredEvents } from '@/hooks/useFilteredEvents';
 
-// ⚙️ Mocks
 const mockGetFiveUpcomingEvents = jest.fn();
 jest.mock('@/services/eventService', () => ({
   getFiveUpcomingEvents: (...args: unknown[]) => mockGetFiveUpcomingEvents(...args),
