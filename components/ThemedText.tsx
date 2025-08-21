@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   authSubtitle: {
-    fontSize: Theme.typography.base.fontSize,
+    fontSize: Theme.typography.deca.fontSize,
     marginBottom: 36, // Exception
     color: Theme.colors.text,
     textAlign: Theme.alignments.textCenter.textAlign,

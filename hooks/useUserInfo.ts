@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { auth } from '@/config/firebaseConfig';
-import { updateCurrentUser } from 'firebase/auth';
+import { updateEmail } from 'firebase/auth'; 
 import { getUserInfo, updateUserInfo, deleteUserAccount } from '@/services/authService';
 import { useUserStore } from '@/stores/userStore';
 import { User } from '@/interfaces/User';
 import { mapFirebaseUserToUser } from '@/interfaces/User';
+import { AuthServiceError } from '@/types/errors';
+import { router } from 'expo-router';
 
 export const useUserInfo = () => {
   const [userId, setUserId] = useState<string | null>(null);
@@ -53,7 +55,7 @@ export const useUserInfo = () => {
       const user = auth.currentUser;
       if (user) {
         if (email !== user.email) {
-          await updateCurrentUser(user, { email });
+          await updateEmail(user, email );
         }
       }
 
@@ -62,7 +64,7 @@ export const useUserInfo = () => {
       setUserData((prevData) =>
         prevData ? { ...prevData, name, lastname, email, phoneNumber } : null,
       );
-      alert('Informations mises à jour avec succès.');
+      Alert.alert('Succès', 'Informations mises à jour avec succès.');
       setIsModalUpdatedAccountVisible(false); // Fermer la modal après la mise à jour
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -80,19 +82,26 @@ export const useUserInfo = () => {
       Alert.alert('Utilisateur non identifié !');
       return;
     }
-
+     setIsModalDeletedAccountVisible(false);
     try {
       const user = auth.currentUser;
       if (user) {
         await deleteUserAccount(userId, password);
-        Alert.alert('Compte supprimé avec succès.');
+        setPassword('');
+        const loginStore = useLoginStore.getState();
+        const userStore = useUserStore.getState();
+        loginStore.resetLogin?.();
+        userStore.resetUserFields();
+          Alert.alert('Succès', 'Compte supprimé avec succès.', [
+      { text: 'OK', onPress: () => router.replace('/home') },
+    ]);
       } else {
         Alert.alert('Aucun utilisateur connecté.');
       }
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('Erreur inconnue lors de la suppression.');
+      if (error instanceof AuthServiceError) {
         Alert.alert('Une erreur est survenue lors de la suppression du compte.');
+         setIsModalDeletedAccountVisible(true);
       }
     }
   };

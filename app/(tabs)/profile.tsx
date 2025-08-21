@@ -104,14 +104,14 @@ const ProfileScreen: React.FC = () => {
               style={styles.input}
               accessibilityLabel='Prénom'
             />
-            <TextInput
+            {/* <TextInput
               placeholder="Email"
               value={email}
               onChangeText={setEmail}
               style={styles.input}
               keyboardType="email-address"
               accessibilityLabel='Email'
-            />
+            /> */}
             <TextInput
               placeholder="Numéro de téléphone"
               value={phoneNumber}
@@ -119,6 +119,7 @@ const ProfileScreen: React.FC = () => {
               style={styles.input}
               accessibilityLabel='Numéro de téléphone'
             />
+            <ThemedText type='text'>Le mail et le mot de passe seront modifiable dans une seconde version</ThemedText>
           </View>
         </UserModal>
 
@@ -305,7 +306,10 @@ const ProfileScreen: React.FC = () => {
             title="Supprimer mon compte"
             buttonStyle={globalStyles.buttonDeletedeStyle}
             titleStyle={globalStyles.titleDeletedStyle}
-            onPress={() => setIsModalDeletedAccountVisible(true)}
+            onPress={() => {
+              setPassword('');                
+              setIsModalDeletedAccountVisible(true);
+             }}
             accessibilityLabel="Bouton pour supprimer le compte"
           />
         </View>
@@ -325,7 +329,10 @@ const ProfileScreen: React.FC = () => {
       </UserModal>
       <UserModal
         visible={isModalDeletedAccountVisible}
-        onClose={() => setIsModalDeletedAccountVisible(false)}
+        onClose={() => {
+          setIsModalDeletedAccountVisible(false);
+          setPassword('');         
+       }}
         title="Confirmer la suppression de votre compte"
         confirmText="Confirmer"
         cancelText="Annuler"

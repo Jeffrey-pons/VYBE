@@ -15,12 +15,13 @@ const NotificationScreen = () => {
   const { updateProgress, loading } = useOnboardingProgress();
   const { notificationsEnabled, toggleNotifications } = useNotificationStore();
 
-  const handleSkip = () => {
+  const handleSkip = async () => {
+     await updateProgress({ hasActiveNotification: false, onboardingCompleted: true });
     router.replace('/(tabs)');
   };
 
   const handleFinish = async () => {
-    await updateProgress({ hasActiveNotification: notificationsEnabled });
+    await updateProgress({ hasActiveNotification: notificationsEnabled, onboardingCompleted: true });
     router.replace('/(tabs)');
   };
 

@@ -54,7 +54,14 @@ export const useUserStore = create<UserStore>()(
         }),
     }),
     {
-      name: 'user-store', // nom clé stockage local
+        name: 'user-store',
+      // ⬇️ Ne persiste que ces 4 champs
+      partialize: (state) => ({
+        name: state.name,
+        lastname: state.lastname,
+        email: state.email,
+        phoneNumber: state.phoneNumber,
+      })
     },
   ),
 );

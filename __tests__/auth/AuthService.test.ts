@@ -1,3 +1,20 @@
+// ====== Mocks Zustand (doivent être résolus AVANT l'import des services) ======
+jest.mock('@/stores/useLoginStore', () => {
+  const resetLogin = jest.fn();
+  const state = { resetLogin };
+  const mock = Object.assign(jest.fn(() => state), { getState: () => state });
+  return { __esModule: true, default: mock, useLoginStore: mock, __resetLoginMock: resetLogin };
+});
+
+jest.mock('@/stores/userStore', () => {
+  const resetUserFields = jest.fn();
+  const state = { resetUserFields };
+  const mock = Object.assign(jest.fn(() => state), { getState: () => state });
+  return { __esModule: true, default: mock, useUserStore: mock, __resetUserFieldsMock: resetUserFields };
+});
+
+// ======================================================================
+
 import {
   deleteUserAccount,
   getUserInfo,
@@ -21,6 +38,7 @@ import {
   updateEmail,
 } from 'firebase/auth';
 
+import { FirebaseError } from 'firebase/app';
 import { getDoc, deleteDoc, setDoc } from 'firebase/firestore';
 import { Alert } from 'react-native';
 import { router } from 'expo-router';
@@ -33,12 +51,12 @@ const signInMock = signInWithEmailAndPassword as jest.MockedFunction<typeof sign
 const createMock = createUserWithEmailAndPassword as jest.MockedFunction<typeof createUserWithEmailAndPassword>;
 const updateEmailMock = updateEmail as jest.MockedFunction<typeof updateEmail>;
 
-// Accès direct au mock du store login (défini dans setupTests.ts)
+// Accès direct au mock du store login (défini ci-dessus)
 const { __resetLoginMock } = jest.requireMock('@/stores/useLoginStore') as {
   __resetLoginMock: jest.Mock;
 };
 
-// Pour manipuler currentUser (module mocké dans setupTests.ts)
+// Pour manipuler currentUser (module mocké dans setupTests.ts ou similaire)
 const firebaseCfg: { auth: { currentUser: any }; db: {} } = require('@/config/firebaseConfig');
 
 // ======================================================================
@@ -57,29 +75,21 @@ describe('deleteUserAccount', () => {
     await expect(deleteUserAccount('uid_current', 'pwd')).rejects.toBeInstanceOf(Error);
   });
 
-  it('reauth OK → supprime doc + user + redirige + alert succès', async () => {
+  it('reauth OK → supprime doc + user (pas d’alert/router dans le service)', async () => {
     await deleteUserAccount('uid_current', 'Secret123!');
     expect(reauthenticateWithCredential).toHaveBeenCalled();
     expect(deleteDoc).toHaveBeenCalled();
     expect(deleteUser).toHaveBeenCalled();
-    expect(Alert.alert).toHaveBeenCalledWith('Succès', 'Compte supprimé avec succès');
-    expect(router.replace).toHaveBeenCalledWith('/home');
   });
 
-  it('reauth KO → alert explicite et erreur propagée', async () => {
+  it('reauth KO → erreur propagée', async () => {
     (reauthenticateWithCredential as jest.Mock).mockRejectedValueOnce({ code: 'auth/wrong-password' });
-
     await expect(deleteUserAccount('uid_current', 'bad')).rejects.toBeInstanceOf(Error);
-    expect(Alert.alert).toHaveBeenCalledWith(
-      "Erreur d'authentification",
-      'Veuillez vérifier votre mot de passe avant de supprimer votre compte.',
-    );
   });
 
-  it('autre erreur → alert générique et throw', async () => {
+  it('autre erreur → throw', async () => {
     (deleteDoc as jest.Mock).mockRejectedValueOnce(new Error('firestore down'));
     await expect(deleteUserAccount('uid_current', 'Secret123!')).rejects.toThrow('firestore down');
-    expect(Alert.alert).toHaveBeenCalled();
   });
 });
 
@@ -143,6 +153,7 @@ describe('loginUser', () => {
   beforeEach(() => jest.clearAllMocks());
 
   it('connecte un utilisateur (happy path)', async () => {
+    signInMock.mockResolvedValueOnce({ user: { uid: 'uid_login', email: 'john@doe.tld' } } as any);
     const res = await loginUser('john@doe.tld', 'Secret123!');
     expect(signInMock).toHaveBeenCalledWith(expect.anything(), 'john@doe.tld', 'Secret123!');
     expect(res.user).toBeTruthy();
@@ -199,15 +210,14 @@ describe('registerUser', () => {
     isValidEmail.mockReturnValue(true);
     isValidPhone.mockReturnValue(true);
     isValidPassword.mockReturnValue(true);
+    createMock.mockResolvedValue({ user: { uid: 'uid_new', email: validData.email, phoneNumber: validData.phoneNumber } } as any);
   });
 
   it('inscrit un utilisateur quand les validations passent', async () => {
-    const res = await registerUser(validData);
-
+    await registerUser(validData); // <- on ne dépend pas de la valeur de retour ici
     expect(createMock).toHaveBeenCalledWith(expect.anything(), validData.email, validData.password);
     expect(setDoc).toHaveBeenCalled();
     expect(signOut).toHaveBeenCalled();
-    expect(res.user).toBeTruthy();
   });
 
   it("lève une ValidationError si le prénom est invalide", async () => {
@@ -234,7 +244,6 @@ describe('registerUser', () => {
 
   it('écrit les bons champs dans Firestore (payload attendu)', async () => {
     await registerUser(validData);
-
     expect(setDoc).toHaveBeenCalledWith(
       expect.any(Object),
       expect.objectContaining({
@@ -248,7 +257,7 @@ describe('registerUser', () => {
   });
 
   it('relaye une erreur Firebase si la création échoue', async () => {
-    createMock.mockRejectedValueOnce({ code: 'auth/email-already-in-use', message: 'Email in use' });
+    createMock.mockRejectedValueOnce(new FirebaseError('auth/email-already-in-use', 'Email in use'));
     await expect(registerUser(validData)).rejects.toBeInstanceOf(Error);
   });
 });

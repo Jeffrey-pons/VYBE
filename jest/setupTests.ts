@@ -1,19 +1,17 @@
 // jest/setupTests.ts
+
 import '@testing-library/jest-native/extend-expect';
 import { Alert } from 'react-native';
 
-// Silence alerts & logs during tests
 jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 jest.spyOn(console, 'log').mockImplementation(() => {});
 jest.spyOn(console, 'error').mockImplementation(() => {});
 
-// Router Expo
 jest.mock('expo-router', () => ({
   router: { replace: jest.fn(), push: jest.fn(), back: jest.fn() },
 }));
 
 // ---------- Zustand stores (expose stable mocks) ----------
-// IMPORTANT: names start with "mock" so jest allows them in factory scope.
 const mockResetRegister = jest.fn();
 jest.mock('@/stores/useRegisterStore', () => ({
   useRegisterStore: { getState: () => ({ resetRegister: mockResetRegister }) },
@@ -49,6 +47,7 @@ jest.mock('@/utils/errorsUtils', () => ({
 }));
 
 // ---------- Auth error handler ----------
+
 // Mappe explicitement certaines erreurs pour matcher tes assertions, sans `any`.
 jest.mock('@/services/errorHandlerService', () => {
   const getCode = (err: unknown): string | undefined =>
@@ -79,18 +78,22 @@ jest.mock('@/services/errorHandlerService', () => {
   return { handleAuthError };
 });
 
-// ---------- Firebase app ----------
-jest.mock('firebase/app', () => {
-  class FirebaseError extends Error {
-    code: string;
-    constructor(code: string, message?: string) {
-      super(message);
-      this.code = code;
-      this.name = 'FirebaseError';
+
+// ⛔️ Ne mocke pas Firebase quand on lance les tests d’intégration (émulateurs)
+if (process.env.FIREBASE_EMULATORS !== '1') {
+  // ---------- Firebase app ----------
+  jest.mock('firebase/app', () => {
+    class FirebaseError extends Error {
+      code: string;
+      constructor(code: string, message?: string) {
+        super(message);
+        this.code = code;
+        this.name = 'FirebaseError';
+      }
     }
-  }
-  return { FirebaseError };
-});
+    return { FirebaseError };
+  });
+
 
 // ---------- Firebase auth ----------
 jest.mock('firebase/auth', () => {
@@ -130,43 +133,28 @@ jest.mock('firebase/auth', () => {
     },
   );
 
-  const getAuth = jest.fn(() => ({}));
 
-  return {
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    deleteUser,
-    updateEmail,
-    sendEmailVerification,
-    EmailAuthProvider,
-    reauthenticateWithCredential,
-    onAuthStateChanged,
-    getAuth,
-    User: class {},
-  };
-});
+  // ---------- Firebase firestore ----------
+  jest.mock('firebase/firestore', () => {
+    const doc = jest.fn((_db: unknown, _col: string, id: string) => ({ id }));
+    const setDoc = jest.fn(async () => {});
+    const getDoc = jest.fn(async (ref: { id: string }) => ({
+      exists: () => true,
+      data: () => ({
+        uid: ref.id,
+        name: 'John',
+        lastname: 'Doe',
+        mail: 'john@doe.tld',
+        number: '0600000000',
+      }),
+    }));
+    const deleteDoc = jest.fn(async () => {});
+    return { doc, setDoc, getDoc, deleteDoc };
+  });
 
-// ---------- Firebase firestore ----------
-jest.mock('firebase/firestore', () => {
-  const doc = jest.fn((_db: unknown, _col: string, id: string) => ({ id }));
-  const setDoc = jest.fn(async () => {});
-  const getDoc = jest.fn(async (ref: { id: string }) => ({
-    exists: () => true,
-    data: () => ({
-      uid: ref.id,
-      name: 'John',
-      lastname: 'Doe',
-      mail: 'john@doe.tld',
-      number: '0600000000',
-    }),
+  // ---------- Firebase config ----------
+  jest.mock('@/config/firebaseConfig', () => ({
+    auth: { currentUser: { uid: 'uid_current', email: 'john@doe.tld', emailVerified: true } },
+    db: {},
   }));
-  const deleteDoc = jest.fn(async () => {});
-  return { doc, setDoc, getDoc, deleteDoc };
-});
-
-// ---------- Firebase config ----------
-jest.mock('@/config/firebaseConfig', () => ({
-  auth: { currentUser: { uid: 'uid_current', email: 'john@doe.tld', emailVerified: true } },
-  db: {},
-}));
+}
