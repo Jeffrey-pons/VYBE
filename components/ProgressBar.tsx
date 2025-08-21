@@ -19,7 +19,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ step, totalSteps }) => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    top: 65,
+    top: 40,
     left: '30%',
     right: '30%',
     height: 10,
