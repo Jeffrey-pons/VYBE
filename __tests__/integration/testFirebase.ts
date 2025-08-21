@@ -23,3 +23,10 @@ export async function cleanupTestApp() {
   try { await signOut(getAuth(app)); } catch {}
   await deleteApp(app);
 }
+
+describe('firebase test utils placeholder', () => {
+  it('loads helpers', () => {
+    expect(typeof initTestApp).toBe('function');
+    expect(typeof cleanupTestApp).toBe('function');
+  });
+});
