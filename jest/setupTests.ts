@@ -35,16 +35,49 @@ jest.mock('@/utils/registerUtils', () => ({
 // ---------- Errors utils ----------
 jest.mock('@/utils/errorsUtils', () => ({
   extractErrorMessage: (e: unknown) =>
-    e instanceof Error ? e.message : (e as { message?: string })?.message ?? 'Unknown',
+    e instanceof Error
+      ? e.message
+      : (typeof e === 'object' &&
+         e !== null &&
+         'message' in (e as Record<string, unknown>) &&
+         typeof (e as { message?: unknown }).message === 'string'
+        )
+      ? (e as { message?: string }).message
+      : 'Unknown',
 }));
 
 // ---------- Auth error handler ----------
-jest.mock('@/services/errorHandlerService', () => ({
-  handleAuthError: (err: any, fallback: string) => {
-    if (err?.code === 'firestore/not-found') return new Error('Utilisateur non trouvé.');
-    return new Error(err?.code ?? err?.message ?? fallback);
-  },
-}));
+
+// Mappe explicitement certaines erreurs pour matcher tes assertions, sans `any`.
+jest.mock('@/services/errorHandlerService', () => {
+  const getCode = (err: unknown): string | undefined =>
+    typeof err === 'object' &&
+    err !== null &&
+    'code' in (err as Record<string, unknown>) &&
+    typeof (err as { code?: unknown }).code === 'string'
+      ? (err as { code: string }).code
+      : undefined;
+
+  const getMessage = (err: unknown): string | undefined =>
+    err instanceof Error
+      ? err.message
+      : typeof err === 'object' &&
+        err !== null &&
+        'message' in (err as Record<string, unknown>) &&
+        typeof (err as { message?: unknown }).message === 'string'
+      ? (err as { message?: string }).message
+      : undefined;
+
+  const handleAuthError = (err: unknown, fallback: string) => {
+    if (getCode(err) === 'firestore/not-found') {
+      return new Error('Utilisateur non trouvé.');
+    }
+    return new Error(getCode(err) ?? getMessage(err) ?? fallback);
+  };
+
+  return { handleAuthError };
+});
+
 
 // ⛔️ Ne mocke pas Firebase quand on lance les tests d’intégration (émulateurs)
 if (process.env.FIREBASE_EMULATORS !== '1') {
@@ -61,37 +94,45 @@ if (process.env.FIREBASE_EMULATORS !== '1') {
     return { FirebaseError };
   });
 
-  // ---------- Firebase auth ----------
-  jest.mock('firebase/auth', () => {
-    const createUserWithEmailAndPassword = jest.fn(async (_auth: unknown, email: string) => ({
-      user: { uid: 'uid_new', email, phoneNumber: null, emailVerified: true },
-    }));
-    const signInWithEmailAndPassword = jest.fn(async (_auth: unknown, email: string) => ({
-      user: { uid: 'uid_login', email, emailVerified: true },
-    }));
-    const signOut = jest.fn(async () => {});
-    const deleteUser = jest.fn(async () => {});
-    const updateEmail = jest.fn(async () => {});
-    const sendEmailVerification = jest.fn(async () => {});
-    const EmailAuthProvider = { credential: jest.fn((email: string) => ({ email })) };
-    const reauthenticateWithCredential = jest.fn(async () => {});
-    const onAuthStateChanged = jest.fn((_auth: unknown, _cb: (user: unknown) => void) => jest.fn());
-    const getAuth = jest.fn(() => ({}));
 
-    return {
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      signOut,
-      deleteUser,
-      updateEmail,
-      sendEmailVerification,
-      EmailAuthProvider,
-      reauthenticateWithCredential,
-      onAuthStateChanged,
-      getAuth,
-      User: class {},
-    };
-  });
+// ---------- Firebase auth ----------
+jest.mock('firebase/auth', () => {
+  const createUserWithEmailAndPassword = jest.fn(
+    async (_auth: unknown, email: string) => ({
+      user: { uid: 'uid_new', email, phoneNumber: null, emailVerified: true },
+    }),
+  );
+
+  const signInWithEmailAndPassword = jest.fn(
+    async (_auth: unknown, email: string) => ({
+      user: { uid: 'uid_login', email, emailVerified: true },
+    }),
+  );
+
+  const signOut = jest.fn(async () => {});
+  const deleteUser = jest.fn(async () => {});
+  const updateEmail = jest.fn(async () => {});
+  const sendEmailVerification = jest.fn(async () => {});
+
+  // Utilise réellement le paramètre `pwd` pour éviter le warning no-unused-vars
+  const EmailAuthProvider = {
+    credential: jest.fn((email: string, pwd?: string) => ({
+      email,
+      password: pwd,
+    })),
+  };
+
+  const reauthenticateWithCredential = jest.fn(async () => {});
+
+  // Ne pas appeler le callback pour éviter des effets de bord, mais marquer les args comme utilisés
+  const onAuthStateChanged = jest.fn(
+    (authArg: unknown, cb: (user: unknown) => void) => {
+      void authArg; // marque le paramètre comme utilisé
+      void cb;      // idem
+      return jest.fn(); // unsubscribe
+    },
+  );
+
 
   // ---------- Firebase firestore ----------
   jest.mock('firebase/firestore', () => {
