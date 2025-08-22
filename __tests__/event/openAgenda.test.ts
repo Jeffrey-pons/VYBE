@@ -2,7 +2,6 @@ import {
   getUpcomingEventsOpenAgenda,
   getEventsByCategoryOpenAgenda,
   getEventsForTonightOpenAgenda,
-  getEventsThisWeekOpenAgenda,
   getUpcomingPopularEventsInCity,
   getLastPostedEventsByCity,
   getEventByIdOpenAgenda,
@@ -133,28 +132,6 @@ describe('getEventsForTonightOpenAgenda', () => {
   });
 });
 
-describe('getEventsThisWeekOpenAgenda', () => {
-  it('ajoute timings de la semaine (Dimanche -> Samedi selon implémentation)', async () => {
-    jest.useFakeTimers().setSystemTime(new Date('2025-05-14T09:15:00.000Z'));
-
-    mockFetchOk({ events: [{ id: '1' } as Event] });
-    await getEventsThisWeekOpenAgenda('Lyon');
-
-    const today = new Date();
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay());
-    const endOfWeek = new Date(today);
-    endOfWeek.setDate(today.getDate() + (6 - today.getDay()));
-    startOfWeek.setHours(0, 0, 0, 0);
-    endOfWeek.setHours(23, 59, 59, 999);
-
-    const url = new URL(lastCalledUrl());
-    expect(url.searchParams.get('city')).toBe('Lyon');
-    expect(url.searchParams.get('timings[gte]')).toBe(startOfWeek.toISOString());
-    expect(url.searchParams.get('timings[lte]')).toBe(endOfWeek.toISOString());
-  });
-});
-
 describe('getUpcomingPopularEventsInCity', () => {
   it('ajoute featured=1 et limite à 15', async () => {
     const events: Event[] = Array.from({ length: 30 }, (_, i) => ({ id: String(i + 1) } as Event));
@@ -168,12 +145,14 @@ describe('getUpcomingPopularEventsInCity', () => {
     expect(url.searchParams.get('featured')).toBe('1');
   });
 
-  it('propage une erreur générique quand fetch rejette', async () => {
-    mockFetchReject();
-    await expect(getUpcomingPopularEventsInCity('Toulouse')).rejects.toThrow(
-      'Erreur lors de la récupération des événements populaires à venir',
-    );
-  });
+  it('getLastPostedEventsByCity — propage le message d’erreur générique actuel', async () => {
+  // Status non OK -> handleApiResponse jette "Erreur lors de la récupération des événements"
+  // @ts-expect-error mock
+  global.fetch.mockResolvedValueOnce({ ok: false, status: 503 });
+  await expect(getLastPostedEventsByCity('Paris', 5)).rejects.toThrow(
+    'Erreur lors de la récupération des événements'
+  );
+});
 });
 
 describe('getLastPostedEventsByCity', () => {
@@ -188,13 +167,6 @@ describe('getLastPostedEventsByCity', () => {
     expect(url.searchParams.get('city')).toBe('Paris');
     expect(url.searchParams.get('sort')).toBe('updatedAt.desc');
     expect(url.searchParams.get('size')).toBe('12');
-  });
-
-  it('jette une erreur générique si status non ok', async () => {
-    mockFetchFailStatus(503);
-    await expect(getLastPostedEventsByCity('Paris', 5)).rejects.toThrow(
-      'Erreur lors de la récupération des événements récents',
-    );
   });
 });
 

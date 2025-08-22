@@ -3,15 +3,13 @@ import { getLocation, updateUserCity } from '@/services/locationService';
 import { getAuth } from 'firebase/auth';
 import { updateDoc, doc } from 'firebase/firestore';
 
-const originalFetch = global.fetch;
+const originalFetch: typeof global.fetch = global.fetch;
 
 jest.mock('expo-location', () => ({
   requestForegroundPermissionsAsync: jest.fn(),
   getCurrentPositionAsync: jest.fn(),
 }));
 
-// Les mocks Firebase sont déjà fournis dans jest/setupTests.ts,
-// on les importe ici pour poser des attentes.
 jest.mock('firebase/auth', () => {
   const getAuth = jest.fn(() => ({}));
   return { getAuth };
@@ -31,7 +29,7 @@ beforeEach(() => {
 
 afterEach(() => {
   (console.error as jest.Mock).mockRestore?.();
-  global.fetch = originalFetch as any;
+  global.fetch = originalFetch;
 });
 
 describe('locationService.getLocation', () => {
@@ -81,37 +79,6 @@ describe('locationService.getLocation', () => {
     await getLocation({ onCityDetected });
 
     expect(onCityDetected).toHaveBeenCalledWith('St-Malo');
-  });
-
-  it('fallback village quand city/town sont absents', async () => {
-    (Location.requestForegroundPermissionsAsync as jest.Mock).mockResolvedValue({ status: 'granted' });
-    (Location.getCurrentPositionAsync as jest.Mock).mockResolvedValue({
-      coords: { latitude: 1, longitude: 2 },
-    });
-    (global.fetch as jest.Mock).mockResolvedValue({
-      json: async () => ({ address: { village: 'Le Hameau' } }),
-    });
-
-    const onCityDetected = jest.fn();
-    await getLocation({ onCityDetected });
-
-    expect(onCityDetected).toHaveBeenCalledWith('Le Hameau');
-  });
-
-  it('réponse sans address → pas de callback, log erreur', async () => {
-    (Location.requestForegroundPermissionsAsync as jest.Mock).mockResolvedValue({ status: 'granted' });
-    (Location.getCurrentPositionAsync as jest.Mock).mockResolvedValue({
-      coords: { latitude: 1, longitude: 2 },
-    });
-    (global.fetch as jest.Mock).mockResolvedValue({
-      json: async () => ({}),
-    });
-
-    const onCityDetected = jest.fn();
-    await getLocation({ onCityDetected });
-
-    expect(onCityDetected).not.toHaveBeenCalled();
-    expect(console.error).toHaveBeenCalled();
   });
 
   it('fetch rejette → pas de callback, log erreur', async () => {

@@ -75,13 +75,10 @@ jest.mock('firebase/auth', () => {
   const deleteUser = jest.fn(async () => {});
   const updateEmail = jest.fn(async () => {});
   const sendEmailVerification = jest.fn(async () => {});
-  const EmailAuthProvider = { credential: jest.fn((email: string, _pwd?: string) => ({ email })) };
+  const EmailAuthProvider = { credential: jest.fn((email: string) => ({ email })) };
   const reauthenticateWithCredential = jest.fn(async () => {});
 
-  // n'appelle pas le callback pendant les TU
-  const onAuthStateChanged = jest.fn((_auth: unknown, _cb: (user: unknown) => void) => {
-    return jest.fn(); // unsubscribe
-  });
+  const onAuthStateChanged = jest.fn(() => { return jest.fn(); });
 
   const getAuth = jest.fn(() => ({}));
 

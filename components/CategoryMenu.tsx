@@ -9,7 +9,6 @@ import {
   iconExposition,
   iconHumor,
   iconAtelier,
-  iconDj,
 } from '@/utils/imagesUtils';
 
 interface CategoryMenuProps {
@@ -18,12 +17,13 @@ interface CategoryMenuProps {
 }
 
 const CategoryMenu: React.FC<CategoryMenuProps> = ({ activeCategory, setActiveCategory }) => {
+  const current = activeCategory && activeCategory.length > 0 ? activeCategory : 'upcoming';
   const categories = [
     {
-      key: 'tonight',
-      label: 'Ce soir',
+      key: 'upcoming',
+      label: 'A venir',
       icon: iconTonight,
-      accessibilityLabel: 'Icône de la catégorie Ce soir',
+      accessibilityLabel: 'Icône de la catégorie A venir',
     },
     {
       key: 'week',
@@ -72,9 +72,7 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ activeCategory, setActiveCa
       label: 'Soirées',
       icon: iconFestival,
       accessibilityLabel: 'Icône de la catégorie Soirées',
-    },
-    { key: 'techno', label: 'DJ', icon: iconDj, accessibilityLabel: 'Icône de la catégorie DJ' },
-  ];
+    },  ];
 
   return (
     <View style={styles.categoriesContainer}>
@@ -87,7 +85,8 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ activeCategory, setActiveCa
         {categories.map((category) => (
           <TouchableOpacity
             key={category.key}
-            style={[styles.categoryCard, activeCategory === category.key && styles.activeCategory]}
+            testID={`category-${category.key}`} 
+            style={[styles.categoryCard, current === category.key && styles.activeCategory]}
             onPress={() => setActiveCategory(category.key)}
           >
             <Image
@@ -123,7 +122,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 2,
     color: 'green',
-    width: 100,
+    width: 101,
     padding: 10,
   },
   activeCategory: {

@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
   text: {
     color: Theme.colors.text,
     fontSize: Theme.typography.deca.fontSize,
-    textAlign: Theme.alignments.textCenter.textAlign,
   },
   informationsProfile: {
     color: Theme.colors.text,

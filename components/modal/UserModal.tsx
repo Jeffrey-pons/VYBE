@@ -86,7 +86,7 @@ export const UserModal: React.FC<UserModalProps> = ({
                     {showCancelButton && (
                       <Button
                         title={cancelText}
-                        buttonStyle={cancelButtonStyle || globalStyles.buttonDeletedeStyle}
+                        buttonStyle={cancelButtonStyle || styles.buttonDeletedeStyle}
                         titleStyle={cancelTitleStyle || globalStyles.titleDeletedStyle}
                         onPress={onClose}
                       />
@@ -95,7 +95,7 @@ export const UserModal: React.FC<UserModalProps> = ({
                     {showConfirmButton && (
                       <Button
                         title={confirmText}
-                        buttonStyle={confirmButtonStyle || globalStyles.buttonSecondStyle}
+                        buttonStyle={confirmButtonStyle || styles.buttonSecondStyle}
                         titleStyle={confirmTitleStyle || globalStyles.titleSecondStyle}
                         onPress={onConfirm}
                       />
@@ -158,5 +158,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     marginTop: 20,
     gap: 15,
+  },
+  buttonDeletedeStyle: {
+    backgroundColor: 'grey',
+    borderRadius: 100,
+    paddingTop: 9,
+    paddingBottom: 9,
+    opacity: 0.7,
+    paddingRight: 30,
+    paddingLeft: 30,
+  },
+  buttonSecondStyle: {
+    backgroundColor: Theme.colors.violet,
+    borderRadius: 100,
+    paddingTop: 9,
+    paddingBottom: 9,
+    paddingRight: 40,
+    paddingLeft: 40,
   },
 });

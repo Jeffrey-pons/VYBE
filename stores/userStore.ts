@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type UserStore = {
   name: string;
@@ -55,7 +56,7 @@ export const useUserStore = create<UserStore>()(
     }),
     {
         name: 'user-store',
-      // ⬇️ Ne persiste que ces 4 champs
+        storage: createJSONStorage(() => AsyncStorage),
       partialize: (state) => ({
         name: state.name,
         lastname: state.lastname,

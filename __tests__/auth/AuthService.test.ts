@@ -1,4 +1,3 @@
-// ====== Mocks Zustand (doivent être résolus AVANT l'import des services) ======
 jest.mock('@/stores/useLoginStore', () => {
   const resetLogin = jest.fn();
   const state = { resetLogin };
@@ -36,16 +35,17 @@ import {
   signOut,
   createUserWithEmailAndPassword,
   updateEmail,
+  type UserCredential,
 } from 'firebase/auth';
 
 import { FirebaseError } from 'firebase/app';
 import { getDoc, deleteDoc, setDoc } from 'firebase/firestore';
 import { Alert } from 'react-native';
 import { router } from 'expo-router';
-import { auth } from '@/config/firebaseConfig';
+import * as firebaseCfg from '@/config/firebaseConfig';
 
 // --------- helpers / casts ----------
-const mockedAuth = jest.mocked(auth, true);
+const mockedAuth = jest.mocked(firebaseCfg.auth, true);
 const getDocMock = getDoc as unknown as jest.MockedFunction<typeof getDoc>;
 const signInMock = signInWithEmailAndPassword as jest.MockedFunction<typeof signInWithEmailAndPassword>;
 const createMock = createUserWithEmailAndPassword as jest.MockedFunction<typeof createUserWithEmailAndPassword>;
@@ -56,9 +56,6 @@ const { __resetLoginMock } = jest.requireMock('@/stores/useLoginStore') as {
   __resetLoginMock: jest.Mock;
 };
 
-// Pour manipuler currentUser (module mocké dans setupTests.ts ou similaire)
-const firebaseCfg: { auth: { currentUser: any }; db: {} } = require('@/config/firebaseConfig');
-
 // ======================================================================
 // deleteUserAccount
 // ======================================================================
@@ -67,7 +64,7 @@ describe('deleteUserAccount', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockedAuth.currentUser = { ...originalUser, uid: 'uid_current', email: 'john@doe.tld' };
+    mockedAuth.currentUser = { ...originalUser, uid: 'uid_current', email: 'john@doe.tld' } as typeof mockedAuth.currentUser;
   });
 
   it('jette si pas de currentUser', async () => {
@@ -153,7 +150,9 @@ describe('loginUser', () => {
   beforeEach(() => jest.clearAllMocks());
 
   it('connecte un utilisateur (happy path)', async () => {
-    signInMock.mockResolvedValueOnce({ user: { uid: 'uid_login', email: 'john@doe.tld' } } as any);
+    signInMock.mockResolvedValueOnce(
+      { user: { uid: 'uid_login', email: 'john@doe.tld' } } as unknown as UserCredential
+    );
     const res = await loginUser('john@doe.tld', 'Secret123!');
     expect(signInMock).toHaveBeenCalledWith(expect.anything(), 'john@doe.tld', 'Secret123!');
     expect(res.user).toBeTruthy();
@@ -210,7 +209,9 @@ describe('registerUser', () => {
     isValidEmail.mockReturnValue(true);
     isValidPhone.mockReturnValue(true);
     isValidPassword.mockReturnValue(true);
-    createMock.mockResolvedValue({ user: { uid: 'uid_new', email: validData.email, phoneNumber: validData.phoneNumber } } as any);
+    createMock.mockResolvedValue(
+      { user: { uid: 'uid_new', email: validData.email, phoneNumber: validData.phoneNumber } } as unknown as UserCredential
+    );
   });
 
   it('inscrit un utilisateur quand les validations passent', async () => {
@@ -270,7 +271,7 @@ describe('updateUserInfo', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    firebaseCfg.auth.currentUser = { ...originalUser, uid: 'uid_current', email: 'john@doe.tld' };
+    firebaseCfg.auth.currentUser = { ...originalUser, uid: 'uid_current', email: 'john@doe.tld' } as typeof firebaseCfg.auth.currentUser;
   });
 
   it('jette si aucun utilisateur connecté', async () => {
@@ -281,7 +282,7 @@ describe('updateUserInfo', () => {
   });
 
   it("jette si l'id ne correspond pas au currentUser", async () => {
-    firebaseCfg.auth.currentUser = { ...originalUser, uid: 'autre' };
+    firebaseCfg.auth.currentUser = { ...originalUser, uid: 'autre' } as typeof firebaseCfg.auth.currentUser;
     await expect(updateUserInfo('uid_current', { name: 'Jane', email: 'jane@doe.tld' })).rejects.toThrow(
       "L'ID utilisateur ne correspond pas à l'utilisateur connecté.",
     );
