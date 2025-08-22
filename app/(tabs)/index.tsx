@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import Logo from '@/components/LogoHeader';
 import { useLocationHandler } from '@/hooks/useLocationHandler';
@@ -21,12 +21,15 @@ const App = () => {
     toggleCitySelector,
   } = useLocationHandler();
   const [activeCategory, setActiveCategory] = useState<string | null>('');
-  const { events } = useEvents(activeCategory || 'upcoming');
+  const { events, loading, refetch } = useEvents(activeCategory || 'upcoming');
 
   const filteredEvents = events.slice(1, 11).filter((event) => event.originAgenda?.uid);
+  const usedIds = new Set<string | undefined>([ events[0]?.uid, ...filteredEvents.map(e => e.uid),]);
+  const secondaryEvent = events.find((e) => e.originAgenda?.uid && e.uid && !usedIds.has(e.uid));
+  const remainingHorizontal = events.filter(e => e.originAgenda?.uid && e.uid && !usedIds.has(e.uid)).slice(1, 12);
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.eventScroll} refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}>
       <View style={globalStyles.scrollContainer}>
         <Logo />
         <View style={styles.inlineLocation}>
@@ -67,62 +70,76 @@ const App = () => {
         <View style={styles.eventsContainer}>
           {events && events.length > 0 ? (
             <>
+            
+             <Text style={styles.titleScreen}>{getIntroPhrase(activeCategory, city)}</Text>
               {/* Afficher levenement le + en vedette */}
-              <View style={styles.featuredEventContainer}>
+              <View>
                 {events[0]?.originAgenda?.uid ? <EventCard event={events[0]} /> : null}
               </View>
-              <ThemedText type="text">{getIntroPhrase(activeCategory, city)}</ThemedText>
 
               {/* Scroll horizontal des autres événements */}
               {/* Afficher les evenements filtres du plus recent au plus loin */}
-              <ScrollView horizontal showsHorizontalScrollIndicator style={styles.horizontalScroll}>
+              <ScrollView horizontal showsHorizontalScrollIndicator>
                 {filteredEvents.map((event) => (
                   <View key={event.uid} style={styles.miniEventCard}>
-                    <EventCard event={event} variant="horizontal" />
+                    <EventCard event={event} variant="horizontal"  cardWidth={250} imageHeight={280} />
+                  </View>
+                ))}
+              </ScrollView>
+                <View style={styles.musicConnectCard}>
+                <View style={styles.musicConnectContent}>
+                  <Text style={styles.musicConnectText}>
+                    Connecte ta musique pour découvrir les évènements qui te correspondent.
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.musicConnectButton}
+                    // onPress={() => router.push('/musicscreen')}
+                    accessibilityLabel='Démarrer la connexion musicale'
+                  >
+                    <Text style={styles.musicConnectButtonText}>Démarrer</Text>
+                  </TouchableOpacity>
+                </View>
+                <Image source={musicConnectImg} style={styles.musicImage} resizeMode="contain" accessibilityLabel='Icône connexion à la musique'/>
+              </View>
+             {secondaryEvent && (
+              <>
+              <Text style={styles.titleScreen}>
+                Plus d’évènements à {city}
+              </Text>
+
+                <View>
+                  <EventCard event={secondaryEvent} />
+                </View>
+              </>
+            )}
+            {remainingHorizontal.length > 0 && (
+            <>
+              {/* Liste horizontale “comme la première” */}
+              <ScrollView horizontal showsHorizontalScrollIndicator>
+                {remainingHorizontal.map((event) => (
+                  <View key={event.uid} style={styles.miniEventCard}>
+                    <EventCard event={event} variant="horizontal" cardWidth={250} imageHeight={280}/>
                   </View>
                 ))}
               </ScrollView>
             </>
-          ) : (
-            <ThemedText type="text">Aucun événement trouvé</ThemedText>
           )}
-        </View>
-        <View style={styles.musicConnectCard}>
-          <View style={styles.musicConnectContent}>
-            <Text style={styles.musicConnectText}>
-              Connecte ta musique pour découvrir les évènements qui te correspondent 🎵
-            </Text>
-            <TouchableOpacity
-              style={styles.musicConnectButton}
-              // onPress={() => router.push('/musicscreen')}
-              accessibilityLabel='Démarrer la connexion musicale'
-            >
-              <Text style={styles.musicConnectButtonText}>Démarrer</Text>
-            </TouchableOpacity>
-          </View>
-          <Image source={musicConnectImg} style={styles.musicImage} resizeMode="contain" accessibilityLabel='Icône connexion à la musique'/>
+            </>
+          ) : (
+            <Text style={styles.errorCategoryEvent}>Cette catégorie ne contient aucun événement planifié à {city} pour le moment</Text>
+          )}
         </View>
         <View>
           {/*  (API LIEU CATEGORIE DANS LA VILLE ) puis une fois rempli, afficher un bloc devenement propose en fonction des gouts musicaux*/}
-          <ThemedText type="text">Les derniers lieux cools près de chez toi</ThemedText>
+          {/* <ThemedText type="text">Les derniers lieux cools près de chez toi</ThemedText> */}
           {/* <ScrollView horizontal showsHorizontalScrollIndicator={true} style={styles.horizontalScroll}>
-    <SpotCard title="Élysée Montmartre" uid="elysee" image={require('@/assets/elysee.webp')} />
-    <SpotCard title="Zénith Paris - La Villette" uid="zenith" image={require('@/assets/zenith.webp')} />
-  </ScrollView> */}
+          <SpotCard title="Élysée Montmartre" uid="elysee" image={require('@/assets/elysee.webp')} />
+          <SpotCard title="Zénith Paris - La Villette" uid="zenith" image={require('@/assets/zenith.webp')} />
+        </ScrollView> */}
         </View>
       </View>
     </ScrollView>
   );
-
-  {
-    /* PUIS EVENEMENT PAR 10 / 20 */
-  }
-  {
-    /* BLOC juste pour 'nom de la personne'''' */
-  }
-  {
-    /* FAIRE DAUTRES STYLES EVENT CARD' */
-  }
 };
 
 const styles = StyleSheet.create({
@@ -193,23 +210,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingBottom: 20,
   },
-  featuredEventContainer: {
-    marginBottom: 20,
-  },
-  horizontalScroll: {
-    paddingLeft: 10,
-  },
   miniEventCard: {
-    // width: 300,
-    marginRight: 10,
-    padding: 15,
+    marginRight: 0,
+    paddingBottom: 10,
+    paddingTop: 10,
+    paddingRight: 15,
   },
 
   musicConnectCard: {
     backgroundColor: '#f5f0e6',
     borderRadius: 12,
     padding: 20,
-    // marginVertical: 30,
+    marginBottom: 20,
     marginHorizontal: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -223,7 +235,6 @@ const styles = StyleSheet.create({
   },
   musicConnectContent: {
     flex: 1,
-    marginRight: 10,
   },
   musicConnectText: {
     fontSize: 18,
@@ -247,6 +258,25 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
   },
+  eventScroll: {
+    marginBottom: 30,
+  },
+  titleScreen: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 22,
+    marginBottom: 18,
+    marginTop: 4,
+    marginLeft: 5,
+  },
+  errorCategoryEvent: {
+    color: 'white',
+    fontSize: 22,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginTop: 20,
+    marginHorizontal: 20,
+  }
 });
 
 export default App;

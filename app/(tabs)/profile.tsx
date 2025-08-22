@@ -393,6 +393,9 @@ const styles = StyleSheet.create({
   titleUpdatedProfileStyle: {
     color: 'black',
     fontFamily: 'FunnelSans-Regular',
+    paddingTop: 5,
+    paddingBottom: 5,
+    fontWeight: 'bold',
   },
   buttonContainer: {
     width: '100%',
@@ -434,9 +437,8 @@ const styles = StyleSheet.create({
   activateButton: {
     backgroundColor: Theme.colors.text,
     color: Theme.colors.background,
-    paddingVertical: 10,
-    borderRadius: 20,
-    width: '80%',
+    borderRadius: 38,
+    width: '90%',
     textAlign: 'center',
     margin: 'auto',
   },
@@ -446,6 +448,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     display: 'flex',
     margin: 'auto',
+    overflow: 'visible',
   },
   sectionDescription: {
     color: Theme.colors.silver,
@@ -455,11 +458,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    minHeight: 40,
   },
   separator: {
     height: 1,
-    backgroundColor: '#444',
+    backgroundColor: 'red',
     width: '100%',
     marginVertical: 10,
     display: 'flex',
@@ -482,10 +485,8 @@ const styles = StyleSheet.create({
   },
   musicButtonsContainer: {
     flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
     width: '100%',
-    paddingTop: 10,
+    paddingTop: 18,
     gap: 12,
   },
   input: {

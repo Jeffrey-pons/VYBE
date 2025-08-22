@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Modal,
   Image,
-  ScrollView,
 } from 'react-native';
 import iconLoupe from '../../assets/images/icons/icon_loupe.png';
 import { cities } from '@/utils/citiesUtils';
@@ -74,7 +73,6 @@ const FilterScreen: React.FC = () => {
   });
 
   return (
-    <ScrollView>
       <View style={globalStyles.containerX}>
         <View style={styles.searchContainer}>
           <Image 
@@ -148,7 +146,6 @@ const FilterScreen: React.FC = () => {
         </Modal>
         <EventList events={filteredEvents} />
       </View>
-    </ScrollView>
   );
 };
 

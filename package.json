@@ -13,7 +13,7 @@
     "test:ci": "jest --ci --runInBand --reporters=default",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "format": "prettier --write .",
-     "emu": "firebase emulators:start --only auth,firestore --project demo-test",
+    "emu": "firebase emulators:start --only auth,firestore --project demo-test",
     "test:int": "cross-env FIREBASE_EMULATORS=1 jest __tests__/integration --runInBand"
   },
   "jest": {
@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
-    "@react-native-async-storage/async-storage": "2.1.2",
+    "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-native-firebase/app": "^21.11.0",
     "@react-native-firebase/auth": "^21.11.0",
     "@react-native-firebase/firestore": "^21.11.0",

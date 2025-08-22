@@ -5,9 +5,14 @@ import { router } from 'expo-router';
 type Props = {
   event: Event;
   variant?: 'featured' | 'horizontal' | 'grid';
+  cardWidth?: number;     
+  imageHeight?: number;  
+  style?: StyleProp<ViewStyle>;
 };
 
-export const EventCard = ({ event, variant = 'featured' }: Props) => {
+const TEXT_BLOCK_HEIGHT = 120;
+
+export const EventCard = ({ event, variant = 'featured', cardWidth = 250, imageHeight = 200, style, }: Props) => {
   const startDate =
     event.dateRange?.fr ||
     (event.firstTiming?.begin
@@ -27,9 +32,18 @@ export const EventCard = ({ event, variant = 'featured' }: Props) => {
       console.warn('UID ou originAgenda manquant');
     }
   };
-
+const isHorizontal = variant === 'horizontal';
   return (
-    <View style={[styles.eventCard, variant === 'horizontal' && styles.horizontalCard]}>
+       <View
+      style={[
+        styles.eventCard,
+        isHorizontal && styles.horizontalCard,
+        // Contraint FERMEMENT largeur + hauteur totale en horizontal
+        // eslint-disable-next-line react-native/no-inline-styles
+        isHorizontal && { width: cardWidth, height: imageHeight + TEXT_BLOCK_HEIGHT, justifyContent: 'space-between' },
+        style,
+      ]}
+    >
       <Image
         source={{ uri: `${event.image?.base || ''}${event.image?.filename}` }}
         style={[styles.eventImage, variant === 'horizontal' && styles.horizontalImage]}
