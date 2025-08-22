@@ -25,7 +25,7 @@ describe('CategoryMenu', () => {
     render(<CategoryMenu activeCategory={null} setActiveCategory={mockSetActiveCategory} />);
 
     const labels = [
-      'Ce soir',
+      'A venir',
       'Cette semaine',
       'Concerts',
       'Festivals',
@@ -34,7 +34,6 @@ describe('CategoryMenu', () => {
       'Humours',
       'Ateliers',
       'Soirées',
-      'DJ',
     ];
 
     for (const label of labels) {
@@ -48,29 +47,19 @@ describe('CategoryMenu', () => {
     fireEvent.press(screen.getByText('Concerts'));
     expect(mockSetActiveCategory).toHaveBeenCalledWith('concert');
 
-    fireEvent.press(screen.getByText('Ce soir'));
-    expect(mockSetActiveCategory).toHaveBeenCalledWith('tonight');
+    fireEvent.press(screen.getByText('A venir'));
+    expect(mockSetActiveCategory).toHaveBeenCalledWith('upcoming');
 
-    fireEvent.press(screen.getByText('DJ'));
-    expect(mockSetActiveCategory).toHaveBeenCalledWith('techno');
+    fireEvent.press(screen.getByText('Soirées'));
+    expect(mockSetActiveCategory).toHaveBeenCalledWith('soiree');
   });
 
   it('met en évidence la catégorie active (bordure jaune)', () => {
-    render(<CategoryMenu activeCategory="concert" setActiveCategory={mockSetActiveCategory} />);
+  render(<CategoryMenu activeCategory="concert" setActiveCategory={mockSetActiveCategory} />);
 
-    const concertsText = screen.getByText('Concerts');
-    const parent = concertsText.parent; 
-
-    const styles = Array.isArray(parent?.props.style)
-      ? parent?.props.style
-      : [parent?.props.style];
-
-    const hasYellowBorder = styles?.some(
-      (s) => s && typeof s === 'object' && (s as Record<string, unknown>).borderColor === 'yellow'
-    );
-
-    expect(hasYellowBorder).toBe(true);
-  });
+  const card = screen.getByTestId('category-concert');
+  expect(card).toHaveStyle({ borderColor: 'yellow' });
+});
 
   it("affiche l'icône accessible d'une catégorie (ex: Concerts)", () => {
     render(<CategoryMenu activeCategory={null} setActiveCategory={mockSetActiveCategory} />);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Linking, Pressable, Alert, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEventById } from '@/hooks/useEventById';
 import globalStyles from '@/styles/globalStyle';
@@ -47,6 +47,33 @@ const EventDetailPage = () => {
   const router = useRouter();
   const { event, loading, error } = useEventById(agendaId, id);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [opening, setOpening] = useState(false);
+
+  const handleBuy = async () => {
+  const url = event.registration?.[0]?.value;
+
+  if (!url) {
+    Alert.alert('Lien indisponible', "Aucun lien de billetterie n'est fourni pour cet évènement.");
+    return;
+  }
+  try {
+    setOpening(true);
+
+    const supported = await Linking.canOpenURL(url);
+    if (!supported) {
+      Alert.alert('Redirection impossible', "Ce lien ne peut pas être ouvert sur cet appareil.");
+      return;
+    }
+
+    // Message avant la bascule (souvent on quitte l'app)
+    Alert.alert('Redirection', 'Ouverture de la billetterie…');
+    await Linking.openURL(url);
+  } catch {
+    Alert.alert('Erreur', "Impossible d'ouvrir la billetterie.");
+  } finally {
+    setOpening(false);
+  }
+};
 
   if (loading) return <Text style={styles.loading}>Chargement...</Text>;
   if (error) return <Text style={styles.error}>Erreur : {error}</Text>;
@@ -76,27 +103,28 @@ const EventDetailPage = () => {
         <View style={styles.separator} />
         {/* DESCRIPTION */}
         <Text style={styles.eventInformationTitle}>Informations sur l'évènement</Text>
-        <TouchableOpacity onPress={() => setIsDescriptionExpanded(!isDescriptionExpanded)}>
-          <View>
-            <Text style={styles.modalDescription}>
-              {isDescriptionExpanded
-                ? event.longDescription?.fr || 'Aucune description disponible'
-                : (event.longDescription?.fr?.substring(0, 180) ||
-                    'Aucune description disponible') + '...'}
-            </Text>
-            <TouchableOpacity
-              onPress={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-              style={styles.arrowContainer}
-            >
-              <Image
-                source={isDescriptionExpanded ? iconArrowDown : iconArrowUp}
-                style={styles.iconActionButton}
-                alt="Flèche pour description"
-                accessibilityLabel="Flèche pour description"
-              />
-            </TouchableOpacity>
+        <Pressable
+          onPress={() => setIsDescriptionExpanded((v) => !v)}
+          accessibilityRole="button"
+          hitSlop={8}
+          style={styles.arrowContainer}
+        >
+          <Text
+            style={styles.modalDescription}
+            numberOfLines={isDescriptionExpanded ? undefined : 6} 
+          >
+            {event.longDescription?.fr || 'Aucune description disponible'}
+          </Text>
+
+          <View style={styles.arrowContainer}>
+            <Image
+              source={isDescriptionExpanded ? iconArrowDown : iconArrowUp}
+              style={styles.iconActionButton}
+              alt="Flèche pour description"
+              accessibilityLabel="Flèche pour description"
+            />
           </View>
-        </TouchableOpacity>
+        </Pressable>
         {/* CONDITIONS */}
         <Text style={styles.eventSectionTitle}>Conditions</Text>
         <Text style={styles.eventText}>
@@ -258,15 +286,17 @@ const EventDetailPage = () => {
       {/* BLOC STICKY PRENDS TA PLACE */}
       <View style={styles.fixedBottomBar}>
         <Text style={styles.reserveText}>{priceLabel}</Text>
-        <TouchableOpacity
-          style={styles.buyButton}
+         <TouchableOpacity
+          // eslint-disable-next-line react-native/no-inline-styles
+          style={[styles.buyButton, opening && { opacity: 0.6 }]}
           accessibilityLabel='Prendre sa place pour l’événement'
-          onPress={() => {
-            const url = event.registration?.[0]?.value;
-            if (url) Linking.openURL(url);
-          }}
+          accessibilityState={{ busy: opening, disabled: opening }}
+          disabled={opening}
+          onPress={handleBuy}
         >
-          <Text style={styles.buyButtonText}>Prends ta place</Text>
+          {opening
+            ? <ActivityIndicator />
+            : <Text style={styles.buyButtonText}>Prends ta place</Text>}
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -335,6 +365,7 @@ const styles = StyleSheet.create({
     color: 'gray',
     marginTop: 5,
     fontFamily: 'FunnelSans-Regular',
+    paddingRight: 28,
   },
   closeEventDetailButton: {
     position: 'absolute',

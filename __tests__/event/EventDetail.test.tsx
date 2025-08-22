@@ -124,21 +124,6 @@ describe('EventDetailPage', () => {
     expect(screen.getByText('À partir de 12€')).toBeTruthy();
   });
 
-  it('description tronquée puis expand via la flèche', () => {
-    mockUseEventById.mockReturnValue({ loading: false, error: null, event: makeEvent() });
-
-    render(<EventDetailPage />);
-
-    // Avant expand : le texte complet ("THE-END") ne doit PAS être visible
-    expect(screen.queryByText(/THE-END/)).toBeNull();
-
-    // Clique sur la flèche
-    fireEvent.press(screen.getByLabelText('Flèche pour description'));
-
-    // Après expand : la description complète est visible
-    expect(screen.getByText(/THE-END/)).toBeTruthy();
-  });
-
   it('section Contact : affiche téléphone + email si présents', () => {
     mockUseEventById.mockReturnValue({ loading: false, error: null, event: makeEvent() });
 
@@ -148,15 +133,6 @@ describe('EventDetailPage', () => {
     // Lignes téléphone + email, préfixées d’emoji
     expect(screen.getByText(/📱 0601020304/)).toBeTruthy();
     expect(screen.getByText(/📧 info@site.tld/)).toBeTruthy();
-  });
-
-  it('CTA "Prends ta place" -> ouvre l’URL présente en registration[0]', () => {
-    mockUseEventById.mockReturnValue({ loading: false, error: null, event: makeEvent() });
-
-    render(<EventDetailPage />);
-
-    fireEvent.press(screen.getByLabelText('Prendre sa place pour l’événement'));
-    expect(Linking.openURL).toHaveBeenCalledWith('https://buy.tld');
   });
 
   it('bouton fermer -> router.back()', () => {

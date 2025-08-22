@@ -3,13 +3,12 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, RefreshCon
 import { ThemedText } from '@/components/ThemedText';
 import Logo from '@/components/LogoHeader';
 import { useLocationHandler } from '@/hooks/useLocationHandler';
-import { iconChoiceLocation } from '@/utils/imagesUtils';
+import { iconChoiceLocation, registerIcon } from '@/utils/imagesUtils';
 import { useEvents } from '@/hooks/useEvent';
 import { EventCard } from '@/components/events/EventCard';
 import CategoryMenu from '@/components/CategoryMenu';
 import globalStyles from '@/styles/globalStyle';
 import { getIntroPhrase } from '@/utils/categoryUtils';
-import { musicConnectImg } from '@/utils/imagesUtils';
 
 const App = () => {
   const {
@@ -24,9 +23,18 @@ const App = () => {
   const { events, loading, refetch } = useEvents(activeCategory || 'upcoming');
 
   const filteredEvents = events.slice(1, 11).filter((event) => event.originAgenda?.uid);
-  const usedIds = new Set<string | undefined>([ events[0]?.uid, ...filteredEvents.map(e => e.uid),]);
-  const secondaryEvent = events.find((e) => e.originAgenda?.uid && e.uid && !usedIds.has(e.uid));
-  const remainingHorizontal = events.filter(e => e.originAgenda?.uid && e.uid && !usedIds.has(e.uid)).slice(1, 12);
+  const usedIds = new Set<string>([
+  ...(events[0]?.uid != null ? [String(events[0].uid)] : []),
+  ...filteredEvents
+    .map((e) => (e.uid != null ? String(e.uid) : undefined))
+    .filter((v): v is string => !!v),
+]);
+  const secondaryEvent = events.find(
+  (e) => e.originAgenda?.uid && e.uid != null && !usedIds.has(String(e.uid))
+);
+  const remainingHorizontal = events
+  .filter((e) => e.originAgenda?.uid && e.uid != null && !usedIds.has(String(e.uid)))
+  .slice(1, 12);
 
   return (
     <ScrollView style={styles.eventScroll} refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}>
@@ -71,7 +79,7 @@ const App = () => {
           {events && events.length > 0 ? (
             <>
             
-             <Text style={styles.titleScreen}>{getIntroPhrase(activeCategory, city)}</Text>
+             <Text style={styles.titleScreen}>{getIntroPhrase(activeCategory, city ?? '')}</Text>
               {/* Afficher levenement le + en vedette */}
               <View>
                 {events[0]?.originAgenda?.uid ? <EventCard event={events[0]} /> : null}
@@ -99,7 +107,7 @@ const App = () => {
                     <Text style={styles.musicConnectButtonText}>Démarrer</Text>
                   </TouchableOpacity>
                 </View>
-                <Image source={musicConnectImg} style={styles.musicImage} resizeMode="contain" accessibilityLabel='Icône connexion à la musique'/>
+                <Image source={registerIcon} style={styles.musicImage} resizeMode="contain" accessibilityLabel='Icône connexion à la musique'/>
               </View>
              {secondaryEvent && (
               <>

@@ -1,32 +1,29 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { memGet, memSet, dedupe } from '@/utils/cache';
 
-type UseRefreshableOpts<T> = {
-  // Optional seed value while the first fetch resolves
+type Opts<T> = {
   initial?: T;
-  // Map/normalize raw result if needed
   mapResult?: (raw: T) => T;
+  cacheKey?: string;
+  ttlMs?: number;
+  preferCache?: boolean; 
 };
 
-export function useRefreshable<T>(
-  fetcher: () => Promise<T>,
-  deps: unknown[] = [],
-  opts: UseRefreshableOpts<T> = {}
-) {
-  const { initial, mapResult } = opts;
+export function useRefreshable<T>(fetcher: () => Promise<T>, opts: Opts<T> = {}) {
+  const { initial, mapResult, cacheKey, ttlMs = 5 * 60_000, preferCache = true } = opts;
 
   const [data, setData] = useState<T | undefined>(initial);
   const [loading, setLoading] = useState<boolean>(!initial);
   const [error, setError] = useState<string | null>(null);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const _fetcher = useMemo(() => fetcher, deps);
-
   const refetch = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const raw = await _fetcher();
-      setData(mapResult ? mapResult(raw) : raw);
+      const raw = cacheKey ? await dedupe(cacheKey, fetcher) : await fetcher();
+      const next = mapResult ? mapResult(raw) : raw;
+      setData((prev) => (Object.is(prev, next) ? prev : next));
+      if (cacheKey) memSet(cacheKey, next, ttlMs);
     } catch (e) {
       const msg =
         e instanceof Error ? e.message : (e as { message?: string })?.message ?? 'Unexpected error';
@@ -34,12 +31,24 @@ export function useRefreshable<T>(
     } finally {
       setLoading(false);
     }
-  }, [_fetcher, mapResult]);
+  }, [fetcher, mapResult, cacheKey, ttlMs]);
 
   useEffect(() => {
-    // first run + whenever deps change
-    refetch();
-  }, [refetch]);
+    let mounted = true;
+    (async () => {
+      if (cacheKey) {
+        const { data: cached, fresh } = memGet<T>(cacheKey);
+        if (cached && preferCache && mounted) {
+          setData((prev) => (Object.is(prev, cached) ? prev : cached));
+          setLoading(!fresh); // si frais: on évite un flash de spinner
+        }
+      }
+      await refetch();
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [cacheKey, preferCache, refetch]);
 
   return { data, loading, error, refetch, setData };
 }

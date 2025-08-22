@@ -2,7 +2,7 @@ export const categoryInfo: Record<
   string,
   { label: string; genre: 'm' | 'f'; pluralLabel: string; special?: boolean }
 > = {
-  tonight: { label: 'Ce soir', genre: 'm', pluralLabel: 'événements', special: true },
+  upcoming: { label: 'À venir', genre: 'm', pluralLabel: 'événements' }, //
   week: { label: 'Cette semaine', genre: 'f', pluralLabel: 'activités', special: true },
   concert: { label: 'Concert', genre: 'm', pluralLabel: 'concerts' },
   festival: { label: 'Festival', genre: 'm', pluralLabel: 'festivals' },
@@ -11,11 +11,10 @@ export const categoryInfo: Record<
   humour: { label: 'Humour', genre: 'm', pluralLabel: 'spectacles d’humour' },
   atelier: { label: 'Atelier', genre: 'm', pluralLabel: 'ateliers' },
   soiree: { label: 'Soirée', genre: 'f', pluralLabel: 'soirées' },
-  techno: { label: 'DJ', genre: 'm', pluralLabel: 'sets DJ' },
 };
 
 export const getIntroPhrase = (categoryKey: string | null, city: string): string => {
-  if (!categoryKey || !categoryInfo[categoryKey]) return `Les événements à ${city}`;
+  if (!categoryKey || !categoryInfo[categoryKey]) return `Les prochains événements à ${city}`;
 
   const { genre, pluralLabel, special } = categoryInfo[categoryKey];
   if (special) return `${categoryInfo[categoryKey].label} à ${city}`;
