@@ -1,6 +1,8 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor, act } from '@testing-library/react-native';
 
+jest.mock('@react-native-community/datetimepicker', () => 'DateTimePicker');
+
 jest.mock('@/hooks/useDebounce', () => ({
   useDebounce: (v: string) => v,
 }));

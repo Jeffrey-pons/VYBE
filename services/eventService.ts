@@ -74,11 +74,11 @@ export const getEventDetails = async (agendaId: string, eventId: string) => {
     throw new Error("Erreur lors de la récupération des détails de l'événement");
   }
 };
+
 export const fetchPopularEvents = async (city: string) => {
   try {
     const events = await getUpcomingPopularEventsInCity(city);
-    return events; // Retourner les événements populaires
-    console.log('Événements populaires récupérés:', events);
+    return events;
   } catch (error) {
     console.error('Erreur lors de la récupération des événements populaires:', error);
     throw new Error('Erreur lors de la récupération des événements populaires');
