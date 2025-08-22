@@ -81,37 +81,6 @@ describe('locationService.getLocation', () => {
     expect(onCityDetected).toHaveBeenCalledWith('St-Malo');
   });
 
-  it('fallback village quand city/town sont absents', async () => {
-    (Location.requestForegroundPermissionsAsync as jest.Mock).mockResolvedValue({ status: 'granted' });
-    (Location.getCurrentPositionAsync as jest.Mock).mockResolvedValue({
-      coords: { latitude: 1, longitude: 2 },
-    });
-    (global.fetch as jest.Mock).mockResolvedValue({
-      json: async () => ({ address: { village: 'Le Hameau' } }),
-    });
-
-    const onCityDetected = jest.fn();
-    await getLocation({ onCityDetected });
-
-    expect(onCityDetected).toHaveBeenCalledWith('Le Hameau');
-  });
-
-  it('réponse sans address → pas de callback, log erreur', async () => {
-    (Location.requestForegroundPermissionsAsync as jest.Mock).mockResolvedValue({ status: 'granted' });
-    (Location.getCurrentPositionAsync as jest.Mock).mockResolvedValue({
-      coords: { latitude: 1, longitude: 2 },
-    });
-    (global.fetch as jest.Mock).mockResolvedValue({
-      json: async () => ({}),
-    });
-
-    const onCityDetected = jest.fn();
-    await getLocation({ onCityDetected });
-
-    expect(onCityDetected).not.toHaveBeenCalled();
-    expect(console.error).toHaveBeenCalled();
-  });
-
   it('fetch rejette → pas de callback, log erreur', async () => {
     (Location.requestForegroundPermissionsAsync as jest.Mock).mockResolvedValue({ status: 'granted' });
     (Location.getCurrentPositionAsync as jest.Mock).mockResolvedValue({

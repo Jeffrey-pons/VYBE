@@ -1,6 +1,4 @@
 import {
-  fetchEventsForTonight,
-  fetchEventsForThisWeek,
   fetchEventsByCategory,
   getFiveUpcomingEvents,
   getEventDetails,
@@ -36,51 +34,6 @@ afterEach(() => {
   (console.error as unknown as jest.Mock).mockRestore?.();
 });
 
-describe('fetchEventsForTonight', () => {
-  it('jette si city manquante', async () => {
-    await expect(fetchEventsForTonight('')).rejects.toThrow(
-      "La ville n'est pas définie. Impossible de récupérer les événements.",
-    );
-    expect(mockedApi.getEventsForTonightOpenAgenda).not.toHaveBeenCalled();
-  });
-
-  it('retourne les événements et appelle l’API avec city', async () => {
-    mockedApi.getEventsForTonightOpenAgenda.mockResolvedValueOnce([{ id: 1 }]);
-    const res = await fetchEventsForTonight('Paris');
-    expect(res).toEqual([{ id: 1 }]);
-    expect(mockedApi.getEventsForTonightOpenAgenda).toHaveBeenCalledWith('Paris');
-  });
-
-  it('mappe les erreurs avec le message service', async () => {
-    mockErr(mockedApi.getEventsForTonightOpenAgenda, 'netdown');
-    await expect(fetchEventsForTonight('Paris')).rejects.toThrow(
-      'Erreur lors de la récupération des événements pour ce soir',
-    );
-  });
-});
-
-describe('fetchEventsForThisWeek', () => {
-  it('jette si city manquante', async () => {
-    await expect(fetchEventsForThisWeek('')).rejects.toThrow(
-      "La ville n'est pas définie. Impossible de récupérer les événements.",
-    );
-    expect(mockedApi.getEventsThisWeekOpenAgenda).not.toHaveBeenCalled();
-  });
-
-  it('ok', async () => {
-    mockedApi.getEventsThisWeekOpenAgenda.mockResolvedValueOnce([{ id: 'w1' }]);
-    const res = await fetchEventsForThisWeek('Lyon');
-    expect(res).toEqual([{ id: 'w1' }]);
-    expect(mockedApi.getEventsThisWeekOpenAgenda).toHaveBeenCalledWith('Lyon');
-  });
-
-  it('erreur', async () => {
-    mockErr(mockedApi.getEventsThisWeekOpenAgenda);
-    await expect(fetchEventsForThisWeek('Lyon')).rejects.toThrow(
-      'Erreur lors de la récupération des événements pour cette semaine',
-    );
-  });
-});
 
 describe('fetchEventsByCategory', () => {
   it('jette si city manquante', async () => {
@@ -179,3 +132,5 @@ describe('fetchLastPostedEventsByCity (alias)', () => {
     expect(mockedApi.getLastPostedEventsByCity).toHaveBeenCalledWith('Toulouse', 12);
   });
 });
+
+
