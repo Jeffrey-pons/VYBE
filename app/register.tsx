@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { Dimensions, TextInput, View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { Dimensions, TextInput, View, Text, StyleSheet, Image, ScrollView, Platform, KeyboardAvoidingView } from 'react-native';
 import { Button } from 'react-native-elements';
 import { router } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native'; // <-- important
@@ -57,7 +57,14 @@ const RegisterScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
+      <KeyboardAvoidingView 
+      // eslint-disable-next-line react-native/no-inline-styles
+      style={{ flex: 1 }} 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+    <ScrollView contentContainerStyle={globalStyles.scrollContainer}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}>
       <View style={globalStyles.container}>
         <Image
           style={globalStyles.logoAuthStyle}
@@ -130,6 +137,7 @@ const RegisterScreen: React.FC = () => {
         </Text>
       </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
