@@ -11,7 +11,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ step, totalSteps }) => {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.progress, { width: `${progress}%` }]} />
+      <View style={[styles.progress, { width: `${progress}%` }]}testID="progress-bar" />
     </View>
   );
 };
@@ -19,7 +19,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ step, totalSteps }) => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    top: 65,
+    top: 40,
     left: '30%',
     right: '30%',
     height: 10,

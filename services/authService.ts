@@ -7,6 +7,7 @@ import { Alert } from 'react-native';
 import { AuthServiceError, ValidationError } from '@/types/errors';
 import { handleAuthError } from './errorHandlerService';
 import { FirebaseError } from 'firebase/app';
+import { useUserStore } from '@/stores/userStore';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -15,13 +16,12 @@ import {
   deleteUser,
   EmailAuthProvider,
   reauthenticateWithCredential,
-  onAuthStateChanged,
   updateEmail,
   sendEmailVerification,
 } from 'firebase/auth';
-import { useLoginStore } from '@/stores/useLoginStore';
+import  useLoginStore  from '@/stores/useLoginStore';
 import { extractErrorMessage } from '@/utils/errorsUtils';
-import { useRegisterStore } from '@/stores/useRegisterStore';
+import useRegisterStore from '@/stores/useRegisterStore';
 
 interface AuthResponse {
   user: User;
@@ -31,6 +31,7 @@ export interface UserProgress {
   city?: string;
   hasConnectedMusic?: boolean;
   hasActiveNotification?: boolean;
+  onBoardingCompleted?: boolean;
 }
 
 export const registerUser = async (data: RegisterDTO): Promise<AuthResponse> => {
@@ -56,10 +57,8 @@ export const registerUser = async (data: RegisterDTO): Promise<AuthResponse> => 
     useRegisterStore.getState().resetRegister();
     return { user: userCredential.user };
   } catch (error: unknown) {
-    Alert.alert('Erreur', extractErrorMessage(error));
     if (error instanceof ValidationError) throw error;
-    if (error instanceof FirebaseError) throw handleAuthError(error, 'Erreur Firebase');
-    throw new AuthServiceError("Erreur lors de l'inscription", 'auth/unknown');
+    if (error instanceof FirebaseError) throw handleAuthError(error, 'Erreur Firebase')
   }
 };
 
@@ -68,7 +67,7 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     return { user: userCredential.user };
   } catch (error: unknown) {
-    throw handleAuthError(error, 'Une erreur est survenue', { showAlert: true });
+        throw handleAuthError(error);
   }
 };
 
@@ -76,7 +75,8 @@ export const logoutUser = async (): Promise<void> => {
   try {
     await signOut(auth);
     Alert.alert('Succès', 'Déconnexion reussie');
-    useLoginStore.getState().resetLogin(); // Reset login state in zustand store
+    useLoginStore.getState().resetLogin();
+    useUserStore.getState().resetUserFields();
     router.replace('/home');
   } catch (error: unknown) {
     throw new Error(extractErrorMessage(error));
@@ -166,20 +166,15 @@ export const deleteUserAccount = async (userId: string, password: string): Promi
     try {
       await reauthenticateUser(user, password);
     } catch (error: unknown) {
-      Alert.alert(
-        "Erreur d'authentification",
-        'Veuillez vérifier votre mot de passe avant de supprimer votre compte.',
-      );
-      throw handleAuthError(error, "Erreur d'authentification", { showAlert: false });
+      throw handleAuthError(error, "Erreur d'authentification");
     }
 
     const userRef = doc(db, 'users', userId);
     await deleteDoc(userRef);
     await deleteUser(user);
-    Alert.alert('Succès', 'Compte supprimé avec succès');
-    router.replace('/home');
+    useLoginStore.getState().resetLogin();
+    useUserStore.getState().resetUserFields();
   } catch (error: unknown) {
-    Alert.alert('Erreur', extractErrorMessage(error));
     throw new Error(extractErrorMessage(error));
   }
 };
@@ -193,18 +188,10 @@ export const reauthenticateUser = async (user: User, password: string) => {
     const credential = EmailAuthProvider.credential(user.email, password);
     await reauthenticateWithCredential(user, credential);
   } catch (error: unknown) {
-    Alert.alert('Erreur', extractErrorMessage(error));
-    throw handleAuthError(error, 'Erreur');
+     throw handleAuthError(error, "Erreur d'authentification", { showAlert: false });
   }
 };
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    console.log('Utilisateur connecté :', user);
-  } else {
-    console.log('Aucun utilisateur connecté.');
-  }
-});
 
 export const handleUpdateEmail = async (newEmail: string) => {
   try {

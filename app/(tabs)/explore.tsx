@@ -1,15 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  Modal,
-  Image,
-  ScrollView,
+  View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity,
+  Modal, Image, Platform
 } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import iconLoupe from '../../assets/images/icons/icon_loupe.png';
 import { cities } from '@/utils/citiesUtils';
 import iconCalendar from '../../assets/images/icons/icon_calender.png';
@@ -21,50 +15,63 @@ import EventList from '@/components/events/EventListCard';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useDebounce } from '@/hooks/useDebounce';
 
+const toYMD = (d: Date) => d.toISOString().slice(0, 10);
+
 const FilterScreen: React.FC = () => {
   const {
-    search,
-    date,
-    city,
-    showDatePicker,
-    showCityInput,
-    setDate,
-    setCity,
-    setShowDatePicker,
-    setShowCityInput,
+    search, date, city,
+    showCityInput, setDate, setCity, setShowCityInput,
   } = useFilterStore();
 
-  const keyword = useFilterStore((state) => state.keyword);
-  const setKeyword = useFilterStore((state) => state.setKeyword);
+  // pilotage local de l’ouverture du picker + date en attente
+  const [isDateOpen, setIsDateOpen] = useState(false);
+  const [pendingYMD, setPendingYMD] = useState<string | null>(null);
 
-  const debouncedKeyword = useDebounce(keyword, 500); // délai de 500ms
+  const keyword = useFilterStore((s) => s.keyword);
+  const setKeyword = useFilterStore((s) => s.setKeyword);
+
+  const debouncedKeyword = useDebounce(keyword, 500);
   const { events, loading, error } = useFilteredEvents({ city, date, keyword: debouncedKeyword });
 
   if (loading) return <Text style={styles.loading}>Chargement...</Text>;
   if (error) return <Text style={styles.error}>Erreur : {error}</Text>;
-  // if (!event) return <Text style={styles.error}>Événement introuvable</Text>;
-
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedDate = e.target.value;
-    setDate(selectedDate);
-    setShowDatePicker(false);
-  };
-  // const toggleDatePicker = () => {
-  //   setShowDatePicker(!showDatePicker);
-  // };
 
   const handleCitySelect = (enteredCity: string) => {
     setCity(enteredCity);
     setShowCityInput(false);
   };
 
+  // Ouvrir le calendrier en initialisant la valeur affichée
+  const openDatePicker = () => {
+    setPendingYMD(date || toYMD(new Date()));
+    setIsDateOpen(true);
+  };
+
+  // Appliquer la date choisie uniquement quand l’utilisateur tape OK
+  const confirmDate = () => {
+    if (pendingYMD != null) {
+      setDate(pendingYMD);
+    }
+    // petit délai pour éviter le "tap-through" qui rouvre le bouton dessous sur iOS
+    setTimeout(() => setIsDateOpen(false), 80);
+  };
+
+  // Réinitialiser le filtre date
+  const resetDate = () => {
+    setPendingYMD(null);
+    setDate('');
+    setIsDateOpen(false);
+  };
+
   const filteredEvents = events.filter((event) => {
     const matchesSearch =
       !search || (event.title.fr && event.title.fr.toLowerCase().includes(search.toLowerCase()));
-    const matchesDate = !date || event.dateRange?.fr?.includes(date);
+    const matchesDate =
+      !date ||
+      event.firstTiming?.begin?.slice(0, 10) === date ||
+      event.dateRange?.fr?.includes(date);
     const matchesCity =
       !city || (event.location?.city && event.location.city.toLowerCase() === city.toLowerCase());
-
     const matchesKeyword =
       !keyword ||
       (event.keywords &&
@@ -73,173 +80,209 @@ const FilterScreen: React.FC = () => {
     return matchesSearch && matchesDate && matchesCity && matchesKeyword;
   });
 
+  // valeur Date affichée dans le picker (fallback aujourd’hui)
+  const pickerDateObj =
+    pendingYMD ? new Date(pendingYMD) : (date ? new Date(date) : new Date());
+
   return (
-    <ScrollView>
-      <View style={globalStyles.containerX}>
-        <View style={styles.searchContainer}>
-          <Image 
-          style={styles.searchIcon} 
-          source={iconLoupe} 
-          alt="Icône de recherche"
-          accessibilityLabel='Icône de recherche'
-            />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Rechercher un événement ou un.e artiste"
-            value={keyword}
-            placeholderTextColor="white"
-            onChangeText={setKeyword}
-            accessibilityLabel='Champ pour entrer la recherche'
-          />
-        </View>
+    <View style={globalStyles.containerX}>
+      <View style={styles.searchContainer}>
+        <Image style={styles.searchIcon} source={iconLoupe} accessibilityLabel="Icône de recherche" />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Rechercher un événement ou un.e artiste"
+          value={keyword}
+          placeholderTextColor="white"
+          onChangeText={setKeyword}
+          accessibilityLabel="Champ pour entrer la recherche"
+        />
+      </View>
 
-        <View style={styles.filterContainer}>
-          <TouchableOpacity style={styles.filterButton} accessibilityLabel='Ouvrir le sélecteur de date' >
-            <Image style={styles.searchIcon} source={iconCalendar} alt="Icône de calendrier" accessibilityLabel='Icône de calendrier'/>
-            <Text style={styles.filterButtonText}>{date || 'DATE'}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton} onPress={() => setShowCityInput(true)} accessibilityLabel='Ouvrir le sélecteur de ville'>
-            <Image style={styles.searchIcon} source={iconChoiceLocation} alt="Icône de lieu" accessibilityLabel='Icône de lieu' />
-            <Text style={styles.filterButtonText}>{city || 'LIEU'}</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.filterContainer}>
+        <TouchableOpacity
+          style={styles.filterButton}
+          onPress={openDatePicker}
+          accessibilityLabel="Ouvrir le sélecteur de date"
+        >
+          <Image style={styles.searchIcon} source={iconCalendar} accessibilityLabel="Icône de calendrier" />
+          <Text style={styles.filterButtonText}>{date || 'DATE'}</Text>
+        </TouchableOpacity>
 
-        {showDatePicker && (
-          <input
-            type="date"
-            value={date}
-            onChange={handleDateChange}
-            // style={styles.dateInput}
-          />
-        )}
+        <TouchableOpacity
+          style={styles.filterButton}
+          onPress={() => setShowCityInput(true)}
+          accessibilityLabel="Ouvrir le sélecteur de ville"
+        >
+          <Image style={styles.searchIcon} source={iconChoiceLocation} accessibilityLabel="Icône de lieu" />
+          <Text style={styles.filterButtonText}>{city || 'LIEU'}</Text>
+        </TouchableOpacity>
+      </View>
 
-        <Modal visible={showCityInput} transparent animationType="none">
-          <View style={styles.modalContainer}>
-            <FlatList
-              data={cities}
-              keyExtractor={(item) => item.value}
-              contentContainerStyle={styles.gridContainer}
-              renderItem={({ item }) => (
+      {/* iOS : modal avec picker inline (on stocke seulement dans pendingYMD) */}
+      {Platform.OS === 'ios' && (
+        <Modal visible={isDateOpen} transparent animationType="fade">
+          <View style={styles.dateModalBackdrop}>
+            <View style={styles.dateModalCard}>
+              <DateTimePicker
+                value={pickerDateObj}
+                mode="date"
+                display="inline"
+                onChange={(_, selected) => {
+                  if (selected) setPendingYMD(toYMD(selected));
+                }}
+              />
+              {/* Réinitialiser + OK côte à côte */}
+              <View style={styles.dateActionsRow}>
                 <TouchableOpacity
-                  onPress={() => handleCitySelect(item.value)} // Sélectionner la ville
+                  style={styles.dateResetBtn}
+                  onPress={resetDate}
+                  accessibilityLabel="Réinitialiser la date"
                 >
-                  <Text style={styles.cityButtonText}>{item.label}</Text>
+                  <Text style={styles.dateResetText}>Réinitialiser</Text>
                 </TouchableOpacity>
-              )}
-            />
-            <TouchableOpacity
-              style={styles.buttonModaleCity}
-              onPress={() => {
-                setCity(''); // Réinitialiser la ville
-                setShowCityInput(false); // Fermer la modale
-              }}
-              accessibilityLabel='Réinitialiser le lieu'
-            >
-              <Text style={styles.textButtonModaleCity}>Réinitialiser le lieu</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonModaleCity}
-              onPress={() => setShowCityInput(false)}
-              accessibilityLabel='Fermer le sélecteur de ville'
-            >
-              <Text style={styles.textButtonModaleCity}>Fermer</Text>
-            </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.dateOkBtn}
+                  onPress={confirmDate}
+                  accessibilityLabel="Valider la date"
+                >
+                  <Text style={styles.dateOkText}>OK</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         </Modal>
-        <EventList events={filteredEvents} />
-      </View>
-    </ScrollView>
+      )}
+
+      {/* Android : dialogue natif (l’OK natif confirme la date) */}
+      {Platform.OS === 'android' && isDateOpen && (
+        <DateTimePicker
+          value={pickerDateObj}
+          mode="date"
+          display="default"
+          onChange={(event, selected) => {
+            // 'set' déclenche quand l'utilisateur appuie sur OK dans le dialogue natif
+            if (event.type === 'set' && selected) {
+              setDate(toYMD(selected));
+            }
+            setIsDateOpen(false);
+          }}
+        />
+      )}
+
+      {/* Web : input date + boutons Réinitialiser / OK */}
+      {Platform.OS === 'web' && isDateOpen && (
+        <View style={styles.webDateWrapper}>
+          <input
+            type="date"
+            value={pendingYMD ?? date ?? ''}
+            onChange={(e) => setPendingYMD(e.target.value || null)}
+          />
+          <View style={styles.dateActionsRow}>
+            <button onClick={resetDate}>Réinitialiser</button>
+            <button onClick={confirmDate}>OK</button>
+          </View>
+        </View>
+      )}
+
+      <Modal visible={showCityInput} transparent animationType="none">
+        <View style={styles.modalContainer}>
+          <FlatList
+            data={cities}
+            keyExtractor={(item) => item.value}
+            contentContainerStyle={styles.gridContainer}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handleCitySelect(item.value)}>
+                <Text style={styles.cityButtonText}>{item.label}</Text>
+              </TouchableOpacity>
+            )}
+          />
+          <TouchableOpacity
+            style={styles.buttonModaleCity}
+            onPress={() => { setCity(''); setShowCityInput(false); }}
+            accessibilityLabel="Réinitialiser le lieu"
+          >
+            <Text style={styles.textButtonModaleCity}>Réinitialiser le lieu</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonModaleCity}
+            onPress={() => setShowCityInput(false)}
+            accessibilityLabel="Fermer le sélecteur de ville"
+          >
+            <Text style={styles.textButtonModaleCity}>Fermer</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+      <EventList events={filteredEvents} />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#535353',
-    borderWidth: 1,
-    borderColor: '#333',
-    borderRadius: 100,
-    paddingHorizontal: 10,
-    padding: 8,
-    marginVertical: 10,
-    marginBottom: 0,
+    flexDirection: 'row', alignItems: 'center', backgroundColor: '#535353',
+    borderWidth: 1, borderColor: '#333', borderRadius: 100, paddingHorizontal: 10, padding: 8,
+    marginVertical: 10, marginBottom: 0,
   },
-  searchIcon: {
-    marginRight: 5,
-    color: '#aaa',
-    width: 20,
-    height: 20,
-  },
-  searchInput: {
-    flex: 1,
-    color: 'white',
-    fontSize: 15,
-    fontFamily: 'FunnelSans-Regular',
-  },
-  filterContainer: {
-    flexDirection: 'row',
-    marginVertical: 10,
-    gap: 10,
-  },
+  searchIcon: { marginRight: 5, width: 20, height: 20 },
+  searchInput: { flex: 1, color: 'white', fontSize: 15, fontFamily: 'FunnelSans-Regular' },
+  filterContainer: { flexDirection: 'row', marginVertical: 10, gap: 10 },
   filterButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#535353',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 100,
-    borderColor: '#333',
-    borderWidth: 1,
-  },
-  buttonModaleCity: {
-    backgroundColor: '#b36dff',
-    padding: 10,
-    borderRadius: 5,
-    marginVertical: 10,
+    flexDirection: 'row', alignItems: 'center', backgroundColor: '#535353',
+    paddingVertical: 10, paddingHorizontal: 16, borderRadius: 100, borderColor: '#333', borderWidth: 1,
   },
   filterButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    fontFamily: 'FunnelSans-Regular',
-    marginLeft: 4,
-    marginBottom: 2,
+    color: '#fff', fontSize: 16, fontWeight: 'bold', fontFamily: 'FunnelSans-Regular',
+    marginLeft: 4, marginBottom: 2,
   },
   modalContainer: {
-    backgroundColor: Theme.colors.background,
-    padding: 20,
-    margin: 40,
-    borderRadius: 10,
-    borderColor: '#333',
-    borderWidth: 1,
+    backgroundColor: Theme.colors.background, padding: 20, margin: 40, borderRadius: 10,
+    borderColor: '#333', borderWidth: 1,
   },
-  gridContainer: {
-    justifyContent: 'center',
-    flexDirection: 'column',
-  },
+  gridContainer: { justifyContent: 'center', flexDirection: 'column' },
   cityButtonText: {
-    color: Theme.colors.text,
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    width: '100%',
-    fontFamily: 'FunnelSans-Regular',
+    color: Theme.colors.text, fontSize: 16, fontWeight: 'bold', textAlign: 'center',
+    width: '100%', fontFamily: 'FunnelSans-Regular', paddingVertical: 10,
   },
-  loading: {
-    textAlign: 'center',
-    marginTop: 40,
-    color: 'white',
+  buttonModaleCity: { backgroundColor: '#b36dff', padding: 10, borderRadius: 5, marginVertical: 10 },
+  textButtonModaleCity: { color: 'white', textAlign: 'center', fontFamily: 'FunnelSans-Regular' },
+  loading: { textAlign: 'center', marginTop: 40, color: 'white' },
+  error: { textAlign: 'center', marginTop: 40, color: '#ff4d4d' },
+
+  // iOS date modal
+  dateModalBackdrop: {
+    flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end',
   },
-  error: {
-    textAlign: 'center',
-    marginTop: 40,
-    color: '#ff4d4d',
+  dateModalCard: {
+    backgroundColor: '#111', borderTopLeftRadius: 16, borderTopRightRadius: 16,
+    paddingHorizontal: 12, paddingTop: 8, paddingBottom: 12, borderColor: '#333', borderWidth: 1,
   },
-  textButtonModaleCity: {
-    color: 'white',
-    textAlign: 'center',
-    fontFamily: 'FunnelSans-Regular',
+  dateActionsRow: {
+    marginTop: 8,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 10,
+  },
+  dateResetBtn: {
+    backgroundColor: 'transparent',
+    borderColor: '#666',
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  dateResetText: { color: 'white', fontWeight: 'bold' },
+  dateOkBtn: {
+    backgroundColor: '#b36dff',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  dateOkText: { color: 'white', fontWeight: 'bold' },
+
+  webDateWrapper: { 
+    gap: 8 
   },
 });
 

@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Dimensions, TextInput, View, Text, StyleSheet, Image, ScrollView, Platform, KeyboardAvoidingView } from 'react-native';
 import { Button } from 'react-native-elements';
 import { router } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native'; // <-- important
 import globalStyles from '@/styles/globalStyle';
 import { ThemedText } from '@/components/ThemedText';
 import { registerIcon } from '@/utils/imagesUtils';
 import { useRegister } from '@/hooks/useRegister';
-import { useRegisterStore } from '@/stores/useRegisterStore';
+import { useRegisterStore } from '@/stores/useRegisterStore'; // <-- corrigé
 
 const RegisterScreen: React.FC = () => {
   const {
@@ -32,6 +33,12 @@ const RegisterScreen: React.FC = () => {
     setIsMounted(true);
     return () => setIsMounted(false);
   }, [setIsMounted]);
+
+  useFocusEffect(
+    useCallback(() => {
+      resetRegister();
+    }, [resetRegister])
+  );
 
   const handleRegister = async () => {
     const userData = {
@@ -59,7 +66,12 @@ const RegisterScreen: React.FC = () => {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}>
       <View style={globalStyles.container}>
-        <Image style={globalStyles.logoAuthStyle} source={registerIcon} alt="Icône d'inscription" accessibilityLabel='Icône d"inscription' />
+        <Image
+          style={globalStyles.logoAuthStyle}
+          source={registerIcon}
+          alt="Icône d'inscription"
+          accessibilityLabel='Icône d"inscription'
+        />
         <ThemedText type="authTitle">Inscris-toi !</ThemedText>
 
         <View style={styles.rowContainer}>
@@ -69,7 +81,7 @@ const RegisterScreen: React.FC = () => {
             placeholderTextColor="#bbb"
             value={name}
             onChangeText={setName}
-            accessibilityLabel='Champ pour entrer le prénom'
+            accessibilityLabel="Champ pour entrer le prénom"
           />
           <TextInput
             style={[globalStyles.input, styles.halfInput]}
@@ -77,9 +89,10 @@ const RegisterScreen: React.FC = () => {
             placeholderTextColor="#bbb"
             value={lastname}
             onChangeText={setLastname}
-            accessibilityLabel='Champ pour entrer le nom'
+            accessibilityLabel="Champ pour entrer le nom"
           />
         </View>
+
         <TextInput
           style={globalStyles.input}
           placeholder="Email"
@@ -87,45 +100,17 @@ const RegisterScreen: React.FC = () => {
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
-          accessibilityLabel='Champ pour entrer l"email'
+          accessibilityLabel="Champ pour entrer l'email"
         />
+
         <TextInput
           style={globalStyles.input}
           placeholder="Téléphone"
           placeholderTextColor="#bbb"
           value={phone}
           onChangeText={setPhone}
-          accessibilityLabel='Champ pour entrer le téléphone'
+          accessibilityLabel="Champ pour entrer le téléphone"
         />
-        {/* <Button
-          title="Envoyer le code"
-          onPress={async () => {
-            await sendVerificationCode(phone);
-            setIsCodeSent(true);
-          }}
-        />
-
-        {isCodeSent && !isVerified && (
-  <>
-    <TextInput
-      style={globalStyles.input}
-      placeholder="Code reçu par SMS"
-      keyboardType="numeric"
-      value={code}
-      onChangeText={setCode}
-    />
-    <Button
-      title="Vérifier le code"
-      onPress={async () => {
-        const verifiedPhone = await confirmCode(code);
-        if (verifiedPhone) {
-          setPhone(verifiedPhone); // on garde le numéro vérifié
-          setIsVerified(true);
-        }
-      }}
-    />
-  </>
-)} */}
 
         <TextInput
           style={globalStyles.input}
@@ -134,8 +119,9 @@ const RegisterScreen: React.FC = () => {
           secureTextEntry
           value={password}
           onChangeText={setPassword}
-          accessibilityLabel='Champ pour entrer le mot de passe'
+          accessibilityLabel="Champ pour entrer le mot de passe"
         />
+
         <Button
           buttonStyle={globalStyles.buttonStyle}
           title="S'inscrire"
@@ -144,19 +130,17 @@ const RegisterScreen: React.FC = () => {
           loading={isLoading}
           accessibilityLabel="Bouton pour s'inscrire"
         />
+
         <Text style={globalStyles.footerAuthTextStyle}>Vous avez déjà un compte ?</Text>
         <Text style={globalStyles.footerAuthLinkStyle} onPress={() => router.replace('/login')}>
           Connectez-vous ici
         </Text>
       </View>
-      {/* <FirebaseRecaptchaVerifierModal
-      ref={recaptchaVerifier}
-      firebaseConfig={auth.app.options}
-    /> */}
     </ScrollView>
     </KeyboardAvoidingView>
   );
 };
+
 const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   rowContainer: {

@@ -1,11 +1,12 @@
 import Logo from '@/components/LogoHeader';
 import { ThemedText } from '@/components/ThemedText';
-import { ScrollView, View, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
+import { ScrollView, View, TouchableOpacity, Text, Image, StyleSheet, RefreshControl } from 'react-native';
 import globalStyles from '@/styles/globalStyle';
 import { iconChoiceLocation } from '@/utils/imagesUtils';
 import { useLocationHandler } from '@/hooks/useLocationHandler';
 import { useEvents } from '@/hooks/useEvent';
 import { EventCard } from '@/components/events/EventCard';
+import React, { useState, useCallback } from 'react';
 
 const TicketsScreen = () => {
   const {
@@ -16,10 +17,30 @@ const TicketsScreen = () => {
     handleUseLocation,
     toggleCitySelector,
   } = useLocationHandler();
-  const { events: popularEvents } = useEvents('featured');
-  const { events: recentEvents } = useEvents('recent');
+
+    const {
+    events: popularEvents,
+    refetch: refetchPopular,
+  } = useEvents('featured');
+
+  const {
+    events: recentEvents,
+    refetch: refetchRecent,
+  } = useEvents('recent');
+
+   const [refreshing, setRefreshing] = useState(false);
+
+     const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await Promise.all([refetchRecent(), refetchPopular()]);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refetchRecent, refetchPopular]);
+
   return (
-    <ScrollView>
+    <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <View style={globalStyles.scrollContainer}>
         <Logo />
         <View style={styles.inlineLocation}>
@@ -57,27 +78,24 @@ const TicketsScreen = () => {
           )}
         </View>
         <View style={globalStyles.scrollContainer}>
-          <ThemedText>Les dernières nouveautés</ThemedText>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <Text style={styles.titleScreen}>Les dernières nouveautés</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.eventScroll}>
             {recentEvents.map((event) => (
-              <View key={event.uid}>
-                <EventCard event={event} variant="horizontal" />
+              <View key={event.uid} style={styles.eventCardContainer}>
+                <EventCard event={event} variant="horizontal" cardWidth={250} imageHeight={280}/>
               </View>
             ))}
           </ScrollView>
         </View>
         <View style={globalStyles.scrollContainer}>
-          <ThemedText>Les plus populaires</ThemedText>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <Text style={styles.titleScreenPopularity}>Les plus populaires</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.eventScrollTwo}>
             {popularEvents.map((event) => (
-              <View key={event.uid}>
-                <EventCard event={event} variant="horizontal" />
+              <View key={event.uid} style={styles.eventCardContainer}>
+                <EventCard event={event} variant="horizontal" cardWidth={250} imageHeight={280} />
               </View>
             ))}
           </ScrollView>
-        </View>
-        <View style={globalStyles.scrollContainer}>
-          <ThemedText>Par catégorie</ThemedText>
         </View>
       </View>
     </ScrollView>
@@ -133,6 +151,8 @@ const styles = StyleSheet.create({
     height: 25,
   },
   titleLocal: {
+    paddingLeft: 5,
+    paddingRight: 5,
     color: '#fff',
     fontWeight: 'bold',
     fontFamily: 'FunnelSans-Regular',
@@ -148,6 +168,33 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
+    eventCardContainer: {
+    paddingBottom: 10,
+    paddingTop: 10,
+    paddingRight: 15,
+  },
+  eventScroll: {
+    marginBottom: -30,
+  },
+  eventScrollTwo: {
+    marginBottom: 50,
+  },
+  titleScreen: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 22,
+    marginBottom: 10,
+    marginTop: 15,
+    marginLeft: 8,
+  },
+  titleScreenPopularity: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 22,
+    marginBottom: 10,
+    marginTop: 35,
+    marginLeft: 8,
+  }
 });
 
 export default TicketsScreen;

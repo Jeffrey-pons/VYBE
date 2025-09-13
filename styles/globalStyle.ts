@@ -54,15 +54,16 @@ const globalStyles = StyleSheet.create({
   buttonDeletedeStyle: {
     backgroundColor: 'grey',
     borderRadius: 100,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingRight: 40,
-    paddingLeft: 40,
-    marginBottom: 16,
+    paddingTop: 18,
+    paddingBottom: 18,
+    opacity: 0.7,
+    paddingRight: 30,
+    paddingLeft: 30,
+    marginBottom: 36,
     marginTop: 10,
   },
   titleDeletedStyle: {
-    fontFamily: 'FunnelSans-Regular',
+    fontFamily: Theme.typography.fontFamily,
   },
   // Page Auth
   logoAuthStyle: {

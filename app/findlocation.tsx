@@ -23,7 +23,7 @@ const LocationScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
-      <View style={globalStyles.container}>
+      <View style={styles.container}>
         <ProgressBar step={1} totalSteps={3} />
         <Image
           style={globalStyles.logoAuthStyle}
@@ -50,11 +50,18 @@ const LocationScreen = () => {
             <RNPickerSelect
               onValueChange={(value) => handleCitySelect(value)}
               items={cities}
-              style={{
-                inputIOS: styles.pickerStyle,
-                inputAndroid: styles.pickerStyle,
-              }}
+              value={city ?? null}
               placeholder={{ label: 'Sélectionner une ville', value: null }}
+              useNativeAndroidPickerStyle={false}
+              doneText='Valider'
+              style={{
+                inputIOS: styles.pickerIOS,
+                inputAndroid: styles.pickerStyle,
+                inputIOSContainer: styles.inputIOSContainer,
+              }}
+               pickerProps={{
+               itemStyle: { color: '#000', fontSize: 18, fontWeight: 'bold' },
+              }}
             />
           </View>
         )}
@@ -78,6 +85,14 @@ const LocationScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    paddingTop: 70,
+
+  },
     pickerContainer: {
     marginTop: 20,
     borderWidth: 2,
@@ -86,10 +101,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   pickerStyle: {
-    fontSize: 36,
+    fontSize: 26,
     paddingHorizontal: 200,
-    color: 'white',
-    paddingRight: 30,
+    color: 'black',
+    paddingRight: 0,
   },
   cityText: {
     fontSize: 18,
@@ -102,6 +117,16 @@ const styles = StyleSheet.create({
     color: 'white',
     paddingTop: 30,
   },
+   pickerIOS: {
+    fontSize: 18,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    color: 'white',
+  },
+    inputIOSContainer: {
+    zIndex: 1000,
+  },
+  
 });
 
 export default LocationScreen;

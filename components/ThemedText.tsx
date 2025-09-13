@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
   text: {
     color: Theme.colors.text,
     fontSize: Theme.typography.deca.fontSize,
-    textAlign: Theme.alignments.textCenter.textAlign,
   },
   informationsProfile: {
     color: Theme.colors.text,
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   authSubtitle: {
-    fontSize: Theme.typography.base.fontSize,
+    fontSize: Theme.typography.deca.fontSize,
     marginBottom: 36, // Exception
     color: Theme.colors.text,
     textAlign: Theme.alignments.textCenter.textAlign,

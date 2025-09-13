@@ -14,7 +14,8 @@ import useOnboardingProgress from '@/hooks/useOnboardingProgress';
 const MusicScreen = () => {
   const { updateProgress, loading } = useOnboardingProgress();
 
-  const handleSkip = () => {
+  const handleSkip = async () => {
+    await updateProgress({ hasConnectedMusic: false });
     router.replace('/activenotification');
   };
 
