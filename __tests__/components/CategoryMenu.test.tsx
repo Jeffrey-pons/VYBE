@@ -55,11 +55,11 @@ describe('CategoryMenu', () => {
   });
 
   it('met en évidence la catégorie active (bordure jaune)', () => {
-  render(<CategoryMenu activeCategory="concert" setActiveCategory={mockSetActiveCategory} />);
+    render(<CategoryMenu activeCategory="concert" setActiveCategory={mockSetActiveCategory} />);
 
-  const card = screen.getByTestId('category-concert');
-  expect(card).toHaveStyle({ borderColor: 'yellow' });
-});
+    const card = screen.getByTestId('category-concert');
+    expect(card).toHaveStyle({ borderColor: 'yellow' });
+  });
 
   it("affiche l'icône accessible d'une catégorie (ex: Concerts)", () => {
     render(<CategoryMenu activeCategory={null} setActiveCategory={mockSetActiveCategory} />);

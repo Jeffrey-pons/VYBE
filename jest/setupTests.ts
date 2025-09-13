@@ -36,7 +36,7 @@ jest.mock('@/utils/registerUtils', () => ({
 // -------- Errors utils --------
 jest.mock('@/utils/errorsUtils', () => ({
   extractErrorMessage: (e: unknown) =>
-    e instanceof Error ? e.message : (e as { message?: string })?.message ?? 'Unknown',
+    e instanceof Error ? e.message : ((e as { message?: string })?.message ?? 'Unknown'),
 }));
 
 // -------- Auth error handler --------
@@ -78,7 +78,9 @@ jest.mock('firebase/auth', () => {
   const EmailAuthProvider = { credential: jest.fn((email: string) => ({ email })) };
   const reauthenticateWithCredential = jest.fn(async () => {});
 
-  const onAuthStateChanged = jest.fn(() => { return jest.fn(); });
+  const onAuthStateChanged = jest.fn(() => {
+    return jest.fn();
+  });
 
   const getAuth = jest.fn(() => ({}));
 

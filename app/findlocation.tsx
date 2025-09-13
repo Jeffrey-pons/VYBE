@@ -53,14 +53,14 @@ const LocationScreen = () => {
               value={city ?? null}
               placeholder={{ label: 'Sélectionner une ville', value: null }}
               useNativeAndroidPickerStyle={false}
-              doneText='Valider'
+              doneText="Valider"
               style={{
                 inputIOS: styles.pickerIOS,
                 inputAndroid: styles.pickerStyle,
                 inputIOSContainer: styles.inputIOSContainer,
               }}
-               pickerProps={{
-               itemStyle: { color: '#000', fontSize: 18, fontWeight: 'bold' },
+              pickerProps={{
+                itemStyle: { color: '#000', fontSize: 18, fontWeight: 'bold' },
               }}
             />
           </View>
@@ -91,9 +91,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     paddingTop: 70,
-
   },
-    pickerContainer: {
+  pickerContainer: {
     marginTop: 20,
     borderWidth: 2,
     borderColor: '#ffffffff',
@@ -117,16 +116,15 @@ const styles = StyleSheet.create({
     color: 'white',
     paddingTop: 30,
   },
-   pickerIOS: {
+  pickerIOS: {
     fontSize: 18,
     paddingVertical: 12,
     paddingHorizontal: 10,
     color: 'white',
   },
-    inputIOSContainer: {
+  inputIOSContainer: {
     zIndex: 1000,
   },
-  
 });
 
 export default LocationScreen;

@@ -16,7 +16,12 @@ const LoginScreen: React.FC = () => {
   return (
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
       <View style={globalStyles.container}>
-        <Image style={globalStyles.logoAuthStyle} source={loginIcon} alt="Icône de connexion" accessibilityLabel='Icône de connexion'/>
+        <Image
+          style={globalStyles.logoAuthStyle}
+          source={loginIcon}
+          alt="Icône de connexion"
+          accessibilityLabel="Icône de connexion"
+        />
         <ThemedText type="authTitle">Connecte toi !</ThemedText>
         <TextInput
           style={globalStyles.input}
@@ -34,7 +39,7 @@ const LoginScreen: React.FC = () => {
           secureTextEntry
           value={password}
           onChangeText={setPassword}
-          accessibilityLabel='Champ pour entrer le mot de passe'
+          accessibilityLabel="Champ pour entrer le mot de passe"
         />
         <Button
           buttonStyle={globalStyles.buttonStyle}

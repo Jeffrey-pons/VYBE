@@ -16,7 +16,7 @@ type ProgressDoc = {
   city: string;
   hasConnectedMusic: boolean;
   [key: string]: unknown;
-}
+};
 
 const uniq = () => Math.random().toString(36).slice(2);
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));

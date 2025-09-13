@@ -18,7 +18,7 @@ const ev = (over: Partial<Event> = {}): Event =>
     dateRange: { fr: 'Vendredi 2 mai 2025 - 23:00' },
     image: { base: 'https://x/', filename: 'a.jpg' },
     ...over,
-  } as unknown as Event);
+  }) as unknown as Event;
 
 describe('EventList', () => {
   beforeEach(() => jest.clearAllMocks());
@@ -43,7 +43,7 @@ describe('EventList', () => {
     expect(mockRouter.push).toHaveBeenCalledWith('/event/ag1/e1');
   });
 
-  it("warn et pas de navigation si uid/agenda absents", () => {
+  it('warn et pas de navigation si uid/agenda absents', () => {
     const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
     render(<EventList events={[ev({ uid: undefined as unknown as string })]} />);
 

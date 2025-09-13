@@ -28,7 +28,7 @@ export const useFilteredEvents = ({ city, date, keyword }: Filters) => {
       try {
         const upcomingEvents = await getFiveUpcomingEvents({
           city,
-          timings,      
+          timings,
           keyword: keyword || '',
         });
         setEvents(upcomingEvents);

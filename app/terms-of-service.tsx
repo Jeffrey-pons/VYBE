@@ -75,7 +75,7 @@ const TermsOfServiceScreen = () => {
             buttonStyle={globalStyles.buttonStyle}
             titleStyle={globalStyles.TextButtonStyle}
             onPress={() => router.back()}
-            accessibilityLabel='Bouton pour revenir en arrière'
+            accessibilityLabel="Bouton pour revenir en arrière"
           />
         </View>
       </View>
@@ -91,9 +91,9 @@ const styles = StyleSheet.create({
     marginTop: 35,
     alignItems: 'center',
   },
-  ScrollViewCGI:{
+  ScrollViewCGI: {
     paddingTop: 50,
-  }
+  },
 });
 
 export default TermsOfServiceScreen;

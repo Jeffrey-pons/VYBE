@@ -16,12 +16,15 @@ const NotificationScreen = () => {
   const { notificationsEnabled, toggleNotifications } = useNotificationStore();
 
   const handleSkip = async () => {
-     await updateProgress({ hasActiveNotification: false, onboardingCompleted: true });
+    await updateProgress({ hasActiveNotification: false, onboardingCompleted: true });
     router.replace('/(tabs)');
   };
 
   const handleFinish = async () => {
-    await updateProgress({ hasActiveNotification: notificationsEnabled, onboardingCompleted: true });
+    await updateProgress({
+      hasActiveNotification: notificationsEnabled,
+      onboardingCompleted: true,
+    });
     router.replace('/(tabs)');
   };
 
@@ -33,7 +36,7 @@ const NotificationScreen = () => {
           style={globalStyles.logoAuthStyle}
           source={notificationIcon}
           alt="Icône de notification"
-          accessibilityLabel='Icône de notification'
+          accessibilityLabel="Icône de notification"
         />
         <SkipButton onPress={handleSkip} />
         <ThemedText type="authTitle">Choisis tes notifications</ThemedText>

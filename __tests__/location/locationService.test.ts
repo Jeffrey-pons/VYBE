@@ -34,7 +34,9 @@ afterEach(() => {
 
 describe('locationService.getLocation', () => {
   it('permission refusée → pas de callback et log erreur', async () => {
-    (Location.requestForegroundPermissionsAsync as jest.Mock).mockResolvedValue({ status: 'denied' });
+    (Location.requestForegroundPermissionsAsync as jest.Mock).mockResolvedValue({
+      status: 'denied',
+    });
 
     const onCityDetected = jest.fn();
     await getLocation({ onCityDetected });
@@ -44,7 +46,9 @@ describe('locationService.getLocation', () => {
   });
 
   it('construit une URL Nominatim correcte avec lat/lon', async () => {
-    (Location.requestForegroundPermissionsAsync as jest.Mock).mockResolvedValue({ status: 'granted' });
+    (Location.requestForegroundPermissionsAsync as jest.Mock).mockResolvedValue({
+      status: 'granted',
+    });
     (Location.getCurrentPositionAsync as jest.Mock).mockResolvedValue({
       coords: { latitude: 48.8566, longitude: 2.3522 },
     });
@@ -67,7 +71,9 @@ describe('locationService.getLocation', () => {
   });
 
   it('fallback town quand city est absente', async () => {
-    (Location.requestForegroundPermissionsAsync as jest.Mock).mockResolvedValue({ status: 'granted' });
+    (Location.requestForegroundPermissionsAsync as jest.Mock).mockResolvedValue({
+      status: 'granted',
+    });
     (Location.getCurrentPositionAsync as jest.Mock).mockResolvedValue({
       coords: { latitude: 1, longitude: 2 },
     });
@@ -82,7 +88,9 @@ describe('locationService.getLocation', () => {
   });
 
   it('fetch rejette → pas de callback, log erreur', async () => {
-    (Location.requestForegroundPermissionsAsync as jest.Mock).mockResolvedValue({ status: 'granted' });
+    (Location.requestForegroundPermissionsAsync as jest.Mock).mockResolvedValue({
+      status: 'granted',
+    });
     (Location.getCurrentPositionAsync as jest.Mock).mockResolvedValue({
       coords: { latitude: 1, longitude: 2 },
     });

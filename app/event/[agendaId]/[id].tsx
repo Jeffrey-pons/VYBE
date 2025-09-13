@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Linking, Pressable, Alert, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  Linking,
+  Pressable,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEventById } from '@/hooks/useEventById';
 import globalStyles from '@/styles/globalStyle';
@@ -50,30 +61,36 @@ const EventDetailPage = () => {
   const [opening, setOpening] = useState(false);
 
   const handleBuy = async () => {
-  const url = event.registration?.[0]?.value;
+    const url = event.registration?.[0]?.value;
 
-  if (!url) {
-    Alert.alert('Lien indisponible', "Aucun lien de billetterie n'est fourni pour cet évènement.");
-    return;
-  }
-  try {
-    setOpening(true);
-
-    const supported = await Linking.canOpenURL(url);
-    if (!supported) {
-      Alert.alert('Redirection impossible', "Cet évènement n'a pas de lien de redirection vers le site de billeterie.");
+    if (!url) {
+      Alert.alert(
+        'Lien indisponible',
+        "Aucun lien de billetterie n'est fourni pour cet évènement.",
+      );
       return;
     }
+    try {
+      setOpening(true);
 
-    // Message avant la bascule (souvent on quitte l'app)
-    Alert.alert('Redirection', 'Ouverture de la billetterie…');
-    await Linking.openURL(url);
-  } catch {
-    Alert.alert('Erreur', "Impossible d'ouvrir la billetterie.");
-  } finally {
-    setOpening(false);
-  }
-};
+      const supported = await Linking.canOpenURL(url);
+      if (!supported) {
+        Alert.alert(
+          'Redirection impossible',
+          "Cet évènement n'a pas de lien de redirection vers le site de billeterie.",
+        );
+        return;
+      }
+
+      // Message avant la bascule (souvent on quitte l'app)
+      Alert.alert('Redirection', 'Ouverture de la billetterie…');
+      await Linking.openURL(url);
+    } catch {
+      Alert.alert('Erreur', "Impossible d'ouvrir la billetterie.");
+    } finally {
+      setOpening(false);
+    }
+  };
 
   if (loading) return <Text style={styles.loading}>Chargement...</Text>;
   if (error) return <Text style={styles.error}>Erreur : {error}</Text>;
@@ -97,7 +114,12 @@ const EventDetailPage = () => {
         <Text style={styles.eventDate}>{event.dateRange?.fr ?? 'Date non disponible'}</Text>
         <Text style={styles.eventLocation}>{event.location?.name ?? 'Lieu non disponible'}</Text>
         <View style={styles.textInformation}>
-          <Image source={iconChoiceLocation} style={styles.iconLocation} alt="Icône lieu" accessibilityLabel='Icône lieu'/>
+          <Image
+            source={iconChoiceLocation}
+            style={styles.iconLocation}
+            alt="Icône lieu"
+            accessibilityLabel="Icône lieu"
+          />
           <Text style={styles.eventCity}>{event.location?.city ?? 'Ville non disponible'}</Text>
         </View>
         <View style={styles.separator} />
@@ -111,7 +133,7 @@ const EventDetailPage = () => {
         >
           <Text
             style={styles.modalDescription}
-            numberOfLines={isDescriptionExpanded ? undefined : 6} 
+            numberOfLines={isDescriptionExpanded ? undefined : 6}
           >
             {event.longDescription?.fr || 'Aucune description disponible'}
           </Text>
@@ -168,7 +190,7 @@ const EventDetailPage = () => {
         <Text style={styles.eventText}>{event.location?.address ?? 'Adresse indisponible'}</Text>
 
         {/* MAP VIEW UNIQUEMENT MOBILE*/}
-         {event.location?.latitude && event.location?.longitude && (
+        {event.location?.latitude && event.location?.longitude && (
           // eslint-disable-next-line react-native/no-inline-styles
           <View style={{ height: 200, marginTop: 10, borderRadius: 10, overflow: 'hidden' }}>
             <MapView
@@ -191,10 +213,15 @@ const EventDetailPage = () => {
               />
             </MapView>
           </View>
-        )} 
+        )}
         {/* Restriction dage */}
         <View style={styles.textInformation}>
-          <Image source={iconInformation} style={styles.iconImage} alt="Icône information" accessibilityLabel='Icône information'/>
+          <Image
+            source={iconInformation}
+            style={styles.iconImage}
+            alt="Icône information"
+            accessibilityLabel="Icône information"
+          />
           <Text style={styles.eventText}>
             {event.age?.min
               ? `Réservé aux plus de ${event.age.min} ans.`
@@ -214,7 +241,12 @@ const EventDetailPage = () => {
 
         {/* ACCESSIBILITÉ */}
         <View style={styles.textInformation}>
-          <Image source={iconAccessibility} style={styles.iconImage} alt="Icône accessibilité" accessibilityLabel='Icône accessibilité' />
+          <Image
+            source={iconAccessibility}
+            style={styles.iconImage}
+            alt="Icône accessibilité"
+            accessibilityLabel="Icône accessibilité"
+          />
           <Text style={styles.eventText}>
             {event.accessibility?.ii ||
             event.accessibility?.hi ||
@@ -236,7 +268,12 @@ const EventDetailPage = () => {
         {/* MOTS CLES */}
         {(event.keywords?.fr ?? []).length > 0 && (
           <View style={styles.textInformation}>
-            <Image source={iconWordKey} style={styles.iconImage} alt="Icône accessibilité" accessibilityLabel='Icône accessibilité'/>
+            <Image
+              source={iconWordKey}
+              style={styles.iconImage}
+              alt="Icône accessibilité"
+              accessibilityLabel="Icône accessibilité"
+            />
             <Text style={styles.eventText}>
               Mots-clés : {(event.keywords?.fr ?? []).join(', ')}
             </Text>
@@ -245,7 +282,12 @@ const EventDetailPage = () => {
         {/* STATUS DE LEVENEMENT */}
         {event.status !== 1 && (
           <View style={styles.textInformation}>
-            <Image source={iconStatus} style={styles.iconImage} alt="Icône statut" accessibilityLabel='Icône statut'/>
+            <Image
+              source={iconStatus}
+              style={styles.iconImage}
+              alt="Icône statut"
+              accessibilityLabel="Icône statut"
+            />
             <Text style={styles.eventText}>
               {event.status
                 ? statusLabels[event.status] || 'Statut inconnu'
@@ -255,7 +297,12 @@ const EventDetailPage = () => {
         )}
         {/* API */}
         <View style={styles.textInformation}>
-          <Image source={iconApi} style={styles.iconImage} alt="Icône API" accessibilityLabel='Icône API'/>
+          <Image
+            source={iconApi}
+            style={styles.iconImage}
+            alt="Icône API"
+            accessibilityLabel="Icône API"
+          />
           <Text style={styles.eventText}>
             {event.originAgenda?.title
               ? `Données fournies par ${event.originAgenda.title}. Récupérées via l'API OpenAgenda.`
@@ -264,7 +311,12 @@ const EventDetailPage = () => {
         </View>
         {/* FERMER LA PAGE EVENT ID */}
         <TouchableOpacity style={styles.closeEventDetailButton} onPress={() => router.back()}>
-          <Image source={iconCroix} style={styles.iconCloseDetail} alt="Icône croix" accessibilityLabel='Icône croix'/>
+          <Image
+            source={iconCroix}
+            style={styles.iconCloseDetail}
+            alt="Icône croix"
+            accessibilityLabel="Icône croix"
+          />
         </TouchableOpacity>
         {/* Boutons "Aimer" et "Repartager" */}
         <TouchableOpacity
@@ -272,31 +324,43 @@ const EventDetailPage = () => {
           onPress={() => console.log("Repartager l'événement")}
           accessibilityLabel='Repartager l"événement'
         >
-          <Image source={iconLink} style={styles.iconActionButton} alt="Repartager" accessibilityLabel='Repartager'/>
+          <Image
+            source={iconLink}
+            style={styles.iconActionButton}
+            alt="Repartager"
+            accessibilityLabel="Repartager"
+          />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.actionButtonTwo}
           onPress={() => console.log("Aimer l'événement")}
           accessibilityLabel='Aimer l"événement'
         >
-          <Image source={iconFavorite} style={styles.iconActionButton} alt="Aimer" accessibilityLabel='Aimer'/>
+          <Image
+            source={iconFavorite}
+            style={styles.iconActionButton}
+            alt="Aimer"
+            accessibilityLabel="Aimer"
+          />
         </TouchableOpacity>
       </View>
 
       {/* BLOC STICKY PRENDS TA PLACE */}
       <View style={styles.fixedBottomBar}>
         <Text style={styles.reserveText}>{priceLabel}</Text>
-         <TouchableOpacity
+        <TouchableOpacity
           // eslint-disable-next-line react-native/no-inline-styles
           style={[styles.buyButton, opening && { opacity: 0.6 }]}
-          accessibilityLabel='Prendre sa place pour l’événement'
+          accessibilityLabel="Prendre sa place pour l’événement"
           accessibilityState={{ busy: opening, disabled: opening }}
           disabled={opening}
           onPress={handleBuy}
         >
-          {opening
-            ? <ActivityIndicator />
-            : <Text style={styles.buyButtonText}>Prends ta place</Text>}
+          {opening ? (
+            <ActivityIndicator />
+          ) : (
+            <Text style={styles.buyButtonText}>Prends ta place</Text>
+          )}
         </TouchableOpacity>
       </View>
     </ScrollView>

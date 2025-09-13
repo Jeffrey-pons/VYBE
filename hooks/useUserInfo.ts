@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { auth } from '@/config/firebaseConfig';
-import { updateEmail } from 'firebase/auth'; 
+import { updateEmail } from 'firebase/auth';
 import { getUserInfo, updateUserInfo, deleteUserAccount } from '@/services/authService';
 import { useUserStore } from '@/stores/userStore';
 import { User } from '@/interfaces/User';
@@ -55,7 +55,7 @@ export const useUserInfo = () => {
       const user = auth.currentUser;
       if (user) {
         if (email !== user.email) {
-          await updateEmail(user, email );
+          await updateEmail(user, email);
         }
       }
 
@@ -82,7 +82,7 @@ export const useUserInfo = () => {
       Alert.alert('Utilisateur non identifié !');
       return;
     }
-     setIsModalDeletedAccountVisible(false);
+    setIsModalDeletedAccountVisible(false);
     try {
       const user = auth.currentUser;
       if (user) {
@@ -92,16 +92,16 @@ export const useUserInfo = () => {
         const userStore = useUserStore.getState();
         loginStore.resetLogin?.();
         userStore.resetUserFields();
-          Alert.alert('Succès', 'Compte supprimé avec succès.', [
-      { text: 'OK', onPress: () => router.replace('/home') },
-    ]);
+        Alert.alert('Succès', 'Compte supprimé avec succès.', [
+          { text: 'OK', onPress: () => router.replace('/home') },
+        ]);
       } else {
         Alert.alert('Aucun utilisateur connecté.');
       }
     } catch (error: unknown) {
       if (error instanceof AuthServiceError) {
         Alert.alert('Une erreur est survenue lors de la suppression du compte.');
-         setIsModalDeletedAccountVisible(true);
+        setIsModalDeletedAccountVisible(true);
       }
     }
   };
@@ -118,7 +118,7 @@ export const useUserInfo = () => {
         })
         .catch((error) => {
           console.error("Erreur lors de la récupération des informations de l'utilisateur", error);
-          Alert.alert('Erreur', 'Impossible de récupérer les informations de l\'utilisateur.');
+          Alert.alert('Erreur', "Impossible de récupérer les informations de l'utilisateur.");
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

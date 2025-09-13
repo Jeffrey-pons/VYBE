@@ -19,7 +19,7 @@ import {
   updateEmail,
   sendEmailVerification,
 } from 'firebase/auth';
-import  useLoginStore  from '@/stores/useLoginStore';
+import useLoginStore from '@/stores/useLoginStore';
 import { extractErrorMessage } from '@/utils/errorsUtils';
 import useRegisterStore from '@/stores/useRegisterStore';
 
@@ -58,7 +58,7 @@ export const registerUser = async (data: RegisterDTO): Promise<AuthResponse> => 
     return { user: userCredential.user };
   } catch (error: unknown) {
     if (error instanceof ValidationError) throw error;
-    if (error instanceof FirebaseError) throw handleAuthError(error, 'Erreur Firebase')
+    if (error instanceof FirebaseError) throw handleAuthError(error, 'Erreur Firebase');
   }
 };
 
@@ -67,7 +67,7 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     return { user: userCredential.user };
   } catch (error: unknown) {
-        throw handleAuthError(error);
+    throw handleAuthError(error);
   }
 };
 
@@ -186,10 +186,9 @@ export const reauthenticateUser = async (user: User, password: string) => {
     const credential = EmailAuthProvider.credential(user.email, password);
     await reauthenticateWithCredential(user, credential);
   } catch (error: unknown) {
-     throw handleAuthError(error, "Erreur d'authentification", { showAlert: false });
+    throw handleAuthError(error, "Erreur d'authentification", { showAlert: false });
   }
 };
-
 
 export const handleUpdateEmail = async (newEmail: string) => {
   try {

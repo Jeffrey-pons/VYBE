@@ -72,7 +72,8 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ activeCategory, setActiveCa
       label: 'Soirées',
       icon: iconFestival,
       accessibilityLabel: 'Icône de la catégorie Soirées',
-    },  ];
+    },
+  ];
 
   return (
     <View style={styles.categoriesContainer}>
@@ -85,7 +86,7 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ activeCategory, setActiveCa
         {categories.map((category) => (
           <TouchableOpacity
             key={category.key}
-            testID={`category-${category.key}`} 
+            testID={`category-${category.key}`}
             style={[styles.categoryCard, current === category.key && styles.activeCategory]}
             onPress={() => setActiveCategory(category.key)}
           >

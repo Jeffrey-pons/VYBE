@@ -97,9 +97,9 @@ const styles = StyleSheet.create({
     marginTop: 35,
     alignItems: 'center',
   },
-    ScrollViewCGI:{
+  ScrollViewCGI: {
     paddingTop: 50,
-  }
+  },
 });
 
 export default PrivacyScreen;

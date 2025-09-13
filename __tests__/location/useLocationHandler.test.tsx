@@ -67,7 +67,7 @@ describe('useLocationHandler', () => {
     (getLocation as jest.Mock).mockImplementation(
       async ({ onCityDetected }: { onCityDetected: (c: string) => void }) => {
         onCityDetected('Nantes');
-      }
+      },
     );
     (updateUserCity as jest.Mock).mockResolvedValue(undefined);
 
@@ -109,7 +109,7 @@ describe('useLocationHandler', () => {
     (getLocation as jest.Mock).mockImplementation(
       async ({ onCityDetected }: { onCityDetected: (c: string) => void }) => {
         onCityDetected('Rennes');
-      }
+      },
     );
     (updateUserCity as jest.Mock).mockRejectedValue(new Error('db fail'));
 
@@ -150,7 +150,7 @@ describe('useLocationHandler', () => {
     });
 
     expect(global.alert).toHaveBeenCalledWith(
-      'Vous devez entrer une ville ou utiliser la géolocalisation avant de continuer.'
+      'Vous devez entrer une ville ou utiliser la géolocalisation avant de continuer.',
     );
   });
 

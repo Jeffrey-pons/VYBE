@@ -117,9 +117,7 @@ describe('EventDetailPage', () => {
     // Status "Complet — ..."
     expect(screen.getByText(/Complet — L’événement affiche complet/i)).toBeTruthy();
     // API info
-    expect(
-      screen.getByText(/Données fournies par OpenAgenda Marseille/i)
-    ).toBeTruthy();
+    expect(screen.getByText(/Données fournies par OpenAgenda Marseille/i)).toBeTruthy();
     // Prix (barre du bas)
     expect(screen.getByText('À partir de 12€')).toBeTruthy();
   });

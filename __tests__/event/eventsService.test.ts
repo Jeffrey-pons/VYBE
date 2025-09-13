@@ -34,7 +34,6 @@ afterEach(() => {
   (console.error as unknown as jest.Mock).mockRestore?.();
 });
 
-
 describe('fetchEventsByCategory', () => {
   it('jette si city manquante', async () => {
     await expect(fetchEventsByCategory('', 'music')).rejects.toThrow(
@@ -132,5 +131,3 @@ describe('fetchLastPostedEventsByCity (alias)', () => {
     expect(mockedApi.getLastPostedEventsByCity).toHaveBeenCalledWith('Toulouse', 12);
   });
 });
-
-

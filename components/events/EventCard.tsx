@@ -5,14 +5,20 @@ import { router } from 'expo-router';
 type Props = {
   event: Event;
   variant?: 'featured' | 'horizontal' | 'grid';
-  cardWidth?: number;     
-  imageHeight?: number;  
+  cardWidth?: number;
+  imageHeight?: number;
   style?: StyleProp<ViewStyle>;
 };
 
 const TEXT_BLOCK_HEIGHT = 120;
 
-export const EventCard = ({ event, variant = 'featured', cardWidth = 250, imageHeight = 200, style, }: Props) => {
+export const EventCard = ({
+  event,
+  variant = 'featured',
+  cardWidth = 250,
+  imageHeight = 200,
+  style,
+}: Props) => {
   const startDate =
     event.dateRange?.fr ||
     (event.firstTiming?.begin
@@ -32,15 +38,19 @@ export const EventCard = ({ event, variant = 'featured', cardWidth = 250, imageH
       console.warn('UID ou originAgenda manquant');
     }
   };
-const isHorizontal = variant === 'horizontal';
+  const isHorizontal = variant === 'horizontal';
   return (
-       <View
+    <View
       style={[
         styles.eventCard,
         isHorizontal && styles.horizontalCard,
         // Contraint FERMEMENT largeur + hauteur totale en horizontal
         // eslint-disable-next-line react-native/no-inline-styles
-        isHorizontal && { width: cardWidth, height: imageHeight + TEXT_BLOCK_HEIGHT, justifyContent: 'space-between' },
+        isHorizontal && {
+          width: cardWidth,
+          height: imageHeight + TEXT_BLOCK_HEIGHT,
+          justifyContent: 'space-between',
+        },
         style,
       ]}
     >
@@ -50,12 +60,20 @@ const isHorizontal = variant === 'horizontal';
         alt="Preview de l'événement"
         accessibilityLabel="Preview de l'événement"
       />
-      <Text numberOfLines={2} ellipsizeMode="tail" style={styles.eventTitle}>{event.title.fr || "Titre de l'évènement indisponible"}</Text>
+      <Text numberOfLines={2} ellipsizeMode="tail" style={styles.eventTitle}>
+        {event.title.fr || "Titre de l'évènement indisponible"}
+      </Text>
       <Text style={styles.eventDate}>{startDate}</Text>
       <Text style={styles.eventLocation}>{event.location?.name}</Text>
 
-      <TouchableOpacity onPress={() => handlePressDetails(event)} style={styles.detailButton} accessibilityLabel='Voir les détails de l’événement'>
-        <Text style={styles.detailButtonText} accessibilityLabel="Voir le détails de l'événement">Voir plus</Text>
+      <TouchableOpacity
+        onPress={() => handlePressDetails(event)}
+        style={styles.detailButton}
+        accessibilityLabel="Voir les détails de l’événement"
+      >
+        <Text style={styles.detailButtonText} accessibilityLabel="Voir le détails de l'événement">
+          Voir plus
+        </Text>
       </TouchableOpacity>
     </View>
   );

@@ -13,7 +13,7 @@ const makeEvent = (over: Partial<Event> = {}): Event =>
     location: { name: 'Le Club', city: 'Paris' },
     dateRange: { fr: 'Lundi 1 janvier 2025 - 20:00' },
     ...over,
-  } as unknown as Event);
+  }) as unknown as Event;
 
 describe('EventCard', () => {
   beforeEach(() => jest.clearAllMocks());
@@ -54,7 +54,7 @@ describe('EventCard', () => {
     expect(screen.getByLabelText(/Preview/i)).toHaveStyle({ height: 200 });
   });
 
-  it("fallback sur le titre si title.fr absent", () => {
+  it('fallback sur le titre si title.fr absent', () => {
     const ev = makeEvent({ title: { fr: '' } as NonNullable<Event['title']> });
     render(<EventCard event={ev} />);
     expect(screen.getByText("Titre de l'évènement indisponible")).toBeTruthy();

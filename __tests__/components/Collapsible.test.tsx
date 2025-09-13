@@ -11,7 +11,7 @@ describe('Collapsible', () => {
     render(
       <Collapsible title="Section A" subtitle="Détails">
         <Text>Contenu</Text>
-      </Collapsible>
+      </Collapsible>,
     );
 
     expect(screen.queryByText('Contenu')).toBeNull();
@@ -26,7 +26,7 @@ describe('Collapsible', () => {
     render(
       <Collapsible title="Section B">
         <Text>Bloc</Text>
-      </Collapsible>
+      </Collapsible>,
     );
 
     fireEvent.press(screen.getByText('Section B'));

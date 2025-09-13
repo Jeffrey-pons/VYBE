@@ -53,8 +53,10 @@ const generateOpenAgendaUrl = (params: {
 };
 
 export const getUpcomingEventsOpenAgenda = async (
-  filters: { city?: string; timings?: { gte: string; lte: string }; keyword?: string } = { keyword: '' },
-  limit = 15
+  filters: { city?: string; timings?: { gte: string; lte: string }; keyword?: string } = {
+    keyword: '',
+  },
+  limit = 15,
 ) => {
   try {
     const urlOpenAgenda = generateOpenAgendaUrl(filters);
@@ -130,7 +132,7 @@ export const getUpcomingPopularEventsInCity = async (city: string, category?: st
   } catch (error) {
     console.error(
       'Erreur lors de la récupération des événements populaires à venir dans la ville:',
-      error
+      error,
     );
     throw new Error('Erreur lors de la récupération des événements populaires à venir');
   }
@@ -149,7 +151,7 @@ export const getLastPostedEventsByCity = async (city: string, limit = 15) => {
 
 export const getEventByIdOpenAgenda = async (
   agendaId: string,
-  eventId: string
+  eventId: string,
 ): Promise<Event | null> => {
   try {
     const baseUrl = process.env.EXPO_PUBLIC_OPEN_AGENDA_API_URL!;

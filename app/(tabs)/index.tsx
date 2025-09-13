@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import Logo from '@/components/LogoHeader';
 import { useLocationHandler } from '@/hooks/useLocationHandler';
@@ -24,22 +32,26 @@ const App = () => {
 
   const filteredEvents = events.slice(1, 11).filter((event) => event.originAgenda?.uid);
   const usedIds = new Set<string>([
-  ...(events[0]?.uid != null ? [String(events[0].uid)] : []),
-  ...filteredEvents
-    .map((e) => (e.uid != null ? String(e.uid) : undefined))
-    .filter((v): v is string => !!v),
-]);
+    ...(events[0]?.uid != null ? [String(events[0].uid)] : []),
+    ...filteredEvents
+      .map((e) => (e.uid != null ? String(e.uid) : undefined))
+      .filter((v): v is string => !!v),
+  ]);
   const secondaryEvent = events.find(
-  (e) => e.originAgenda?.uid && e.uid != null && !usedIds.has(String(e.uid))
-);
+    (e) => e.originAgenda?.uid && e.uid != null && !usedIds.has(String(e.uid)),
+  );
   const remainingHorizontal = events
-  .filter((e) => e.originAgenda?.uid && e.uid != null && !usedIds.has(String(e.uid)))
-  .slice(1, 12);
+    .filter((e) => e.originAgenda?.uid && e.uid != null && !usedIds.has(String(e.uid)))
+    .slice(1, 12);
 
   return (
-    <ScrollView style={styles.eventScroll} contentInsetAdjustmentBehavior="automatic" refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}>
+    <ScrollView
+      style={styles.eventScroll}
+      contentInsetAdjustmentBehavior="automatic"
+      refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}
+    >
       <View style={globalStyles.scrollContainer}>
-        <Logo/>
+        <Logo />
         <View style={styles.inlineLocation}>
           <ThemedText style={styles.titleLocal}>Découvre ton prochain évènements à </ThemedText>
           <TouchableOpacity onPress={toggleCitySelector}></TouchableOpacity>
@@ -78,23 +90,25 @@ const App = () => {
         <View style={styles.eventsContainer}>
           {events && events.length > 0 ? (
             <>
-            
-             <Text style={styles.titleScreen}>{getIntroPhrase(activeCategory, city ?? '')}</Text>
+              <Text style={styles.titleScreen}>{getIntroPhrase(activeCategory, city ?? '')}</Text>
               {/* Afficher levenement le + en vedette */}
-              <View>
-                {events[0]?.originAgenda?.uid ? <EventCard event={events[0]} /> : null}
-              </View>
+              <View>{events[0]?.originAgenda?.uid ? <EventCard event={events[0]} /> : null}</View>
 
               {/* Scroll horizontal des autres événements */}
               {/* Afficher les evenements filtres du plus recent au plus loin */}
               <ScrollView horizontal showsHorizontalScrollIndicator>
                 {filteredEvents.map((event) => (
                   <View key={event.uid} style={styles.miniEventCard}>
-                    <EventCard event={event} variant="horizontal"  cardWidth={250} imageHeight={280} />
+                    <EventCard
+                      event={event}
+                      variant="horizontal"
+                      cardWidth={250}
+                      imageHeight={280}
+                    />
                   </View>
                 ))}
               </ScrollView>
-                <View style={styles.musicConnectCard}>
+              <View style={styles.musicConnectCard}>
                 <View style={styles.musicConnectContent}>
                   <Text style={styles.musicConnectText}>
                     Connecte ta musique pour découvrir les évènements qui te correspondent.
@@ -102,39 +116,49 @@ const App = () => {
                   <TouchableOpacity
                     style={styles.musicConnectButton}
                     // onPress={() => router.push('/musicscreen')}
-                    accessibilityLabel='Démarrer la connexion musicale'
+                    accessibilityLabel="Démarrer la connexion musicale"
                   >
                     <Text style={styles.musicConnectButtonText}>Démarrer</Text>
                   </TouchableOpacity>
                 </View>
-                <Image source={registerIcon} style={styles.musicImage} resizeMode="contain" accessibilityLabel='Icône connexion à la musique'/>
+                <Image
+                  source={registerIcon}
+                  style={styles.musicImage}
+                  resizeMode="contain"
+                  accessibilityLabel="Icône connexion à la musique"
+                />
               </View>
-             {secondaryEvent && (
-              <>
-              <Text style={styles.titleScreen}>
-                Plus d’évènements à {city}
-              </Text>
+              {secondaryEvent && (
+                <>
+                  <Text style={styles.titleScreen}>Plus d’évènements à {city}</Text>
 
-                <View>
-                  <EventCard event={secondaryEvent} />
-                </View>
-              </>
-            )}
-            {remainingHorizontal.length > 0 && (
-            <>
-              {/* Liste horizontale “comme la première” */}
-              <ScrollView horizontal showsHorizontalScrollIndicator>
-                {remainingHorizontal.map((event) => (
-                  <View key={event.uid} style={styles.miniEventCard}>
-                    <EventCard event={event} variant="horizontal" cardWidth={250} imageHeight={280}/>
+                  <View>
+                    <EventCard event={secondaryEvent} />
                   </View>
-                ))}
-              </ScrollView>
-            </>
-          )}
+                </>
+              )}
+              {remainingHorizontal.length > 0 && (
+                <>
+                  {/* Liste horizontale “comme la première” */}
+                  <ScrollView horizontal showsHorizontalScrollIndicator>
+                    {remainingHorizontal.map((event) => (
+                      <View key={event.uid} style={styles.miniEventCard}>
+                        <EventCard
+                          event={event}
+                          variant="horizontal"
+                          cardWidth={250}
+                          imageHeight={280}
+                        />
+                      </View>
+                    ))}
+                  </ScrollView>
+                </>
+              )}
             </>
           ) : (
-            <Text style={styles.errorCategoryEvent}>Cette catégorie ne contient aucun événement planifié à {city} pour le moment</Text>
+            <Text style={styles.errorCategoryEvent}>
+              Cette catégorie ne contient aucun événement planifié à {city} pour le moment
+            </Text>
           )}
         </View>
         <View>
@@ -284,7 +308,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     marginHorizontal: 20,
-  }
+  },
 });
 
 export default App;

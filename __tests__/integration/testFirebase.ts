@@ -20,7 +20,9 @@ export function initTestApp() {
 }
 
 export async function cleanupTestApp() {
-  try { await signOut(getAuth(app)); } catch {
+  try {
+    await signOut(getAuth(app));
+  } catch {
     // ignore sign out errors
   }
   await deleteApp(app);

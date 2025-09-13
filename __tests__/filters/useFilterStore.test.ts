@@ -62,7 +62,7 @@ describe('useFilterStore', () => {
 });
 
 describe('useFilterStore - Tests réalistes', () => {
-  it('resetCity maintient la cohérence de l\'état global', () => {
+  it("resetCity maintient la cohérence de l'état global", () => {
     act(() => {
       useFilterStore.getState().setCity('Paris');
       useFilterStore.getState().setKeyword('concert');

@@ -10,11 +10,20 @@ const WelcomeScreen = () => {
   const router = useRouter();
   return (
     <View style={styles.containerHomePage}>
-      <Image source={vybeLogo} alt="Logo Vybe" style={styles.logoHome} accessibilityLabel='Logo Vybe'/>
+      <Image
+        source={vybeLogo}
+        alt="Logo Vybe"
+        style={styles.logoHome}
+        accessibilityLabel="Logo Vybe"
+      />
       <ThemedText type="title" style={styles.welcomeTitle}>
         TROUVE LES{'\n'}ÉVÈNEMENTS{'\n'}RIEN QUE POUR TOI
       </ThemedText>
-      <TouchableOpacity onPress={() => router.push('/login')} style={globalStyles.buttonStyle} accessibilityLabel='Ouvrir la page de connexion'>
+      <TouchableOpacity
+        onPress={() => router.push('/login')}
+        style={globalStyles.buttonStyle}
+        accessibilityLabel="Ouvrir la page de connexion"
+      >
         <Text style={globalStyles.titleStyle}>CONNEXION / INSCRIPTION</Text>
       </TouchableOpacity>
     </View>

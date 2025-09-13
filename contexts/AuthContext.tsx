@@ -31,38 +31,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setHasCheckedFirestore(true);
 
           const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-    if (userDoc.exists()) {
-      const data = userDoc.data() as {
-        city?: string;
-        hasConnectedMusic?: boolean;
-        hasActiveNotification?: boolean;
-        onboardingCompleted?: boolean;
-      };
+          if (userDoc.exists()) {
+            const data = userDoc.data() as {
+              city?: string;
+              hasConnectedMusic?: boolean;
+              hasActiveNotification?: boolean;
+              onboardingCompleted?: boolean;
+            };
 
-      if (data.city) updateLocation(data.city);
+            if (data.city) updateLocation(data.city);
 
-      if (data.onboardingCompleted === true) {
-        router.replace('/(tabs)');
-      } else {
-        // diriger vers la prochaine étape manquante
-        if (!data.city) {
-          router.replace('/findlocation');
-        } else if (data.hasConnectedMusic !== true) {
-          router.replace('/connectmusic');
-        } else {
-          // dernière étape: notifications
-          router.replace('/activenotification');
+            if (data.onboardingCompleted === true) {
+              router.replace('/(tabs)');
+            } else {
+              // diriger vers la prochaine étape manquante
+              if (!data.city) {
+                router.replace('/findlocation');
+              } else if (data.hasConnectedMusic !== true) {
+                router.replace('/connectmusic');
+              } else {
+                // dernière étape: notifications
+                router.replace('/activenotification');
+              }
+            }
+          } else {
+            router.replace('/home');
+          }
         }
+      } else {
+        setUser(null);
+        setHasCheckedFirestore(false);
+        router.replace('/home');
       }
-    } else {
-      router.replace('/home');
-    }
-  }
-} else {
-  setUser(null);
-  setHasCheckedFirestore(false);
-  router.replace('/home');
-}
       setLoading(false);
     });
 

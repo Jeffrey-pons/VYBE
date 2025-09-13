@@ -26,15 +26,15 @@ export default function RootLayout() {
             <View style={{ flex: 1 }}>
               <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
                 <Stack.Screen name="(tabs)" />
-                  <Stack.Screen
-                    name="event/[agendaId]/[id]"
-                    options={{
-                      presentation: 'modal',
-                      gestureEnabled: true,
-                      gestureDirection: 'vertical',
-                      headerShown: false,
-                    }}
-                  />
+                <Stack.Screen
+                  name="event/[agendaId]/[id]"
+                  options={{
+                    presentation: 'modal',
+                    gestureEnabled: true,
+                    gestureDirection: 'vertical',
+                    headerShown: false,
+                  }}
+                />
                 <Stack.Screen name="login" />
                 <Stack.Screen name="register" />
                 <Stack.Screen name="findlocation" />

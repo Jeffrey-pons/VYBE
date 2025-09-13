@@ -42,14 +42,14 @@ const resetStore = () =>
       keyword: '',
       showDatePicker: false,
       showCityInput: false,
-    })
+    }),
   );
 
 describe('FilterScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     resetStore();
-    mockEventListCard.mockClear(); 
+    mockEventListCard.mockClear();
   });
 
   it('affiche erreur quand hook renvoie error', () => {
@@ -89,9 +89,7 @@ describe('FilterScreen', () => {
 
     render(<FilterScreen />);
 
-    await waitFor(() =>
-      expect(screen.getByLabelText('Réinitialiser le lieu')).toBeTruthy()
-    );
+    await waitFor(() => expect(screen.getByLabelText('Réinitialiser le lieu')).toBeTruthy());
     fireEvent.press(screen.getByLabelText('Réinitialiser le lieu'));
 
     expect(useFilterStore.getState().city).toBe('');
@@ -133,7 +131,7 @@ describe('FilterScreen', () => {
     render(<FilterScreen />);
 
     expect(mockEventListCard).toHaveBeenCalled();
-    
+
     // Récupération des events du dernier appel
     const lastCall = mockEventListCard.mock.calls[mockEventListCard.mock.calls.length - 1];
     const events = lastCall?.[0]?.events || [];
@@ -141,7 +139,7 @@ describe('FilterScreen', () => {
 
     // Optionnel: vérification plus précise
     expect(events[0]).toMatchObject({
-      title: { fr: 'Soirée Electro' }
+      title: { fr: 'Soirée Electro' },
     });
   });
 
@@ -153,21 +151,21 @@ describe('FilterScreen', () => {
   });
 });
 
-describe('FilterScreen - Tests d\'intégration améliorés', () => {
+describe("FilterScreen - Tests d'intégration améliorés", () => {
   it('workflow utilisateur complet: recherche → sélection ville → filtrage', async () => {
     const mockEvents = [
       {
         title: { fr: 'Concert Rock Paris' },
         location: { city: 'Paris' },
         dateRange: { fr: 'Vendredi 2 mai 2025 - 20:00' },
-        keywords: { fr: ['rock', 'live'] }
+        keywords: { fr: ['rock', 'live'] },
       },
       {
         title: { fr: 'Expo Art Lyon' },
         location: { city: 'Lyon' },
         dateRange: { fr: 'Samedi 3 mai 2025 - 14:00' },
-        keywords: { fr: ['art', 'exposition'] }
-      }
+        keywords: { fr: ['art', 'exposition'] },
+      },
     ];
 
     mockUseFilteredEvents.mockReturnValue({ events: mockEvents, error: null });
@@ -181,41 +179,41 @@ describe('FilterScreen - Tests d\'intégration améliorés', () => {
     fireEvent.press(screen.getByLabelText('Ouvrir le sélecteur de ville'));
     await waitFor(() => expect(screen.getByText('Paris')).toBeTruthy());
     fireEvent.press(screen.getByText('Paris'));
-    
+
     expect(useFilterStore.getState().city).toBe('Paris');
 
     await waitFor(() => {
       const lastCall = mockEventListCard.mock.calls[mockEventListCard.mock.calls.length - 1];
       const filteredEvents = lastCall?.[0]?.events || [];
-      
+
       // Doit ne garder que l'événement Rock à Paris
       expect(filteredEvents).toHaveLength(1);
       expect(filteredEvents[0].title.fr).toBe('Concert Rock Paris');
     });
   });
 
-  it('gère les grandes listes d\'événements sans ralentissement', async () => {
+  it("gère les grandes listes d'événements sans ralentissement", async () => {
     const largeEventList = Array.from({ length: 1000 }, (_, i) => ({
       title: { fr: `Event ${i}` },
       location: { city: i % 2 === 0 ? 'Paris' : 'Lyon' },
       dateRange: { fr: 'Vendredi 2 mai 2025 - 20:00' },
-      keywords: { fr: ['test'] }
+      keywords: { fr: ['test'] },
     }));
 
     mockUseFilteredEvents.mockReturnValue({ events: largeEventList, error: null });
 
     const startTime = performance.now();
     render(<FilterScreen />);
-    
+
     act(() => {
       useFilterStore.getState().setCity('Paris');
       useFilterStore.getState().setKeyword('test');
     });
 
     const endTime = performance.now();
-    
+
     expect(endTime - startTime).toBeLessThan(100);
-    
+
     const lastCall = mockEventListCard.mock.calls[mockEventListCard.mock.calls.length - 1];
     const events = lastCall?.[0]?.events || [];
     expect(events).toHaveLength(500); // Moitié des événements (Paris seulement)

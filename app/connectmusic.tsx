@@ -28,7 +28,12 @@ const MusicScreen = () => {
     <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
       <View style={globalStyles.container}>
         <ProgressBar step={2} totalSteps={3} />
-        <Image style={globalStyles.logoAuthStyle} source={musicIcon} alt="Icône de musique" accessibilityLabel='Icône de musique'/>
+        <Image
+          style={globalStyles.logoAuthStyle}
+          source={musicIcon}
+          alt="Icône de musique"
+          accessibilityLabel="Icône de musique"
+        />
         <SkipButton onPress={handleSkip} />
         <ThemedText type="authTitle">Connecte ta musique</ThemedText>
         <ThemedText type="authSubtitle">

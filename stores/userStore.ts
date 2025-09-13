@@ -55,14 +55,14 @@ export const useUserStore = create<UserStore>()(
         }),
     }),
     {
-        name: 'user-store',
-        storage: createJSONStorage(() => AsyncStorage),
+      name: 'user-store',
+      storage: createJSONStorage(() => AsyncStorage),
       partialize: (state) => ({
         name: state.name,
         lastname: state.lastname,
         email: state.email,
         phoneNumber: state.phoneNumber,
-      })
+      }),
     },
   ),
 );

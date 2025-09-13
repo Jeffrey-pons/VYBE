@@ -19,15 +19,14 @@ jest.mock('@/services/eventService', () => ({
 const mockSetLoading = jest.fn();
 jest.mock('@/contexts/LoadingContext', () => ({
   useLoading: () => ({ setLoading: mockSetLoading }),
-  
 }));
 
-
-
 // Petit composant de test pour lire la sortie du hook
-const HookProbe: React.FC<
-  PropsWithChildren<{ city: string; date: string; keyword: string }>
-> = ({ city, date, keyword }) => {
+const HookProbe: React.FC<PropsWithChildren<{ city: string; date: string; keyword: string }>> = ({
+  city,
+  date,
+  keyword,
+}) => {
   const { events, error } = useFilteredEvents({ city, date, keyword });
   return (
     <View>
@@ -42,31 +41,26 @@ describe('useFilteredEvents', () => {
     jest.clearAllMocks();
   });
 
-  
-it('appelle getFiveUpcomingEvents avec city/keyword et timings (quand date fourni)', async () => {
-  mockGetFiveUpcomingEvents.mockResolvedValueOnce([]);
+  it('appelle getFiveUpcomingEvents avec city/keyword et timings (quand date fourni)', async () => {
+    mockGetFiveUpcomingEvents.mockResolvedValueOnce([]);
 
-  renderHook(() =>
-    useFilteredEvents({ city: 'Paris', date: '2025-05-02', keyword: 'rock' })
-  );
+    renderHook(() => useFilteredEvents({ city: 'Paris', date: '2025-05-02', keyword: 'rock' }));
 
-  const { gte, lte } = makeDayRangeISO('2025-05-02');
+    const { gte, lte } = makeDayRangeISO('2025-05-02');
 
-  await waitFor(() => {
-    expect(mockGetFiveUpcomingEvents).toHaveBeenCalledWith({
-      city: 'Paris',
-      timings: { gte, lte },
-      keyword: 'rock',
+    await waitFor(() => {
+      expect(mockGetFiveUpcomingEvents).toHaveBeenCalledWith({
+        city: 'Paris',
+        timings: { gte, lte },
+        keyword: 'rock',
+      });
     });
   });
-});
 
   it('sur erreur -> setError + stop loading', async () => {
     mockGetFiveUpcomingEvents.mockRejectedValueOnce(new Error('boom'));
 
-    const { getByTestId } = render(
-      <HookProbe city="Lyon" date="" keyword="" />
-    );
+    const { getByTestId } = render(<HookProbe city="Lyon" date="" keyword="" />);
 
     await waitFor(() => {
       expect(mockSetLoading).toHaveBeenCalledWith(true);

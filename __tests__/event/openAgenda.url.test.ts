@@ -16,7 +16,6 @@ afterEach(() => {
 });
 
 describe('URL générée via fonctions publiques', () => {
-
   it('respecte le limit (slice) de getUpcomingEventsOpenAgenda', async () => {
     const payload = { events: Array.from({ length: 50 }, (_, i) => ({ id: i })) };
     ((globalThis as unknown as { fetch: jest.Mock }).fetch as jest.Mock).mockResolvedValueOnce(

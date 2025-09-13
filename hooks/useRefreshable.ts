@@ -6,7 +6,7 @@ type Opts<T> = {
   mapResult?: (raw: T) => T;
   cacheKey?: string;
   ttlMs?: number;
-  preferCache?: boolean; 
+  preferCache?: boolean;
 };
 
 export function useRefreshable<T>(fetcher: () => Promise<T>, opts: Opts<T> = {}) {
@@ -26,7 +26,9 @@ export function useRefreshable<T>(fetcher: () => Promise<T>, opts: Opts<T> = {})
       if (cacheKey) memSet(cacheKey, next, ttlMs);
     } catch (e) {
       const msg =
-        e instanceof Error ? e.message : (e as { message?: string })?.message ?? 'Unexpected error';
+        e instanceof Error
+          ? e.message
+          : ((e as { message?: string })?.message ?? 'Unexpected error');
       setError(msg);
     } finally {
       setLoading(false);

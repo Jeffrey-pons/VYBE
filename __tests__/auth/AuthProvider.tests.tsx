@@ -48,7 +48,7 @@ describe('AuthProvider', () => {
     render(
       <AuthProvider>
         <Wrapper />
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     await waitFor(() => {
@@ -73,7 +73,7 @@ describe('AuthProvider', () => {
     render(
       <AuthProvider>
         <Wrapper />
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     await waitFor(() => {
@@ -96,7 +96,7 @@ describe('AuthProvider', () => {
     render(
       <AuthProvider>
         <Wrapper />
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     await waitFor(() => {
@@ -116,7 +116,7 @@ describe('AuthProvider', () => {
     render(
       <AuthProvider>
         <Wrapper />
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     await waitFor(() => {

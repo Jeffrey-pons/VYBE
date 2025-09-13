@@ -16,10 +16,10 @@ export const useLogin = () => {
       if (response) {
         Alert.alert('Succès', 'Connexion réussie');
         useLoginStore.getState().resetLogin();
-          const userStore = useUserStore.getState();
-          userStore.setPassword('');
-          userStore.setIsModalDeletedAccountVisible(false);
-          userStore.setIsModalUpdatedAccountVisible(false);
+        const userStore = useUserStore.getState();
+        userStore.setPassword('');
+        userStore.setIsModalDeletedAccountVisible(false);
+        userStore.setIsModalUpdatedAccountVisible(false);
       }
     } catch (error: unknown) {
       if (error instanceof AuthServiceError) {

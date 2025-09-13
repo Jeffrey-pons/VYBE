@@ -64,8 +64,8 @@ describe('useRefreshable + memory cache', () => {
     const key = 'events:Lyon:week';
     memSet<string[]>(key, ['cached-lyon'], 60_000);
 
-    const fetcher = jest.fn<() => Promise<string[]>>(() =>
-      new Promise((resolve) => setTimeout(() => resolve(['net-lyon']), 20))
+    const fetcher = jest.fn<() => Promise<string[]>>(
+      () => new Promise((resolve) => setTimeout(() => resolve(['net-lyon']), 20)),
     );
 
     const { result } = renderHook(() =>
@@ -73,7 +73,7 @@ describe('useRefreshable + memory cache', () => {
         cacheKey: key,
         initial: undefined,
         preferCache: false,
-      })
+      }),
     );
 
     // Pas de valeur cache servie d’abord
@@ -90,12 +90,10 @@ describe('useRefreshable + memory cache', () => {
 
   it('sans cacheKey → comportement simple: prend la valeur réseau', async () => {
     const fetcher = jest.fn<() => Promise<number>>(
-      () => new Promise((resolve) => setTimeout(() => resolve(7), 10))
+      () => new Promise((resolve) => setTimeout(() => resolve(7), 10)),
     );
 
-    const { result } = renderHook(() =>
-      useRefreshable<number>(fetcher, { initial: undefined })
-    );
+    const { result } = renderHook(() => useRefreshable<number>(fetcher, { initial: undefined }));
 
     // au départ pas de data
     expect(result.current.data).toBeUndefined();

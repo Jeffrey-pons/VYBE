@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import {
-  View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity,
-  Modal, Image, Platform
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Modal,
+  Image,
+  Platform,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import iconLoupe from '../../assets/images/icons/icon_loupe.png';
@@ -17,10 +24,8 @@ import { useDebounce } from '@/hooks/useDebounce';
 const toYMD = (d: Date) => d.toISOString().slice(0, 10);
 
 const FilterScreen: React.FC = () => {
-  const {
-    search, date, city,
-    showCityInput, setDate, setCity, setShowCityInput,
-  } = useFilterStore();
+  const { search, date, city, showCityInput, setDate, setCity, setShowCityInput } =
+    useFilterStore();
 
   // pilotage local de l’ouverture du picker + date en attente
   const [isDateOpen, setIsDateOpen] = useState(false);
@@ -80,13 +85,16 @@ const FilterScreen: React.FC = () => {
   });
 
   // valeur Date affichée dans le picker (fallback aujourd’hui)
-  const pickerDateObj =
-    pendingYMD ? new Date(pendingYMD) : (date ? new Date(date) : new Date());
+  const pickerDateObj = pendingYMD ? new Date(pendingYMD) : date ? new Date(date) : new Date();
 
   return (
     <View style={styles.containerExplore}>
       <View style={styles.searchContainer}>
-        <Image style={styles.searchIcon} source={iconLoupe} accessibilityLabel="Icône de recherche" />
+        <Image
+          style={styles.searchIcon}
+          source={iconLoupe}
+          accessibilityLabel="Icône de recherche"
+        />
         <TextInput
           style={styles.searchInput}
           placeholder="Rechercher un événement ou un.e artiste"
@@ -103,7 +111,11 @@ const FilterScreen: React.FC = () => {
           onPress={openDatePicker}
           accessibilityLabel="Ouvrir le sélecteur de date"
         >
-          <Image style={styles.searchIcon} source={iconCalendar} accessibilityLabel="Icône de calendrier" />
+          <Image
+            style={styles.searchIcon}
+            source={iconCalendar}
+            accessibilityLabel="Icône de calendrier"
+          />
           <Text style={styles.filterButtonText}>{date || 'DATE'}</Text>
         </TouchableOpacity>
 
@@ -112,7 +124,11 @@ const FilterScreen: React.FC = () => {
           onPress={() => setShowCityInput(true)}
           accessibilityLabel="Ouvrir le sélecteur de ville"
         >
-          <Image style={styles.searchIcon} source={iconChoiceLocation} accessibilityLabel="Icône de lieu" />
+          <Image
+            style={styles.searchIcon}
+            source={iconChoiceLocation}
+            accessibilityLabel="Icône de lieu"
+          />
           <Text style={styles.filterButtonText}>{city || 'LIEU'}</Text>
         </TouchableOpacity>
       </View>
@@ -198,7 +214,10 @@ const FilterScreen: React.FC = () => {
           />
           <TouchableOpacity
             style={styles.buttonModaleCity}
-            onPress={() => { setCity(''); setShowCityInput(false); }}
+            onPress={() => {
+              setCity('');
+              setShowCityInput(false);
+            }}
             accessibilityLabel="Réinitialiser le lieu"
           >
             <Text style={styles.textButtonModaleCity}>Réinitialiser le lieu</Text>
@@ -220,42 +239,88 @@ const FilterScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   searchContainer: {
-    flexDirection: 'row', alignItems: 'center', backgroundColor: '#535353',
-    borderWidth: 1, borderColor: '#333', borderRadius: 100, paddingHorizontal: 10, padding: 8,
-    marginVertical: 10, marginBottom: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#535353',
+    borderWidth: 1,
+    borderColor: '#333',
+    borderRadius: 100,
+    paddingHorizontal: 10,
+    padding: 8,
+    marginVertical: 10,
+    marginBottom: 0,
   },
   searchIcon: { marginRight: 5, width: 20, height: 20 },
   searchInput: { flex: 1, color: 'white', fontSize: 17, fontFamily: 'FunnelSans-Regular' },
   filterContainer: { flexDirection: 'row', marginVertical: 10, gap: 10 },
   filterButton: {
-    flexDirection: 'row', alignItems: 'center', backgroundColor: '#535353',
-    paddingVertical: 10, paddingHorizontal: 16, borderRadius: 100, borderColor: '#333', borderWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#535353',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 100,
+    borderColor: '#333',
+    borderWidth: 1,
   },
   filterButtonText: {
-    color: '#fff', fontSize: 16, fontWeight: 'bold', fontFamily: 'FunnelSans-Regular',
-    marginLeft: 4, marginBottom: 2,
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'FunnelSans-Regular',
+    marginLeft: 4,
+    marginBottom: 2,
   },
   modalContainer: {
-    backgroundColor: '#333', padding: 20, margin: 40, marginTop: 100, marginBottom: 200,borderRadius: 10,
-    borderColor: '#333', borderWidth: 1,
+    backgroundColor: '#333',
+    padding: 20,
+    margin: 40,
+    marginTop: 100,
+    marginBottom: 200,
+    borderRadius: 10,
+    borderColor: '#333',
+    borderWidth: 1,
   },
   gridContainer: { justifyContent: 'center', flexDirection: 'column' },
   cityButtonText: {
-    color: Theme.colors.text, fontSize: 18, fontWeight: 'bold', textAlign: 'center',
-    width: '100%', fontFamily: 'FunnelSans-Regular', paddingVertical: 5,
+    color: Theme.colors.text,
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    width: '100%',
+    fontFamily: 'FunnelSans-Regular',
+    paddingVertical: 5,
   },
-  buttonModaleCity: { backgroundColor: '#b36dff', padding: 10, borderRadius: 5, marginVertical: 10 },
-  textButtonModaleCity: { color: 'white', textAlign: 'center', fontFamily: 'FunnelSans-Regular', fontSize: 16 },
+  buttonModaleCity: {
+    backgroundColor: '#b36dff',
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 10,
+  },
+  textButtonModaleCity: {
+    color: 'white',
+    textAlign: 'center',
+    fontFamily: 'FunnelSans-Regular',
+    fontSize: 16,
+  },
   loading: { textAlign: 'center', marginTop: 40, color: 'white' },
   error: { textAlign: 'center', marginTop: 40, color: '#ff4d4d' },
 
   // iOS date modal
   dateModalBackdrop: {
-    flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end',
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
   },
   dateModalCard: {
-    backgroundColor: '#111', borderTopLeftRadius: 16, borderTopRightRadius: 16,
-    paddingHorizontal: 12, paddingTop: 8, paddingBottom: 12, borderColor: '#333', borderWidth: 1,
+    backgroundColor: '#111',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingHorizontal: 12,
+    paddingTop: 8,
+    paddingBottom: 12,
+    borderColor: '#333',
+    borderWidth: 1,
   },
   dateActionsRow: {
     marginTop: 8,
@@ -280,16 +345,16 @@ const styles = StyleSheet.create({
   },
   dateOkText: { color: 'white', fontWeight: 'bold' },
 
-  webDateWrapper: { 
-    gap: 8 
+  webDateWrapper: {
+    gap: 8,
   },
-  containerExplore : {
+  containerExplore: {
     flex: 1,
     justifyContent: 'center',
     padding: 20,
     marginBottom: 60,
     marginTop: 30,
-  }
+  },
 });
 
 export default FilterScreen;

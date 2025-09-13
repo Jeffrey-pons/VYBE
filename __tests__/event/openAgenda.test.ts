@@ -55,7 +55,7 @@ afterEach(() => {
 
 describe('getUpcomingEventsOpenAgenda', () => {
   it('construit la bonne URL (city + keyword) et limite à 15 par défaut', async () => {
-    const events: Event[] = Array.from({ length: 20 }, (_, i) => ({ id: String(i + 1) } as Event));
+    const events: Event[] = Array.from({ length: 20 }, (_, i) => ({ id: String(i + 1) }) as Event);
     mockFetchOk({ events });
 
     const res = await getUpcomingEventsOpenAgenda({ city: 'Paris', keyword: 'concert' });
@@ -71,7 +71,7 @@ describe('getUpcomingEventsOpenAgenda', () => {
   });
 
   it('respecte un limit personnalisé', async () => {
-    const events: Event[] = Array.from({ length: 10 }, (_, i) => ({ id: String(i + 1) } as Event));
+    const events: Event[] = Array.from({ length: 10 }, (_, i) => ({ id: String(i + 1) }) as Event);
     mockFetchOk({ events });
 
     const res = await getUpcomingEventsOpenAgenda({ city: 'Lyon' }, 5);
@@ -134,7 +134,7 @@ describe('getEventsForTonightOpenAgenda', () => {
 
 describe('getUpcomingPopularEventsInCity', () => {
   it('ajoute featured=1 et limite à 15', async () => {
-    const events: Event[] = Array.from({ length: 30 }, (_, i) => ({ id: String(i + 1) } as Event));
+    const events: Event[] = Array.from({ length: 30 }, (_, i) => ({ id: String(i + 1) }) as Event);
     mockFetchOk({ events });
 
     const res = await getUpcomingPopularEventsInCity('Bordeaux');
@@ -146,13 +146,13 @@ describe('getUpcomingPopularEventsInCity', () => {
   });
 
   it('getLastPostedEventsByCity — propage le message d’erreur générique actuel', async () => {
-  // Status non OK -> handleApiResponse jette "Erreur lors de la récupération des événements"
-  // @ts-expect-error mock
-  global.fetch.mockResolvedValueOnce({ ok: false, status: 503 });
-  await expect(getLastPostedEventsByCity('Paris', 5)).rejects.toThrow(
-    'Erreur lors de la récupération des événements'
-  );
-});
+    // Status non OK -> handleApiResponse jette "Erreur lors de la récupération des événements"
+    // @ts-expect-error mock
+    global.fetch.mockResolvedValueOnce({ ok: false, status: 503 });
+    await expect(getLastPostedEventsByCity('Paris', 5)).rejects.toThrow(
+      'Erreur lors de la récupération des événements',
+    );
+  });
 });
 
 describe('getLastPostedEventsByCity', () => {

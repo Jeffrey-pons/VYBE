@@ -1,6 +1,14 @@
 import Logo from '@/components/LogoHeader';
 import { ThemedText } from '@/components/ThemedText';
-import { ScrollView, View, TouchableOpacity, Text, Image, StyleSheet, RefreshControl } from 'react-native';
+import {
+  ScrollView,
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  StyleSheet,
+  RefreshControl,
+} from 'react-native';
 import globalStyles from '@/styles/globalStyle';
 import { iconChoiceLocation } from '@/utils/imagesUtils';
 import { useLocationHandler } from '@/hooks/useLocationHandler';
@@ -18,19 +26,13 @@ const TicketsScreen = () => {
     toggleCitySelector,
   } = useLocationHandler();
 
-    const {
-    events: popularEvents,
-    refetch: refetchPopular,
-  } = useEvents('featured');
+  const { events: popularEvents, refetch: refetchPopular } = useEvents('featured');
 
-  const {
-    events: recentEvents,
-    refetch: refetchRecent,
-  } = useEvents('recent');
+  const { events: recentEvents, refetch: refetchRecent } = useEvents('recent');
 
-   const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-     const onRefresh = useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
       await Promise.all([refetchRecent(), refetchPopular()]);
@@ -40,7 +42,10 @@ const TicketsScreen = () => {
   }, [refetchRecent, refetchPopular]);
 
   return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView
+      contentInsetAdjustmentBehavior="automatic"
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+    >
       <View style={globalStyles.scrollContainer}>
         <Logo />
         <View style={styles.inlineLocation}>
@@ -82,14 +87,18 @@ const TicketsScreen = () => {
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.eventScroll}>
             {recentEvents.map((event) => (
               <View key={event.uid} style={styles.eventCardContainer}>
-                <EventCard event={event} variant="horizontal" cardWidth={250} imageHeight={280}/>
+                <EventCard event={event} variant="horizontal" cardWidth={250} imageHeight={280} />
               </View>
             ))}
           </ScrollView>
         </View>
         <View style={globalStyles.scrollContainer}>
           <Text style={styles.titleScreenPopularity}>Les plus populaires</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.eventScrollTwo}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.eventScrollTwo}
+          >
             {popularEvents.map((event) => (
               <View key={event.uid} style={styles.eventCardContainer}>
                 <EventCard event={event} variant="horizontal" cardWidth={250} imageHeight={280} />
@@ -168,7 +177,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-    eventCardContainer: {
+  eventCardContainer: {
     paddingBottom: 20,
     paddingTop: 10,
     paddingRight: 10,
@@ -195,7 +204,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 35,
     marginLeft: 8,
-  }
+  },
 });
 
 export default TicketsScreen;

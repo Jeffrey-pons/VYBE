@@ -1,15 +1,26 @@
 jest.mock('@/stores/useLoginStore', () => {
   const resetLogin = jest.fn();
   const state = { resetLogin };
-  const mock = Object.assign(jest.fn(() => state), { getState: () => state });
+  const mock = Object.assign(
+    jest.fn(() => state),
+    { getState: () => state },
+  );
   return { __esModule: true, default: mock, useLoginStore: mock, __resetLoginMock: resetLogin };
 });
 
 jest.mock('@/stores/userStore', () => {
   const resetUserFields = jest.fn();
   const state = { resetUserFields };
-  const mock = Object.assign(jest.fn(() => state), { getState: () => state });
-  return { __esModule: true, default: mock, useUserStore: mock, __resetUserFieldsMock: resetUserFields };
+  const mock = Object.assign(
+    jest.fn(() => state),
+    { getState: () => state },
+  );
+  return {
+    __esModule: true,
+    default: mock,
+    useUserStore: mock,
+    __resetUserFieldsMock: resetUserFields,
+  };
 });
 
 // ======================================================================
@@ -47,8 +58,12 @@ import * as firebaseCfg from '@/config/firebaseConfig';
 // --------- helpers / casts ----------
 const mockedAuth = jest.mocked(firebaseCfg.auth, true);
 const getDocMock = getDoc as unknown as jest.MockedFunction<typeof getDoc>;
-const signInMock = signInWithEmailAndPassword as jest.MockedFunction<typeof signInWithEmailAndPassword>;
-const createMock = createUserWithEmailAndPassword as jest.MockedFunction<typeof createUserWithEmailAndPassword>;
+const signInMock = signInWithEmailAndPassword as jest.MockedFunction<
+  typeof signInWithEmailAndPassword
+>;
+const createMock = createUserWithEmailAndPassword as jest.MockedFunction<
+  typeof createUserWithEmailAndPassword
+>;
 const updateEmailMock = updateEmail as jest.MockedFunction<typeof updateEmail>;
 
 // Accès direct au mock du store login (défini ci-dessus)
@@ -64,7 +79,11 @@ describe('deleteUserAccount', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockedAuth.currentUser = { ...originalUser, uid: 'uid_current', email: 'john@doe.tld' } as typeof mockedAuth.currentUser;
+    mockedAuth.currentUser = {
+      ...originalUser,
+      uid: 'uid_current',
+      email: 'john@doe.tld',
+    } as typeof mockedAuth.currentUser;
   });
 
   it('jette si pas de currentUser', async () => {
@@ -80,7 +99,9 @@ describe('deleteUserAccount', () => {
   });
 
   it('reauth KO → erreur propagée', async () => {
-    (reauthenticateWithCredential as jest.Mock).mockRejectedValueOnce({ code: 'auth/wrong-password' });
+    (reauthenticateWithCredential as jest.Mock).mockRejectedValueOnce({
+      code: 'auth/wrong-password',
+    });
     await expect(deleteUserAccount('uid_current', 'bad')).rejects.toBeInstanceOf(Error);
   });
 
@@ -150,9 +171,9 @@ describe('loginUser', () => {
   beforeEach(() => jest.clearAllMocks());
 
   it('connecte un utilisateur (happy path)', async () => {
-    signInMock.mockResolvedValueOnce(
-      { user: { uid: 'uid_login', email: 'john@doe.tld' } } as unknown as UserCredential
-    );
+    signInMock.mockResolvedValueOnce({
+      user: { uid: 'uid_login', email: 'john@doe.tld' },
+    } as unknown as UserCredential);
     const res = await loginUser('john@doe.tld', 'Secret123!');
     expect(signInMock).toHaveBeenCalledWith(expect.anything(), 'john@doe.tld', 'Secret123!');
     expect(res.user).toBeTruthy();
@@ -199,9 +220,15 @@ describe('registerUser', () => {
   };
 
   const isValidName = validators.isValidName as jest.MockedFunction<typeof validators.isValidName>;
-  const isValidEmail = validators.isValidEmail as jest.MockedFunction<typeof validators.isValidEmail>;
-  const isValidPhone = validators.isValidPhone as jest.MockedFunction<typeof validators.isValidPhone>;
-  const isValidPassword = validators.isValidPassword as jest.MockedFunction<typeof validators.isValidPassword>;
+  const isValidEmail = validators.isValidEmail as jest.MockedFunction<
+    typeof validators.isValidEmail
+  >;
+  const isValidPhone = validators.isValidPhone as jest.MockedFunction<
+    typeof validators.isValidPhone
+  >;
+  const isValidPassword = validators.isValidPassword as jest.MockedFunction<
+    typeof validators.isValidPassword
+  >;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -209,9 +236,9 @@ describe('registerUser', () => {
     isValidEmail.mockReturnValue(true);
     isValidPhone.mockReturnValue(true);
     isValidPassword.mockReturnValue(true);
-    createMock.mockResolvedValue(
-      { user: { uid: 'uid_new', email: validData.email, phoneNumber: validData.phoneNumber } } as unknown as UserCredential
-    );
+    createMock.mockResolvedValue({
+      user: { uid: 'uid_new', email: validData.email, phoneNumber: validData.phoneNumber },
+    } as unknown as UserCredential);
   });
 
   it('inscrit un utilisateur quand les validations passent', async () => {
@@ -221,7 +248,7 @@ describe('registerUser', () => {
     expect(signOut).toHaveBeenCalled();
   });
 
-  it("lève une ValidationError si le prénom est invalide", async () => {
+  it('lève une ValidationError si le prénom est invalide', async () => {
     isValidName.mockReturnValue(false);
     await expect(registerUser(validData)).rejects.toThrow('Le prénom est invalide.');
   });
@@ -231,16 +258,18 @@ describe('registerUser', () => {
     await expect(registerUser(validData)).rejects.toThrow("L'email est invalide.");
   });
 
-  it("lève une ValidationError si le numéro de téléphone est invalide", async () => {
+  it('lève une ValidationError si le numéro de téléphone est invalide', async () => {
     isValidPhone.mockReturnValue(false);
     await expect(registerUser({ ...validData, phoneNumber: 'xxx' })).rejects.toThrow(
       'Le numéro de téléphone est invalide.',
     );
   });
 
-  it("lève une ValidationError si le mot de passe est invalide", async () => {
+  it('lève une ValidationError si le mot de passe est invalide', async () => {
     isValidPassword.mockReturnValue(false);
-    await expect(registerUser({ ...validData, password: '123' })).rejects.toThrow('Le mot de passe est invalide.');
+    await expect(registerUser({ ...validData, password: '123' })).rejects.toThrow(
+      'Le mot de passe est invalide.',
+    );
   });
 
   it('écrit les bons champs dans Firestore (payload attendu)', async () => {
@@ -258,7 +287,9 @@ describe('registerUser', () => {
   });
 
   it('relaye une erreur Firebase si la création échoue', async () => {
-    createMock.mockRejectedValueOnce(new FirebaseError('auth/email-already-in-use', 'Email in use'));
+    createMock.mockRejectedValueOnce(
+      new FirebaseError('auth/email-already-in-use', 'Email in use'),
+    );
     await expect(registerUser(validData)).rejects.toBeInstanceOf(Error);
   });
 });
@@ -271,27 +302,38 @@ describe('updateUserInfo', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    firebaseCfg.auth.currentUser = { ...originalUser, uid: 'uid_current', email: 'john@doe.tld' } as typeof firebaseCfg.auth.currentUser;
+    firebaseCfg.auth.currentUser = {
+      ...originalUser,
+      uid: 'uid_current',
+      email: 'john@doe.tld',
+    } as typeof firebaseCfg.auth.currentUser;
   });
 
   it('jette si aucun utilisateur connecté', async () => {
     firebaseCfg.auth.currentUser = null;
-    await expect(updateUserInfo('uid_current', { name: 'Jane', email: 'jane@doe.tld' })).rejects.toThrow(
-      'Aucun utilisateur connecté.',
-    );
+    await expect(
+      updateUserInfo('uid_current', { name: 'Jane', email: 'jane@doe.tld' }),
+    ).rejects.toThrow('Aucun utilisateur connecté.');
   });
 
   it("jette si l'id ne correspond pas au currentUser", async () => {
-    firebaseCfg.auth.currentUser = { ...originalUser, uid: 'autre' } as typeof firebaseCfg.auth.currentUser;
-    await expect(updateUserInfo('uid_current', { name: 'Jane', email: 'jane@doe.tld' })).rejects.toThrow(
-      "L'ID utilisateur ne correspond pas à l'utilisateur connecté.",
-    );
+    firebaseCfg.auth.currentUser = {
+      ...originalUser,
+      uid: 'autre',
+    } as typeof firebaseCfg.auth.currentUser;
+    await expect(
+      updateUserInfo('uid_current', { name: 'Jane', email: 'jane@doe.tld' }),
+    ).rejects.toThrow("L'ID utilisateur ne correspond pas à l'utilisateur connecté.");
   });
 
   it("appelle updateEmail si l'email change puis setDoc en merge", async () => {
     await updateUserInfo('uid_current', { email: 'new@doe.tld' });
     expect(updateEmailMock).toHaveBeenCalledWith(expect.any(Object), 'new@doe.tld');
-    expect(setDoc).toHaveBeenCalledWith(expect.any(Object), { email: 'new@doe.tld' }, { merge: true });
+    expect(setDoc).toHaveBeenCalledWith(
+      expect.any(Object),
+      { email: 'new@doe.tld' },
+      { merge: true },
+    );
   });
 
   it('propage une erreur si updateEmail (Firebase) rejette', async () => {

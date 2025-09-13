@@ -7,7 +7,11 @@ interface SkipButtonProps {
 
 const SkipButton: React.FC<SkipButtonProps> = ({ onPress }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.skipButton} accessibilityLabel="Passer cette étape">
+    <TouchableOpacity
+      onPress={onPress}
+      style={styles.skipButton}
+      accessibilityLabel="Passer cette étape"
+    >
       <Text style={styles.skipText}>Passer</Text>
     </TouchableOpacity>
   );

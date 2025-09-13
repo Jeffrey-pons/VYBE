@@ -1,5 +1,15 @@
 import React, { useEffect, useCallback } from 'react';
-import { Dimensions, TextInput, View, Text, StyleSheet, Image, ScrollView, Platform, KeyboardAvoidingView } from 'react-native';
+import {
+  Dimensions,
+  TextInput,
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Platform,
+  KeyboardAvoidingView,
+} from 'react-native';
 import { Button } from 'react-native-elements';
 import { router } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native'; // <-- important
@@ -37,7 +47,7 @@ const RegisterScreen: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       resetRegister();
-    }, [resetRegister])
+    }, [resetRegister]),
   );
 
   const handleRegister = async () => {
@@ -57,86 +67,88 @@ const RegisterScreen: React.FC = () => {
   };
 
   return (
-      <KeyboardAvoidingView 
+    <KeyboardAvoidingView
       // eslint-disable-next-line react-native/no-inline-styles
-      style={{ flex: 1 }} 
+      style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-    <ScrollView contentContainerStyle={globalStyles.scrollContainer}
+      <ScrollView
+        contentContainerStyle={globalStyles.scrollContainer}
         keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}>
-      <View style={globalStyles.container}>
-        <Image
-          style={globalStyles.logoAuthStyle}
-          source={registerIcon}
-          alt="Icône d'inscription"
-          accessibilityLabel='Icône d"inscription'
-        />
-        <ThemedText type="authTitle">Inscris-toi !</ThemedText>
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={globalStyles.container}>
+          <Image
+            style={globalStyles.logoAuthStyle}
+            source={registerIcon}
+            alt="Icône d'inscription"
+            accessibilityLabel='Icône d"inscription'
+          />
+          <ThemedText type="authTitle">Inscris-toi !</ThemedText>
 
-        <View style={styles.rowContainer}>
+          <View style={styles.rowContainer}>
+            <TextInput
+              style={[globalStyles.input, styles.halfInput]}
+              placeholder="Prénom"
+              placeholderTextColor="#bbb"
+              value={name}
+              onChangeText={setName}
+              accessibilityLabel="Champ pour entrer le prénom"
+            />
+            <TextInput
+              style={[globalStyles.input, styles.halfInput]}
+              placeholder="Nom"
+              placeholderTextColor="#bbb"
+              value={lastname}
+              onChangeText={setLastname}
+              accessibilityLabel="Champ pour entrer le nom"
+            />
+          </View>
+
           <TextInput
-            style={[globalStyles.input, styles.halfInput]}
-            placeholder="Prénom"
+            style={globalStyles.input}
+            placeholder="Email"
             placeholderTextColor="#bbb"
-            value={name}
-            onChangeText={setName}
-            accessibilityLabel="Champ pour entrer le prénom"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            accessibilityLabel="Champ pour entrer l'email"
           />
+
           <TextInput
-            style={[globalStyles.input, styles.halfInput]}
-            placeholder="Nom"
+            style={globalStyles.input}
+            placeholder="Téléphone"
             placeholderTextColor="#bbb"
-            value={lastname}
-            onChangeText={setLastname}
-            accessibilityLabel="Champ pour entrer le nom"
+            value={phone}
+            onChangeText={setPhone}
+            accessibilityLabel="Champ pour entrer le téléphone"
           />
+
+          <TextInput
+            style={globalStyles.input}
+            placeholder="Mot de passe"
+            placeholderTextColor="#bbb"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+            accessibilityLabel="Champ pour entrer le mot de passe"
+          />
+
+          <Button
+            buttonStyle={globalStyles.buttonStyle}
+            title="S'inscrire"
+            titleStyle={globalStyles.titleStyle}
+            onPress={handleRegister}
+            loading={isLoading}
+            accessibilityLabel="Bouton pour s'inscrire"
+          />
+
+          <Text style={globalStyles.footerAuthTextStyle}>Vous avez déjà un compte ?</Text>
+          <Text style={globalStyles.footerAuthLinkStyle} onPress={() => router.replace('/login')}>
+            Connectez-vous ici
+          </Text>
         </View>
-
-        <TextInput
-          style={globalStyles.input}
-          placeholder="Email"
-          placeholderTextColor="#bbb"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          accessibilityLabel="Champ pour entrer l'email"
-        />
-
-        <TextInput
-          style={globalStyles.input}
-          placeholder="Téléphone"
-          placeholderTextColor="#bbb"
-          value={phone}
-          onChangeText={setPhone}
-          accessibilityLabel="Champ pour entrer le téléphone"
-        />
-
-        <TextInput
-          style={globalStyles.input}
-          placeholder="Mot de passe"
-          placeholderTextColor="#bbb"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-          accessibilityLabel="Champ pour entrer le mot de passe"
-        />
-
-        <Button
-          buttonStyle={globalStyles.buttonStyle}
-          title="S'inscrire"
-          titleStyle={globalStyles.titleStyle}
-          onPress={handleRegister}
-          loading={isLoading}
-          accessibilityLabel="Bouton pour s'inscrire"
-        />
-
-        <Text style={globalStyles.footerAuthTextStyle}>Vous avez déjà un compte ?</Text>
-        <Text style={globalStyles.footerAuthLinkStyle} onPress={() => router.replace('/login')}>
-          Connectez-vous ici
-        </Text>
-      </View>
-    </ScrollView>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
