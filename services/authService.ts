@@ -172,8 +172,6 @@ export const deleteUserAccount = async (userId: string, password: string): Promi
     const userRef = doc(db, 'users', userId);
     await deleteDoc(userRef);
     await deleteUser(user);
-    useLoginStore.getState().resetLogin();
-    useUserStore.getState().resetUserFields();
   } catch (error: unknown) {
     throw new Error(extractErrorMessage(error));
   }

@@ -8,7 +8,7 @@ import globalStyles from '@/styles/globalStyle';
 
 const TermsOfServiceScreen = () => {
   return (
-    <ScrollView>
+    <ScrollView style={styles.ScrollViewCGI}>
       <Logo />
       <View style={globalStyles.containerX}>
         <ThemedText type="title">Conditions Générales d'Utilisation</ThemedText>
@@ -91,6 +91,9 @@ const styles = StyleSheet.create({
     marginTop: 35,
     alignItems: 'center',
   },
+  ScrollViewCGI:{
+    paddingTop: 50,
+  }
 });
 
 export default TermsOfServiceScreen;

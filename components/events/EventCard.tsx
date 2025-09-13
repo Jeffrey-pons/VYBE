@@ -50,7 +50,7 @@ const isHorizontal = variant === 'horizontal';
         alt="Preview de l'événement"
         accessibilityLabel="Preview de l'événement"
       />
-      <Text style={styles.eventTitle}>{event.title.fr || "Titre de l'évènement indisponible"}</Text>
+      <Text numberOfLines={2} ellipsizeMode="tail" style={styles.eventTitle}>{event.title.fr || "Titre de l'évènement indisponible"}</Text>
       <Text style={styles.eventDate}>{startDate}</Text>
       <Text style={styles.eventLocation}>{event.location?.name}</Text>
 

@@ -8,7 +8,7 @@ import Logo from '@/components/LogoHeader';
 
 const PrivacyScreen = () => {
   return (
-    <ScrollView>
+    <ScrollView style={styles.ScrollViewCGI}>
       <Logo />
       <View style={globalStyles.containerX}>
         <ThemedText type="title">Politique de Confidentialité</ThemedText>
@@ -97,6 +97,9 @@ const styles = StyleSheet.create({
     marginTop: 35,
     alignItems: 'center',
   },
+    ScrollViewCGI:{
+    paddingTop: 50,
+  }
 });
 
 export default PrivacyScreen;

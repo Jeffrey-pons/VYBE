@@ -8,7 +8,6 @@ import iconLoupe from '../../assets/images/icons/icon_loupe.png';
 import { cities } from '@/utils/citiesUtils';
 import iconCalendar from '../../assets/images/icons/icon_calender.png';
 import iconChoiceLocation from '../../assets/images/icons/icon_choice_location.png';
-import globalStyles from '@/styles/globalStyle';
 import { Theme } from '@/constants/Theme';
 import { useFilteredEvents } from '@/hooks/useFilteredEvents';
 import EventList from '@/components/events/EventListCard';
@@ -85,7 +84,7 @@ const FilterScreen: React.FC = () => {
     pendingYMD ? new Date(pendingYMD) : (date ? new Date(date) : new Date());
 
   return (
-    <View style={globalStyles.containerX}>
+    <View style={styles.containerExplore}>
       <View style={styles.searchContainer}>
         <Image style={styles.searchIcon} source={iconLoupe} accessibilityLabel="Icône de recherche" />
         <TextInput
@@ -226,7 +225,7 @@ const styles = StyleSheet.create({
     marginVertical: 10, marginBottom: 0,
   },
   searchIcon: { marginRight: 5, width: 20, height: 20 },
-  searchInput: { flex: 1, color: 'white', fontSize: 15, fontFamily: 'FunnelSans-Regular' },
+  searchInput: { flex: 1, color: 'white', fontSize: 17, fontFamily: 'FunnelSans-Regular' },
   filterContainer: { flexDirection: 'row', marginVertical: 10, gap: 10 },
   filterButton: {
     flexDirection: 'row', alignItems: 'center', backgroundColor: '#535353',
@@ -237,16 +236,16 @@ const styles = StyleSheet.create({
     marginLeft: 4, marginBottom: 2,
   },
   modalContainer: {
-    backgroundColor: Theme.colors.background, padding: 20, margin: 40, borderRadius: 10,
+    backgroundColor: '#333', padding: 20, margin: 40, marginTop: 100, marginBottom: 200,borderRadius: 10,
     borderColor: '#333', borderWidth: 1,
   },
   gridContainer: { justifyContent: 'center', flexDirection: 'column' },
   cityButtonText: {
-    color: Theme.colors.text, fontSize: 16, fontWeight: 'bold', textAlign: 'center',
-    width: '100%', fontFamily: 'FunnelSans-Regular', paddingVertical: 10,
+    color: Theme.colors.text, fontSize: 18, fontWeight: 'bold', textAlign: 'center',
+    width: '100%', fontFamily: 'FunnelSans-Regular', paddingVertical: 5,
   },
   buttonModaleCity: { backgroundColor: '#b36dff', padding: 10, borderRadius: 5, marginVertical: 10 },
-  textButtonModaleCity: { color: 'white', textAlign: 'center', fontFamily: 'FunnelSans-Regular' },
+  textButtonModaleCity: { color: 'white', textAlign: 'center', fontFamily: 'FunnelSans-Regular', fontSize: 16 },
   loading: { textAlign: 'center', marginTop: 40, color: 'white' },
   error: { textAlign: 'center', marginTop: 40, color: '#ff4d4d' },
 
@@ -284,6 +283,13 @@ const styles = StyleSheet.create({
   webDateWrapper: { 
     gap: 8 
   },
+  containerExplore : {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    marginBottom: 60,
+    marginTop: 30,
+  }
 });
 
 export default FilterScreen;

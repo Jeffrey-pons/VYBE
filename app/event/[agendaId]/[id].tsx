@@ -61,7 +61,7 @@ const EventDetailPage = () => {
 
     const supported = await Linking.canOpenURL(url);
     if (!supported) {
-      Alert.alert('Redirection impossible', "Ce lien ne peut pas être ouvert sur cet appareil.");
+      Alert.alert('Redirection impossible', "Cet évènement n'a pas de lien de redirection vers le site de billeterie.");
       return;
     }
 
@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: 'black',
     paddingTop: 10,
-    paddingBottom: 10,
+    paddingBottom: 40,
     paddingLeft: 20,
     paddingRight: 20,
     borderTopWidth: 1,

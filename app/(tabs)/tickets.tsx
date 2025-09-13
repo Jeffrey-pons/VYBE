@@ -40,7 +40,7 @@ const TicketsScreen = () => {
   }, [refetchRecent, refetchPopular]);
 
   return (
-    <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView contentInsetAdjustmentBehavior="automatic" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <View style={globalStyles.scrollContainer}>
         <Logo />
         <View style={styles.inlineLocation}>
@@ -169,15 +169,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
     eventCardContainer: {
-    paddingBottom: 10,
+    paddingBottom: 20,
     paddingTop: 10,
-    paddingRight: 15,
+    paddingRight: 10,
+    paddingLeft: 5,
   },
   eventScroll: {
     marginBottom: -30,
   },
   eventScrollTwo: {
-    marginBottom: 50,
+    marginBottom: 70,
   },
   titleScreen: {
     color: 'white',

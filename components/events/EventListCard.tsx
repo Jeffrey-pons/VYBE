@@ -71,8 +71,11 @@ const styles = StyleSheet.create({
   },
   eventText: {
     color: '#fff',
-    marginTop: 5,
-    fontFamily: 'FunnelSans-Regular',
+    marginTop: 8,
+    // fontFamily: 'FunnelSans-Regular',
+    // textDecorationLine: 'underline',
+    fontWeight: '700',
+    
   },
   eventTextDate: {
     color: '#ffdd59',

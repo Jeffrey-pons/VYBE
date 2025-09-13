@@ -37,9 +37,9 @@ const App = () => {
   .slice(1, 12);
 
   return (
-    <ScrollView style={styles.eventScroll} refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}>
+    <ScrollView style={styles.eventScroll} contentInsetAdjustmentBehavior="automatic" refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}>
       <View style={globalStyles.scrollContainer}>
-        <Logo />
+        <Logo/>
         <View style={styles.inlineLocation}>
           <ThemedText style={styles.titleLocal}>Découvre ton prochain évènements à </ThemedText>
           <TouchableOpacity onPress={toggleCitySelector}></TouchableOpacity>
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
     height: 80,
   },
   eventScroll: {
-    marginBottom: 30,
+    marginBottom: 60,
   },
   titleScreen: {
     color: 'white',

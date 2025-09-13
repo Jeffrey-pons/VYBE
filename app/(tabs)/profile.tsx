@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ScrollView, View, Switch, StyleSheet, TextInput, Pressable } from 'react-native';
+import React, { useState, useCallback  } from 'react';
+import { ScrollView, View, Switch, StyleSheet, TextInput, Pressable, RefreshControl } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from 'react-native-elements';
 import { Collapsible } from '@/components/Collapsible';
@@ -45,9 +45,19 @@ const ProfileScreen: React.FC = () => {
   } = useUserInfo();
 
   const [isModalLogoutAccountVisible, setIsModalLogoutAccountVisible] = useState(false);
-
+ const [refreshing, setRefreshing] = useState(false);
+  
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      // En attendant d'intégrer le rechargement des données utilisateur, on simule un délai
+      await new Promise(resolve => setTimeout(resolve, 800));
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
   return (
-    <ScrollView>
+    <ScrollView contentInsetAdjustmentBehavior="automatic" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
       <Logo />
       <View style={globalStyles.containerX}>
         <View style={styles.centeredContainer}>
@@ -93,32 +103,39 @@ const ProfileScreen: React.FC = () => {
           onConfirm={handleUpdateUserInfo}
           modalType="update"
         >
-          <View style={styles.inputContainer}>
-            <TextInput placeholder="Nom" value={name} onChangeText={setName} style={styles.input} accessibilityLabel='Nom'/>
-            <TextInput
-              placeholder="Prénom"
-              value={lastname}
-              onChangeText={setLastname}
-              style={styles.input}
-              accessibilityLabel='Prénom'
-            />
-            {/* <TextInput
-              placeholder="Email"
-              value={email}
-              onChangeText={setEmail}
-              style={styles.input}
-              keyboardType="email-address"
-              accessibilityLabel='Email'
-            /> */}
-            <TextInput
-              placeholder="Numéro de téléphone"
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
-              style={styles.input}
-              accessibilityLabel='Numéro de téléphone'
-            />
-            <ThemedText type='text'>L'email et le mot de passe seront modifiables dans une seconde version de Vybe. </ThemedText>
-          </View>
+          <ScrollView 
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+            // eslint-disable-next-line react-native/no-inline-styles
+            contentContainerStyle={{ paddingBottom: 20 }}
+          >
+            <View style={styles.inputContainer}>
+              <TextInput 
+                placeholder="Nom" 
+                value={name} 
+                onChangeText={setName} 
+                style={styles.input} 
+                accessibilityLabel='Nom'
+              />
+              <TextInput
+                placeholder="Prénom"
+                value={lastname}
+                onChangeText={setLastname}
+                style={styles.input}
+                accessibilityLabel='Prénom'
+              />
+              <TextInput
+                placeholder="Numéro de téléphone"
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+                style={styles.input}
+                accessibilityLabel='Numéro de téléphone'
+              />
+              <ThemedText type='text'>
+                L'email et le mot de passe seront modifiables dans une seconde version de Vybe.
+              </ThemedText>
+            </View>
+          </ScrollView>
         </UserModal>
 
         <Collapsible title="Localisation">
@@ -361,6 +378,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     width: '70%',
     margin: 'auto',
+    marginBottom: 20,
   },
   modalText: {
     color: 'white',
