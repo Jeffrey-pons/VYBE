@@ -51,6 +51,18 @@ jest.mock('@/hooks/useEventById', () => ({
 // --- On espionne Linking.openURL
 jest.spyOn(Linking, 'openURL').mockResolvedValue();
 
+ jest.mock('@expo/vector-icons', () => ({
+   Ionicons: () => null, 
+ }));
+
+ jest.mock('@/hooks/useFavoriteId', () => ({
+  useFavoriteId: () => ({
+    favorited: false,
+    loading: false,
+    toggle: jest.fn(),
+  }),
+}));
+
 // ⚠️ ADAPTE ce chemin si besoin
 import EventDetailPage from '@/app/event/[agendaId]/[id]';
 
