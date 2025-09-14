@@ -7,7 +7,11 @@ import {
   TextInput,
   Pressable,
   RefreshControl,
+  ActivityIndicator, 
 } from 'react-native';
+import { EventCard } from '@/components/events/EventCard';
+import { useHydratedFavorites } from '@/hooks/useHydratedFavorites';
+import { auth } from '@/config/firebaseConfig';
 import { ThemedText } from '@/components/ThemedText';
 import { Button } from 'react-native-elements';
 import { Collapsible } from '@/components/Collapsible';
@@ -54,6 +58,9 @@ const ProfileScreen: React.FC = () => {
 
   const [isModalLogoutAccountVisible, setIsModalLogoutAccountVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
+  const uid = auth.currentUser?.uid;
+  const { items: favoriteItems, loading: favoritesLoading } = useHydratedFavorites(uid);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -242,8 +249,32 @@ const ProfileScreen: React.FC = () => {
           </View>
         </Collapsible>
 
-        <Collapsible title="Lieu favoris">
-          <ThemedText type="text">Aucun Lieu favoris n'a encore été ajouté.</ThemedText>
+       <Collapsible title="Favoris">
+          {!uid ? (
+            <ThemedText type="text">Connecte-toi pour voir tes favoris.</ThemedText>
+          ) : favoritesLoading ? (
+            <ActivityIndicator />
+          ) : favoriteItems.length === 0 ? (
+            <ThemedText type="text">Aucun favori pour l’instant.</ThemedText>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.favContent}
+            >
+              {favoriteItems.map((item) => (
+                <Pressable
+                  key={`${item.agendaId}_${item.eventId}`}
+                  onPress={() => router.push(`/event/${item.agendaId}/${item.eventId}`)}
+                  style={styles.favItem}
+                >
+                    <View>
+                      <EventCard event={item.event} variant="compact" />
+                  </View>
+                </Pressable>
+              ))}
+            </ScrollView>
+          )}
         </Collapsible>
 
         <Collapsible title="Politique de confidentialité">
@@ -529,6 +560,12 @@ const styles = StyleSheet.create({
   inputContainer: {
     display: 'flex',
     gap: 20,
+  },
+  favContent: {
+    columnGap: 20,
+  },
+  favItem: {
+    width: 260,
   },
 });
 

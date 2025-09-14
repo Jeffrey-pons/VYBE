@@ -9,7 +9,6 @@ export function mapFirebaseUserToUser(firebaseUser: FirebaseUser): User {
     number: firebaseUser.phoneNumber || '',
     privacy: '',
     notifications: false,
-    favorites: [],
   };
 }
 
@@ -21,5 +20,4 @@ export interface User {
   mail: string;
   privacy: string;
   notifications: boolean;
-  favorites: string[];
 }

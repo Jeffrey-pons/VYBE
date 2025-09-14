@@ -1,4 +1,5 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { Event } from '@/interfaces/event';
 import { router } from 'expo-router';
 
@@ -19,6 +20,13 @@ export const EventCard = ({
   imageHeight = 200,
   style,
 }: Props) => {
+  const [imgOk, setImgOk] = useState(true);
+
+  const imageUrl =
+    event.image?.base && event.image?.filename
+      ? `${event.image.base}${event.image.filename}`
+      : undefined;
+
   const startDate =
     event.dateRange?.fr ||
     (event.firstTiming?.begin
@@ -38,7 +46,9 @@ export const EventCard = ({
       console.warn('UID ou originAgenda manquant');
     }
   };
+
   const isHorizontal = variant === 'horizontal';
+
   return (
     <View
       style={[
@@ -54,12 +64,20 @@ export const EventCard = ({
         style,
       ]}
     >
-      <Image
-        source={{ uri: `${event.image?.base || ''}${event.image?.filename}` }}
-        style={[styles.eventImage, variant === 'horizontal' && styles.horizontalImage]}
-        alt="Preview de l'événement"
-        accessibilityLabel="Preview de l'événement"
-      />
+      {imageUrl && imgOk ? (
+        <Image
+          source={{ uri: imageUrl }}
+          onError={() => setImgOk(false)}
+          style={[styles.eventImage, variant === 'horizontal' && styles.horizontalImage]}
+          alt="Preview de l'événement"
+          accessibilityLabel="Preview de l'événement"
+        />
+      ) : (
+        <View style={[styles.eventImage, styles.placeholder, variant === 'horizontal' && styles.horizontalImage]}>
+          <Text style={styles.placeholderText}>Aucune image</Text>
+        </View>
+      )}
+
       <Text numberOfLines={2} ellipsizeMode="tail" style={styles.eventTitle}>
         {event.title.fr || "Titre de l'évènement indisponible"}
       </Text>
@@ -96,6 +114,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     resizeMode: 'cover',
   },
+  placeholder: {
+    backgroundColor: '#0e0e0e',
+    borderWidth: 1,
+    borderColor: '#333',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  placeholderText: {
+    color: '#777',
+    fontFamily: 'FunnelSans-Regular',
+  },
   horizontalCard: {
     padding: 5,
     marginBottom: 10,
@@ -109,7 +138,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
   },
-
   eventTitle: {
     fontSize: 18,
     fontWeight: 'bold',

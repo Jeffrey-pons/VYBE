@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEventById } from '@/hooks/useEventById';
+import { auth } from '@/config/firebaseConfig';
+import { useFavoriteId } from '@/hooks/useFavoriteId';
 import globalStyles from '@/styles/globalStyle';
 import {
   iconInformation,
@@ -23,7 +25,6 @@ import {
   iconChoiceLocation,
   iconApi,
   iconCroix,
-  iconFavorite,
   iconLink,
   iconArrowDown,
   iconArrowUp,
@@ -31,6 +32,7 @@ import {
 import { getEventDuration } from '@/utils/dateUtils';
 import MapView, { Marker } from 'react-native-maps';
 import { extractPriceLabel } from '@/utils/priceUtils';
+import { Ionicons } from '@expo/vector-icons';
 
 const formatDate = (dateString?: string) => {
   if (!dateString) return 'Date non disponible';
@@ -57,6 +59,13 @@ const EventDetailPage = () => {
   const { id, agendaId } = useLocalSearchParams();
   const router = useRouter();
   const { event, loading, error } = useEventById(agendaId, id);
+  const agendaIdStr = String(agendaId);
+  const eventIdStr = String(id);
+  const uid = auth.currentUser?.uid;
+
+  const { favorited, loading: favLoading, toggle } =
+    useFavoriteId(uid, agendaIdStr, eventIdStr);
+
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [opening, setOpening] = useState(false);
 
@@ -82,7 +91,6 @@ const EventDetailPage = () => {
         return;
       }
 
-      // Message avant la bascule (souvent on quitte l'app)
       Alert.alert('Redirection', 'Ouverture de la billetterie…');
       await Linking.openURL(url);
     } catch {
@@ -92,27 +100,77 @@ const EventDetailPage = () => {
     }
   };
 
+  const handleShare = () => {
+  Alert.alert(
+    'Partage bientôt disponible',
+    'La fonctionnalité de partage sera disponible dans une seconde version de Vybe.'
+  );
+};
+
   if (loading) return <Text style={styles.loading}>Chargement...</Text>;
   if (error) return <Text style={styles.error}>Erreur : {error}</Text>;
   if (!event) return <Text style={styles.error}>Événement introuvable</Text>;
 
   const priceLabel = extractPriceLabel(event.conditions?.fr);
+  const hasImage = Boolean(event.image?.base && event.image?.filename);
+  const imageUri =
+    hasImage ? `${event.image!.base}${event.image!.filename}` : undefined;
 
   return (
     <ScrollView contentContainerStyle={[globalStyles.scrollContainer]}>
       <View style={styles.container}>
-        {event.image && (
-          <Image
-            source={{ uri: `${event.image.base}${event.image.filename}` }}
-            style={styles.eventImage}
-            alt="Image de l'évènement"
-            accessibilityLabel="Image de l'évènement"
-          />
-        )}
+        {/* IMAGE OU PLACEHOLDER */}
+        <View style={styles.mediaBox}>
+          {hasImage ? (
+            <Image
+              source={{ uri: imageUri! }}
+              style={styles.eventImage}
+              alt="Image de l'évènement"
+              accessibilityLabel="Image de l'évènement"
+            />
+          ) : (
+            <View style={[styles.eventImage, styles.imagePlaceholder]}>
+              <Ionicons name="image-outline" size={40} color="#666" />
+              <Text style={styles.placeholderText}>Aucune image</Text>
+            </View>
+          )}
+
+          {/* Bouton partager */}
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={handleShare}
+            accessibilityLabel='Repartager l"événement'
+          >
+            <Image
+              source={iconLink}
+              style={styles.iconActionButton}
+              alt="Repartager"
+              accessibilityLabel="Repartager"
+            />
+          </TouchableOpacity>
+
+          {/* Bouton favori */}
+          <TouchableOpacity
+            style={styles.actionButtonTwo}
+            onPress={toggle}
+            disabled={!uid || favLoading}
+            accessibilityLabel={favorited ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+            accessibilityState={{ selected: favorited }}
+            hitSlop={8}
+          >
+            <Ionicons
+              name={favorited ? 'heart' : 'heart-outline'}
+              size={24}
+              color="#fff"
+            />
+          </TouchableOpacity>
+        </View>
+
         {/* Titre et description de l'événement */}
         <Text style={styles.eventTitle}>{event.title?.fr}</Text>
         <Text style={styles.eventDate}>{event.dateRange?.fr ?? 'Date non disponible'}</Text>
         <Text style={styles.eventLocation}>{event.location?.name ?? 'Lieu non disponible'}</Text>
+
         <View style={styles.textInformation}>
           <Image
             source={iconChoiceLocation}
@@ -122,7 +180,9 @@ const EventDetailPage = () => {
           />
           <Text style={styles.eventCity}>{event.location?.city ?? 'Ville non disponible'}</Text>
         </View>
+
         <View style={styles.separator} />
+
         {/* DESCRIPTION */}
         <Text style={styles.eventInformationTitle}>Informations sur l'évènement</Text>
         <Pressable
@@ -147,11 +207,13 @@ const EventDetailPage = () => {
             />
           </View>
         </Pressable>
+
         {/* CONDITIONS */}
         <Text style={styles.eventSectionTitle}>Conditions</Text>
         <Text style={styles.eventText}>
           {event.conditions?.fr ?? 'Aucune condition pour cet évènement.'}
         </Text>
+
         <View>
           {event.registration?.some((item) => item.type === 'phone' || item.type === 'email') && (
             <>
@@ -178,12 +240,14 @@ const EventDetailPage = () => {
             </>
           )}
         </View>
+
         {/* HORAIRE DUREE */}
         <Text style={styles.eventSectionTitle}>Horaires et durée</Text>
         <Text style={styles.eventText}>Débute le {formatDate(event.firstTiming?.begin)}</Text>
         <Text style={styles.eventText}>
           Durée estimée : {getEventDuration(event.firstTiming?.begin, event.firstTiming?.end)}
         </Text>
+
         {/* LIEU DETAILS */}
         <Text style={styles.eventSectionTitle}>Lieu</Text>
         <Text style={styles.eventText}>{event.location?.name ?? 'Nom indisponible'}</Text>
@@ -214,7 +278,8 @@ const EventDetailPage = () => {
             </MapView>
           </View>
         )}
-        {/* Restriction dage */}
+
+        {/* Restriction d'âge */}
         <View style={styles.textInformation}>
           <Image
             source={iconInformation}
@@ -265,6 +330,7 @@ const EventDetailPage = () => {
               : 'Accessibilité non précisée pour cet évènement.'}
           </Text>
         </View>
+
         {/* MOTS CLES */}
         {(event.keywords?.fr ?? []).length > 0 && (
           <View style={styles.textInformation}>
@@ -279,7 +345,8 @@ const EventDetailPage = () => {
             </Text>
           </View>
         )}
-        {/* STATUS DE LEVENEMENT */}
+
+        {/* STATUS */}
         {event.status !== 1 && (
           <View style={styles.textInformation}>
             <Image
@@ -295,6 +362,7 @@ const EventDetailPage = () => {
             </Text>
           </View>
         )}
+
         {/* API */}
         <View style={styles.textInformation}>
           <Image
@@ -309,38 +377,14 @@ const EventDetailPage = () => {
               : `Aucune information sur l'origine des données.`}
           </Text>
         </View>
-        {/* FERMER LA PAGE EVENT ID */}
+
+        {/* FERMER LA PAGE */}
         <TouchableOpacity style={styles.closeEventDetailButton} onPress={() => router.back()}>
           <Image
             source={iconCroix}
             style={styles.iconCloseDetail}
             alt="Icône croix"
             accessibilityLabel="Icône croix"
-          />
-        </TouchableOpacity>
-        {/* Boutons "Aimer" et "Repartager" */}
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={() => console.log("Repartager l'événement")}
-          accessibilityLabel='Repartager l"événement'
-        >
-          <Image
-            source={iconLink}
-            style={styles.iconActionButton}
-            alt="Repartager"
-            accessibilityLabel="Repartager"
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.actionButtonTwo}
-          onPress={() => console.log("Aimer l'événement")}
-          accessibilityLabel='Aimer l"événement'
-        >
-          <Image
-            source={iconFavorite}
-            style={styles.iconActionButton}
-            alt="Aimer"
-            accessibilityLabel="Aimer"
           />
         </TouchableOpacity>
       </View>
@@ -375,12 +419,33 @@ const styles = StyleSheet.create({
     padding: 20,
     flex: 1,
   },
+
+  mediaBox: {
+    width: '100%',
+    height: 300,      
+    borderRadius: 10,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#333',
+    backgroundColor: '#0e0e0e',
+    marginBottom: 0,
+  },
+
   eventImage: {
     width: '100%',
-    height: 300,
+    height: '100%',  
     resizeMode: 'cover',
-    borderRadius: 10,
   },
+  imagePlaceholder: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  placeholderText: {
+    marginTop: 8,
+    color: '#777',
+    fontFamily: 'FunnelSans-Regular',
+  },
+
   eventTitle: {
     fontSize: 22,
     color: 'white',
@@ -520,10 +585,11 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     width: '100%',
   },
+
   actionButton: {
     position: 'absolute',
-    top: 275,
-    right: 25,
+    top: 245,
+    right: 10,
     backgroundColor: 'black',
     width: 40,
     height: 40,
@@ -539,12 +605,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#333',
   },
-
   actionButtonTwo: {
     position: 'absolute',
     backgroundColor: 'black',
-    right: 75,
-    top: 275,
+    right: 60,
+    top: 245,
     width: 40,
     height: 40,
     borderRadius: 20,
