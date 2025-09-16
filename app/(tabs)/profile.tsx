@@ -31,11 +31,8 @@ const ProfileScreen: React.FC = () => {
   const { city } = useLocation();
   const router = useRouter();
   const {
-    isPushEnabled,
     isEmailEnabled,
     isLastTicketsEnabled,
-    setIsPushEnabled,
-    setIsEmailEnabled,
     setIsLastTicketsEnabled,
   } = useNotificationStore();
   const {
@@ -188,47 +185,6 @@ const ProfileScreen: React.FC = () => {
         </Collapsible>
 
         <Collapsible title="Notifications">
-          <View style={styles.infoBox}>
-            <ThemedText type="title" style={styles.infoTitle}>
-              On te tient au courant !
-            </ThemedText>
-            <ThemedText type="text" style={styles.infoDescription}>
-              Découvre les derniers évènements, les mises en vente de billets etc...
-            </ThemedText>
-            <Button
-              title="ACTIVER LES NOTIFICATIONS"
-              buttonStyle={styles.activateButton}
-              titleStyle={styles.titleUpdatedProfileStyle}
-              accessibilityLabel="Bouton pour activer les notifications"
-            />
-          </View>
-          <View style={styles.sectionNotification}>
-            <ThemedText type="title">Modification de tes évènements</ThemedText>
-            <ThemedText type="text" style={styles.sectionDescription}>
-              Programmation, horaire ou lieu, on te tient au courant s'il y a du changement
-            </ThemedText>
-            <View style={styles.separator} />
-            <View style={styles.switchRow}>
-              <ThemedText type="text">Push</ThemedText>
-              <Switch
-                trackColor={{ false: '#767577', true: Theme.colors.violet }}
-                thumbColor={isEmailEnabled ? Theme.colors.text : Theme.colors.text}
-                onValueChange={() => setIsPushEnabled(!isPushEnabled)}
-                value={isPushEnabled}
-              />
-            </View>
-            <View style={styles.separator} />
-            <View style={styles.switchRow}>
-              <ThemedText type="text">Email</ThemedText>
-              <Switch
-                trackColor={{ false: '#767577', true: Theme.colors.violet }}
-                thumbColor={isEmailEnabled ? Theme.colors.text : Theme.colors.text}
-                onValueChange={() => setIsEmailEnabled(!isEmailEnabled)}
-                value={isEmailEnabled}
-              />
-            </View>
-            <View style={styles.separator} />
-          </View>
           <View style={styles.sectionNotification}>
             <ThemedText type="title">Derniers billets disponibles à la vente</ThemedText>
             <ThemedText type="text" style={styles.sectionDescription}>
@@ -472,43 +428,12 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 10,
   },
-  //////
-  infoBox: {
-    backgroundColor: 'black',
-    width: '95%',
-    padding: 16,
-    borderRadius: 10,
-    borderColor: 'white',
-    borderWidth: 1,
-    gap: 10,
-    display: 'flex',
-    textAlign: 'center',
-    margin: 'auto',
-  },
-  infoTitle: {
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  infoDescription: {
-    textAlign: 'center',
-    marginBottom: 12,
-    color: Theme.colors.silver,
-  },
-  activateButton: {
-    backgroundColor: Theme.colors.text,
-    color: Theme.colors.background,
-    borderRadius: 38,
-    width: '90%',
-    textAlign: 'center',
-    margin: 'auto',
-  },
   sectionNotification: {
-    padding: 16,
+    paddingTop: 16,
+    paddingRight: 16,
+    paddingLeft: 16,
+    paddingBottom: 10,
     borderRadius: 10,
-    marginBottom: 20,
-    display: 'flex',
-    margin: 'auto',
-    overflow: 'visible',
   },
   sectionDescription: {
     color: Theme.colors.silver,
@@ -522,7 +447,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    backgroundColor: 'red',
+    backgroundColor: 'white',
     width: '100%',
     marginVertical: 10,
     display: 'flex',
