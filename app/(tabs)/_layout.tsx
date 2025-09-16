@@ -17,13 +17,14 @@ export default function TabLayout() {
           ios: {
             background: 'transparent',
             position: 'absolute',
-            paddingTop: 4,
+            paddingTop: 10,
+            height: 60,
           },
           android: {
             backgroundColor: 'transparent',
-            height: 50,
+            height: 30,
             paddingBottom: 48,
-            paddingTop: 8,
+            paddingTop: 10,
           },
           default: {},
         }),
